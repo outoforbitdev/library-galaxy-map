@@ -1,5 +1,5 @@
 import { Expandable } from "../oodreact";
-import styles from "./map.module.css";
+import styles from "../styles/map.module.css";
 
 export interface IMapOptions {
   hidePlanetLabels?: boolean;

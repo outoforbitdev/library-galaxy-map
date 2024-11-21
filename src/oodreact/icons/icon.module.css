@@ -1,0 +1,29 @@
+.small {
+  height: 0.75em;
+  width: 0.75em;
+}
+
+.medium {
+  height: 1em;
+  width: 1em;
+}
+
+.large {
+  height: 1.5em;
+  width: 1.5em;
+}
+
+@media (max-width: 768px) {
+  .clickable.small {
+    height: 1em;
+    width: 1em;
+  }
+  .clickable.medium {
+    height: 1.5em;
+    width: 1.5em;
+  }
+  .clickable.large {
+    height: 2em;
+    width: 2em;
+  }
+}

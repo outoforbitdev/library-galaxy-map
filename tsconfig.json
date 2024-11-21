@@ -1,15 +1,22 @@
 {
     "compilerOptions": {
+        "lib": ["dom", "dom.iterable", "esnext"],
+        "skipLibCheck": true,
+        "strict": true,
+        "noEmit": false,
+        "esModuleInterop": true,
+        "resolveJsonModule": true,
+        "isolatedModules": true,
+        "incremental": true,
       "outDir": "./dist/",
       "sourceMap": true,
       "noImplicitAny": true,
-      "module": "es6",
-      "target": "es5",
-      "jsx": "react",
+      "module": "esnext",
+      "target": "es2017",
+      "jsx": "preserve",
       "allowJs": true,
-      "moduleResolution": "node",
+      "moduleResolution": "node", // maybe "bundler" instead
       "allowSyntheticDefaultImports": true,
       "plugins": [{"name": "typescript-react-plugins-css-modules"}]
     }
   }
-  

@@ -5,7 +5,7 @@ import { IMapOptions, MapOption, MapOptions } from "./MapOptions";
 import { useRef, useState } from "react";
 import { IPlanet } from "./PlanetMap";
 import { ISpacelane } from "./SpacelaneMap";
-import styles from "./map.module.css";
+import styles from "../styles/map.module.css";
 
 export interface IMapProps {
   planets: IPlanet[];
