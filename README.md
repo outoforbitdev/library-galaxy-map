@@ -3,10 +3,10 @@
 <p align="center">
   <!-- <a href="https://github.com/outoforbitdev/library-galaxy-map/actions?query=workflow%3ATest+branch%3Amaster">
     <img alt="Build states" src="https://github.com/outoforbitdev/library-galaxy-map/workflows/Test/badge.svg">
-  </a>
+  </a> -->
   <a href="https://github.com/outoforbitdev/library-galaxy-map/actions">
     <img alt="Build states" src="https://github.com/outoforbitdev/library-galaxy-map/workflows/Release/badge.svg">
-  </a> -->
+  </a>
   <a href="https://securityscorecards.dev/viewer/?uri=github.com/outoforbitdev/library-galaxy-map">
     <img alt="OpenSSF Scorecard" src="https://api.securityscorecards.dev/projects/github.com/outoforbitdev/library-galaxy-map/badge">
   </a>
