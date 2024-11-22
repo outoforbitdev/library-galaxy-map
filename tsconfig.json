@@ -9,16 +9,13 @@
   
       // Added
       "jsx": "react-jsx", 
-      "module": "ESNext",  
-    //   "declaration": true,
-    //   "declarationDir": "dist/types",
+      "module": "ESNext",
       "sourceMap": true,
       "outDir": "./dist/",
       "moduleResolution": "node",
       "allowSyntheticDefaultImports": true,
       "resolveJsonModule": true,
       "isolatedModules": true,
-    //   "incremental": true,
     },
     "include": [
         "**/*.ts"
