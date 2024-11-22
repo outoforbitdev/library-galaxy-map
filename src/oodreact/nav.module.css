@@ -1,0 +1,31 @@
+.nav {
+  --header-height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  height: var(--header-height);
+}
+
+nav.nav {
+  margin: 1rem;
+  padding: 1rem;
+}
+
+.nav ul {
+  list-style: none;
+  display: flex;
+  flex-direction: row;
+}
+
+.nav a {
+  text-decoration: none;
+  /* display: block; */
+  padding: 1rem;
+  /* vertical-align: middle; */
+}
+
+.nav a:hover {
+  background-color: var(--neutral-text);
+  color: var(--neutral-background);
+}
