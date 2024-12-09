@@ -20,7 +20,7 @@
     "husky": "^9.1.7",
     "postcss": "^8.4.49",
     "postcss-cli": "^11.0.0",
-    "rollup": "^4.27.3",
+    "rollup": "^4.28.1",
     "rollup-plugin-dts": "^6.1.1",
     "rollup-plugin-peer-deps-external": "^2.2.4",
     "rollup-plugin-postcss": "^4.0.2",
