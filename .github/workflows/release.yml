@@ -16,17 +16,14 @@ jobs:
   release:
     runs-on: ubuntu-latest
     name: Publish Github Release
-    outputs:
-      version-released: ${{ steps.semantic-release.outputs.version-released }}
-      next-version: ${{ steps.semantic-release.outputs.next-version }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
         with:
           persist-credentials: false
-      - name: Publish Release
-        id: semantic-release
-        shell: python
-        run: |
-          from ci import create_release
-          create_release.release_version(${{secrets.GITHUB_TOKEN}})
+      - name: Set up Python
+        uses: actions/setup-python@v5 
+        with:
+          python-version: '3.10'
+      - name: Run release script
+        run: python ci/create_release.py ${{secrets.GITHUB_TOKEN}}

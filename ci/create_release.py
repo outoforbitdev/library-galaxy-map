@@ -1,4 +1,5 @@
 import re
+import sys
 import requests
 import json
 import subprocess
@@ -62,3 +63,7 @@ def release_version(github_token):
             print(release_response)
         else:
             print("Could not determine repository name.")
+
+if __name__ == "__main__":
+    github_token = sys.argv[1]
+    release_version(github_token)
