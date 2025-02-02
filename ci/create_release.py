@@ -1,3 +1,4 @@
+import os
 import re
 import sys
 import requests
@@ -49,6 +50,12 @@ def get_repo_name():
         return "/".join(repo_name)
     except subprocess.CalledProcessError:
         return None
+    
+def write_release_to_output(release_version, release_link):
+    step_summary_path = os.getenv("GITHUB_STEP_SUMMARY")
+    if step_summary_path:
+        with open(step_summary_path, "a") as summary_file:
+            summary_file.write(f"## Release Created\n\n- [{release_version}]({release_link})\n\n")
 
 def release_version(github_token):
     changelog_file = "CHANGELOG.md"
@@ -60,6 +67,7 @@ def release_version(github_token):
         if repo_name:
             release_response = create_github_release(repo_name, first_version, github_token, f"Release {first_version}")
             print(release_response)
+            write_release_to_output(first_version, release_response.url)
         else:
             print("Could not determine repository name.")
 
