@@ -7,40 +7,39 @@ on:
       - beta
       - dev
       - staging
+    paths:
+      - CHANGELOG.md
 jobs:
+  check-release-match:
+    runs-on: ubuntu-latest
+    name: Check Release Versions Match
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+            persist-credentials: false
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+            python-version: '3.10'
+      - name: Compare versions
+        run: python ci/check_versions.py
   release:
+    permissions: 
+      contents: write
     runs-on: ubuntu-latest
     name: Publish Github Release
-    outputs:
-      version-released: ${{ steps.semantic-release.outputs.version-released }}
-      next-version: ${{ steps.semantic-release.outputs.next-version }}
+    needs: check-release-match
     steps:
       - name: Checkout
         uses: actions/checkout@v4
         with:
           persist-credentials: false
-      - name: Publish Release
-        uses: outoforbitdev/action-semantic-release@v1.6.2
-        id: semantic-release
+      - name: Set up Python
+        uses: actions/setup-python@v5 
         with:
-          github-token: ${{ secrets.RELEASE_TOKEN }}
-          skip-changelog: ${{ github.ref_name != 'main' }}
-  publish-aspnet:
-    runs-on: ubuntu-latest
-    name: Publish Package
-    needs:
-      - release
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          persist-credentials: false
-      - name: Setup node
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20.x'
-          registry-url: 'https://registry.npmjs.org'
-      - run: npm ci
-      - run: npm publish --provenance --access public
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          python-version: '3.10'
+      - name: Install Python dependencies
+        run: python -m pip install requests
+      - name: Run release script
+        run: python ci/create_release.py ${{secrets.GITHUB_TOKEN}}

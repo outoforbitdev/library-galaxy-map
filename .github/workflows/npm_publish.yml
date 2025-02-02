@@ -1,0 +1,21 @@
+name: NPM Publish
+permissions: read-all
+on: release
+jobs:
+  npm-publish:
+    runs-on: ubuntu-latest
+    name: Publish Package
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Setup node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          registry-url: 'https://registry.npmjs.org'
+      - run: npm ci
+      - run: npm publish --provenance --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
