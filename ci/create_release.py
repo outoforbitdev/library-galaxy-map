@@ -1,7 +1,6 @@
 import re
 import sys
 import requests
-import json
 import subprocess
 
 def find_first_version(changelog_path):
