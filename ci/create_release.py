@@ -67,7 +67,7 @@ def release_version(github_token):
         if repo_name:
             release_response = create_github_release(repo_name, first_version, github_token, f"Release {first_version}")
             print(release_response)
-            write_release_to_output(first_version, release_response.url)
+            write_release_to_output(first_version, release_response["url"])
         else:
             print("Could not determine repository name.")
 
