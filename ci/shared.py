@@ -7,7 +7,7 @@ def write_to_summary(content):
         with open(step_summary_path, "a") as summary_file:
             summary_file.write(content)
 
-def find_first_changelog_version(changelog_path):
+def find_first_changelog_version(changelog_path="CHANGELOG.md"):
     version_pattern = re.compile(r'^#{1,2} (\d+\.\d+\.\d+)')
     
     with open(changelog_path, 'r', encoding='utf-8') as file:

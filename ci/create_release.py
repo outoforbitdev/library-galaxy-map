@@ -43,8 +43,7 @@ def write_release_to_output(release_version, release_link):
     write_to_summary(f"## Release Created\n\n- [{release_version}]({release_link})\n\n")
 
 def release_version(github_token):
-    changelog_file = "CHANGELOG.md"
-    first_version = find_first_changelog_version(changelog_file)
+    first_version = find_first_changelog_version()
     print(f"First version found: {first_version}")
     
     if first_version:
