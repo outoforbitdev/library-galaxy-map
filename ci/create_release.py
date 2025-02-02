@@ -1,19 +1,8 @@
 import os
-import re
 import sys
 import requests
 import subprocess
-
-def find_first_version(changelog_path):
-    version_pattern = re.compile(r'^#{1,2} (\d+\.\d+\.\d+)')
-    
-    with open(changelog_path, 'r', encoding='utf-8') as file:
-        for line in file:
-            match = version_pattern.match(line.strip())
-            if match:
-                return match.group(1)
-    
-    return None  # Return None if no version is found
+from shared import find_first_changelog_version, write_to_summary
 
 def release_exists(repo, tag_name, token):
     url = f"https://api.github.com/repos/{repo}/releases/tags/{tag_name}"
@@ -56,7 +45,7 @@ def write_release_to_output(release_version, release_link):
 
 def release_version(github_token):
     changelog_file = "CHANGELOG.md"
-    first_version = find_first_version(changelog_file)
+    first_version = find_first_changelog_version(changelog_file)
     print(f"First version found: {first_version}")
     
     if first_version:
@@ -67,12 +56,6 @@ def release_version(github_token):
             write_release_to_output(first_version, release_response["html_url"])
         else:
             print("Could not determine repository name.")
-
-def write_to_summary(content):
-    step_summary_path = os.getenv("GITHUB_STEP_SUMMARY")
-    if step_summary_path:
-        with open(step_summary_path, "a") as summary_file:
-            summary_file.write(content)
 
 if __name__ == "__main__":
     github_token = sys.argv[1]
