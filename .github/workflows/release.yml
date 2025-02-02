@@ -7,6 +7,8 @@ on:
       - beta
       - dev
       - staging
+    paths:
+      - CHANGELOG.md
 jobs:
   release:
     runs-on: ubuntu-latest
@@ -20,27 +22,8 @@ jobs:
         with:
           persist-credentials: false
       - name: Publish Release
-        uses: outoforbitdev/action-semantic-release@v1.6.2
         id: semantic-release
-        with:
-          github-token: ${{ secrets.RELEASE_TOKEN }}
-          skip-changelog: ${{ github.ref_name != 'main' }}
-  publish-aspnet:
-    runs-on: ubuntu-latest
-    name: Publish Package
-    needs:
-      - release
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          persist-credentials: false
-      - name: Setup node
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20.x'
-          registry-url: 'https://registry.npmjs.org'
-      - run: npm ci
-      - run: npm publish --provenance --access public
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        shell: python
+        run: |
+          from ci import create_release
+          create_release.release_version(${{secrets.GITHUB_TOKEN}})
