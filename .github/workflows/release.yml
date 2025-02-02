@@ -9,9 +9,6 @@ on:
       - staging
     paths:
       - CHANGELOG.md
-  pull_request:
-    paths:
-      - CHANGELOG.md
 jobs:
   check-release-match:
     runs-on: ubuntu-latest
