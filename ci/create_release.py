@@ -44,6 +44,8 @@ def write_release_to_output(release_version, release_link):
 
 def release_version(github_token):
     first_version = find_first_changelog_version()
+    if first_version[0] != "v":
+        first_version = f"v{first_version}"
     print(f"First version found: {first_version}")
     
     if first_version:
