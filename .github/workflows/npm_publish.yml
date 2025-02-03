@@ -1,10 +1,14 @@
 name: NPM Publish
 permissions: read-all
-on: release
+on:
+  release:
+    types: [published]
 jobs:
   npm-publish:
     runs-on: ubuntu-latest
     name: Publish Package
+    permissions:
+      id-token: write
     steps:
       - name: Checkout
         uses: actions/checkout@v4
