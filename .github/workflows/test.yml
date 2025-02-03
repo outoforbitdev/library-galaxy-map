@@ -1,4 +1,4 @@
-name: Release App
+name: Test
 permissions: read-all
 on:
   pull_request
