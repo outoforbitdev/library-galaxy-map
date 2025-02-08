@@ -1,7 +1,7 @@
 {
   "name": "@outoforbitdev/galaxy-map",
   "version": "0.0.2",
-  "description": "",
+  "description": "An SVG galaxy map for React that displays planets and spacelanes in a coordinate system",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
   "types": "dist/types.d.ts",
