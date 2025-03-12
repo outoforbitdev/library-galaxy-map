@@ -21,10 +21,10 @@ permissions: read-all
 jobs:
   scorecard:
     uses: outoforbitdev/.github/.github/workflows/scorecard.yml@main
-    permissions:
-      # Needed to upload the results to code-scanning dashboard.
-      security-events: write
-      # Needed to publish results and get a badge (see publish_results below).
-      id-token: write
+    # permissions:
+    #   # Needed to upload the results to code-scanning dashboard.
+    #   security-events: write
+    #   # Needed to publish results and get a badge (see publish_results below).
+    #   id-token: write
     secrets: 
       scorecard_token: ${{ secrets.GITHUB_TOKEN }}
