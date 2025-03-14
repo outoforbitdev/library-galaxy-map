@@ -14,3 +14,17 @@ jobs:
     uses: outoforbitdev/.github/.github/workflows/labels.yml@main
     permissions:
       issues: write
+      actions: read
+      attestations: read
+      checks: read
+      contents: read
+      deployments: read
+      discussions: read
+      packages: read
+      pages: read
+      pull-requests: read
+      repository-projects: read
+      statuses: read
+      security-events: read
+      id-token: read
+      
