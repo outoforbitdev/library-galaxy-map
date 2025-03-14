@@ -1,0 +1,16 @@
+name: Sync Labels
+on:
+  issues: 
+    types:
+      - opened
+      - labeled
+  pull_request:
+
+# Declare default permissions as read only.
+permissions: read-all
+
+jobs:
+  scorecard:
+    uses: outoforbitdev/.github/.github/workflows/labels.yml@main
+    permissions:
+      issues: write
