@@ -1,4 +1,3 @@
-import classNames from "./classNames";
 import { getDomProps, IComponentProps } from "./IComponent";
 import styles from "./nav.module.css";
 
