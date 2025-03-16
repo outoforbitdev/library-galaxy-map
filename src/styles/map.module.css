@@ -13,7 +13,7 @@ div.container {
 }
 
 .optionsWindow {
-  background-color: var(--primary-accent);
+  background-color: var(--primary-accent-background);
   color: var(--neutral-text);
   position: absolute;
   z-index: 1;
