@@ -1,8 +1,4 @@
-# This workflow uses actions that are not certified by GitHub. They are provided
-# by a third-party and are governed by separate terms of service, privacy
-# policy, and support documentation.
-
-name: Scorecard supply-chain security
+name: Update OSSF Scorecard
 on:
   # For Branch-Protection check. Only the default branch is supported. See
   # https://github.com/ossf/scorecard/blob/main/docs/checks.md#branch-protection
@@ -19,23 +15,9 @@ permissions: read-all
 
 jobs:
   scorecard:
-    uses: outoforbitdev/.github/.github/workflows/scorecard.yml@main
+    uses: outoforbitdev/reusable-workflows-library/.github/workflows/scorecard.yml@8fb3405555561af2c714e9d54dc5b9bbe3dd92f8 # v1.0.0
     permissions:
-      actions: read
-      attestations: read
-      checks: read
-      contents: read
-      deployments: read
-      discussions: read
-      issues: read
-      packages: read
-      pages: read
-      pull-requests: read
-      repository-projects: read
-      statuses: read
       # Needed to upload the results to code-scanning dashboard.
       security-events: write
       # Needed to publish results and get a badge (see publish_results below).
       id-token: write
-    secrets:
-      scorecard_token: ${{ secrets.GITHUB_TOKEN }}
