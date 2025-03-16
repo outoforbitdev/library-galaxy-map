@@ -8,6 +8,7 @@ permissions: read-all
 
 jobs:
   release:
+    # yamllint disable-line rule:line-length
     uses: outoforbitdev/reusable-workflows-library/.github/workflows/release.yml@8fb3405555561af2c714e9d54dc5b9bbe3dd92f8 # v1.0.0
     permissions:
       contents: write
