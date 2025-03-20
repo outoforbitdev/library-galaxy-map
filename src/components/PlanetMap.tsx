@@ -1,5 +1,6 @@
 import { colorToCss, MapColor } from "./Colors";
-import { zoomLevelToModifier } from "./ZoomableMap";
+import styles from "../styles/map.module.css";
+import { getDomProps } from "../oodreact/IComponent";
 
 export interface IPlanet {
   name: string;
@@ -19,26 +20,39 @@ interface IPlanetMapProps {
 }
 
 export default function PlanetMap(props: IPlanetMapProps) {
-  const zoomModifier = zoomLevelToModifier(props.zoomLevel);
   const planet = props.planet;
-  const x = props.centerX + planet.x / zoomModifier;
-  const y = props.centerY - planet.y / zoomModifier;
+  const x = props.centerX + planet.x;
+  const y = props.centerY - planet.y;
+  // console.log(x);
   const name = planet.name;
   const color = colorToCss(planet.color);
-  const inFocus = planet.focusLevel >= zoomModifier;
-  const radius = inFocus ? 3 : zoomModifier - planet.focusLevel < 10 ? 2 : 1;
-  if (zoomModifier - planet.focusLevel > 20 && !props.forceShow) return;
+  const inFocus = true;
+  // const radius = inFocus ? 3 : zoomModifier - planet.focusLevel < 10 ? 2 : 1;
+  // if (zoomModifier - planet.focusLevel > 20 && !props.forceShow) return;
 
   return (
     <g fill={color} stroke={color}>
-      <circle cx={x} cy={y} r={radius} />
+      <line
+        x1={x}
+        y1={y}
+        x2={x}
+        y2={y}
+        {...getDomProps(
+          {},
+          styles.planet,
+          planet.focusLevel > 50 ? styles.primary : styles.secondary,
+        )}
+      />
+      {/* <circle cx={x} cy={y} r={radius} /> */}
       {inFocus && !props.hideLabel ? (
         <text
+          {...getDomProps(
+            {},
+            styles.planet_label,
+            planet.focusLevel > 50 ? styles.primary : styles.secondary,
+          )}
           x={x + 10}
           y={y + 5}
-          fontWeight={"bold"}
-          strokeWidth={"1px"}
-          stroke="var(--neutral-background)"
         >
           {name}
         </text>

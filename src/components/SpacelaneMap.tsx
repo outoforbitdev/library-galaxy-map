@@ -1,5 +1,4 @@
 import { colorToCss, MapColor } from "./Colors";
-import { zoomLevelToModifier } from "./ZoomableMap";
 
 export interface ISpacelane {
   name: string;
@@ -21,17 +20,16 @@ interface ISpacelaneMapProps {
 }
 
 export default function SpacelaneMap(props: ISpacelaneMapProps) {
-  const zoomModifier = zoomLevelToModifier(props.zoomLevel);
   const spacelane = props.spacelane;
-  const xOne = props.centerX + spacelane.xOne / zoomModifier;
-  const yOne = props.centerY - spacelane.yOne / zoomModifier;
-  const xTwo = props.centerX + spacelane.xTwo / zoomModifier;
-  const yTwo = props.centerY - spacelane.yTwo / zoomModifier;
+  const xOne = props.centerX + spacelane.xOne;
+  const yOne = props.centerY - spacelane.yOne;
+  const xTwo = props.centerX + spacelane.xTwo;
+  const yTwo = props.centerY - spacelane.yTwo;
   const name = spacelane.name;
   const color = colorToCss(spacelane.color);
-  const inFocus = spacelane.focusLevel >= zoomModifier;
+  const inFocus = true;
   const strokeWidth = inFocus ? 2 : 1;
-  if (zoomModifier - spacelane.focusLevel > 5 && !props.forceShow) return;
+  // if (zoomModifier - spacelane.focusLevel > 5 && !props.forceShow) return;
 
   const textRotation =
     (Math.atan((yTwo - yOne) / (xTwo - xOne)) * 180) / Math.PI;
