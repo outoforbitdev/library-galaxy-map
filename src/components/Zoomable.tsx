@@ -37,7 +37,9 @@ export default function Zoomable(props: IZoomableProps) {
   const svgRef = useRef<SVGSVGElement>(null);
   const [offsetX, setOffsetX] = useState(0);
   const [offsetY, setOffsetY] = useState(0);
-  const [zoomLevel, setZoomLevel] = useState(props.zoom.initial && props.zoom.initial > 0 ? props.zoom.initial : 1 );
+  const [zoomLevel, setZoomLevel] = useState(
+    props.zoom.initial && props.zoom.initial > 0 ? props.zoom.initial : 1,
+  );
   const previousPointerDiff = useRef(-1);
   const initialPointerPosition = useRef({ pageX: 0, pageY: 0 });
 
@@ -47,8 +49,8 @@ export default function Zoomable(props: IZoomableProps) {
   useEffect(() => {
     if (props.containerRef.current) {
       const container = props.containerRef.current.getBoundingClientRect();
-      const initialOffsetX = (container.width - (svgWidth * zoomLevel)) / 2;
-      const initialOffsetY = (container.height - (svgHeight * zoomLevel)) / 2;
+      const initialOffsetX = (container.width - svgWidth * zoomLevel) / 2;
+      const initialOffsetY = (container.height - svgHeight * zoomLevel) / 2;
       setOffsetX(initialOffsetX);
       setOffsetY(initialOffsetY);
     }
@@ -71,7 +73,11 @@ export default function Zoomable(props: IZoomableProps) {
       event.touches[0].pageX - event.touches[1].pageX,
     );
     if (previousPointerDiff.current > 0) {
-      adjustZoom((currentDiff - previousPointerDiff.current) / previousPointerDiff.current, event.touches[0]);
+      adjustZoom(
+        (currentDiff - previousPointerDiff.current) /
+          previousPointerDiff.current,
+        event.touches[0],
+      );
     }
     previousPointerDiff.current = currentDiff;
   };
@@ -85,8 +91,8 @@ export default function Zoomable(props: IZoomableProps) {
   };
 
   const onClick = function (e: React.MouseEvent<SVGElement, MouseEvent>) {
-    adjustZoom(.1, e);
-  }
+    adjustZoom(0.1, e);
+  };
 
   const adjustZoom = function (scrollDistance: number, event: IGenericEvent) {
     if (!svgRef.current) return;
@@ -156,8 +162,8 @@ function calculateNewTotalOffset(
   newZoomModifier: number,
 ) {
   const newTotalOffset = {
-    x: oldTotalOffset.x / oldZoomModifier * newZoomModifier,
-    y: oldTotalOffset.y / oldZoomModifier * newZoomModifier,
+    x: (oldTotalOffset.x / oldZoomModifier) * newZoomModifier,
+    y: (oldTotalOffset.y / oldZoomModifier) * newZoomModifier,
   };
   // console.log(`oldMouseX: ${oldTotalOffset.x}, newMouseX: ${newTotalOffset.x}, oldZoom: ${oldZoomModifier}, newZoom: ${newZoomModifier}`);
   return newTotalOffset;

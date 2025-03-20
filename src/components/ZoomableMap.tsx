@@ -1,6 +1,4 @@
-import {
-  RefObject,
-} from "react";
+import { RefObject } from "react";
 import PlanetMap, { IPlanet } from "./PlanetMap";
 import SpacelaneMap, { ISpacelane } from "./SpacelaneMap";
 import { IMapOptions } from "./MapOptions";
@@ -28,12 +26,16 @@ export interface IZoomableMapProps {
 export default function ZoomableMap(props: IZoomableMapProps) {
   const centerX = props.dimensions.minX * -1;
   const centerY = props.dimensions.maxY;
-//   console.log("center");
-//   console.log(centerX);
+  //   console.log("center");
+  //   console.log(centerX);
 
   return (
     <Draggable initialPosition={{ x: 0, y: 0 }}>
-      <Zoomable dimensions={props.dimensions} zoom={props.zoom} containerRef={props.containerRef}>
+      <Zoomable
+        dimensions={props.dimensions}
+        zoom={props.zoom}
+        containerRef={props.containerRef}
+      >
         {props.spacelanes.map((s: ISpacelane, _i: number) => (
           <SpacelaneMap
             spacelane={s}
