@@ -114,29 +114,28 @@ return (
 
 ### IPlanet Props
 | Prop          | Type        | Default   | Description |
-| ------------- | ----------- | --------- | ----------- |
-| `name`        | `string`    | Required  | Name of the planet |
-| `x`           | `number`    | Required  | X coordinate of the planet |
-| `y`           | `number`    | Required  | Y coordinate of the planet |
-| `color`       | `MapColor`  | Required  | Color of the planet |
-| `focusLevel`  | `number`    | Required  | Zoom level at which the planet comes into focus
+| ------------- | -----------  | --------- | ----------- |
+| `name`        | `string`     | Required  | Name of the planet |
+| `x`           | `number`     | Required  | X coordinate of the planet |
+| `y`           | `number`     | Required  | Y coordinate of the planet |
+| `color`       | `MapColor`   | Required  | Color of the planet |
+| `focusLevel`  | `FocusLevel` | Required  | Zoom level at which the planet comes into focus
 
 ### ISpacelane Props
-| Prop          | Type        | Default   | Description |
-| ------------- | ----------- | --------- | ----------- |
-| `name`        | `string`    | Required  | Name of the spacelane |
-| `xOne`        | `number`    | Required  | X coordinate of the first end of the spacelane |
-| `yOne`        | `number`    | Required  | Y coordinate of the first end of the spacelane |
-| `xTwo`        | `number`    | Required  | X coordinate of the second end of the spacelane |
-| `yTwo`        | `number`    | Required  | Y coordinate of the second end of the spacelane |
-| `color`       | `MapColor`  | Required  | Color of the spacelane |
-| `focusLevel`  | `number`    | Required  | Zoom level at which the spacelane comes into focus |
+| Prop          | Type         | Default   | Description |
+| ------------- | -----------  | --------- | ----------- |
+| `name`        | `string`     | Required  | Name of the spacelane |
+| `xOne`        | `number`     | Required  | X coordinate of the first end of the spacelane |
+| `yOne`        | `number`     | Required  | Y coordinate of the first end of the spacelane |
+| `xTwo`        | `number`     | Required  | X coordinate of the second end of the spacelane |
+| `yTwo`        | `number`     | Required  | Y coordinate of the second end of the spacelane |
+| `color`       | `MapColor`   | Required  | Color of the spacelane |
+| `focusLevel`  | `FocusLevel` | Required  | Zoom level at which the spacelane comes into focus |
 
 ### IMapOptionsProps
 | Prop                  | Type          | Default | Description |
 | --------------------- | ------------- | ------- | ----------- |
 | `hidePlanetLabels`    | `boolean`     | `false` | Whether to hide planet text labels at all zoom levels |
-| `hideSpacelaneLabels` | `boolean`     | `false` | Whether to hide spacelane text labels at all zoom levels |
 | `showAllPlanets`      | `boolean`     | `false` | Whether to show all planets at all zoom levels |
 | `showAllSpacelanes`   | `boolean`     | `false` | Whether to show all spacelanes at all zoom levels |
 | `customOptions`       | `MapOption[]` | `[]`    | Additional options to show in the options window |

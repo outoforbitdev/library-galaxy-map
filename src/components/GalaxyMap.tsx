@@ -1,5 +1,3 @@
-"use client";
-
 import ZoomableMap from "./ZoomableMap";
 import { IMapOptions, MapOption, MapOptions } from "./MapOptions";
 import { useRef, useState } from "react";
@@ -29,9 +27,6 @@ export default function Map(props: IMapProps) {
   const [hidePlanetLabels, setHidePlanetLabels] = useState(
     props.mapOptions?.hidePlanetLabels ?? false,
   );
-  const [hideSpacelaneLabels, setHideSpacelaneLabels] = useState(
-    props.mapOptions?.hideSpacelaneLabels ?? false,
-  );
   const [showAllPlanets, setShowAllPlanets] = useState(
     props.mapOptions?.showAllPlanets ?? false,
   );
@@ -42,8 +37,6 @@ export default function Map(props: IMapProps) {
   const mapOptions = createMapOptions(
     hidePlanetLabels,
     setHidePlanetLabels,
-    hideSpacelaneLabels,
-    setHideSpacelaneLabels,
     showAllPlanets,
     setShowAllPlanets,
     showAllSpacelanes,
@@ -53,7 +46,6 @@ export default function Map(props: IMapProps) {
 
   const mapOptionsProps: IMapOptions = {};
   mapOptionsProps.hidePlanetLabels = hidePlanetLabels;
-  mapOptionsProps.hideSpacelaneLabels = hideSpacelaneLabels;
   mapOptionsProps.showAllPlanets = showAllPlanets;
   mapOptionsProps.showAllSpacelanes = showAllSpacelanes;
 
@@ -73,8 +65,6 @@ export default function Map(props: IMapProps) {
 function createMapOptions(
   hidePlanetLabels: boolean,
   setHidePlanetLabels: (value: boolean) => void,
-  hideSpacelaneLabels: boolean,
-  setHideSpacelaneLabels: (value: boolean) => void,
   showAllPlanets: boolean,
   setShowAllPlanets: (value: boolean) => void,
   showAllSpacelanes: boolean,
@@ -86,12 +76,6 @@ function createMapOptions(
       hidePlanetLabels,
       setHidePlanetLabels,
       "Hide planet labels",
-      "checkbox",
-    ),
-    createSingleMapOption(
-      hideSpacelaneLabels,
-      setHideSpacelaneLabels,
-      "Hide spacelane labels",
       "checkbox",
     ),
     createSingleMapOption(

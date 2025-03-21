@@ -3,7 +3,6 @@ import styles from "../styles/map.module.css";
 
 export interface IMapOptions {
   hidePlanetLabels?: boolean;
-  hideSpacelaneLabels?: boolean;
   showAllPlanets?: boolean;
   showAllSpacelanes?: boolean;
   customOptions?: MapOption[];

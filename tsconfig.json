@@ -1,26 +1,22 @@
 {
-    "compilerOptions": {
-      // Default
-      "target": "es5", 
-      "esModuleInterop": true, 
-      "forceConsistentCasingInFileNames": true,
-      "strict": true, 
-      "skipLibCheck": true,
-  
-      // Added
-      "jsx": "react-jsx", 
-      "module": "ESNext",
-      "sourceMap": true,
-      "outDir": "./dist/",
-      "moduleResolution": "node",
-      "allowSyntheticDefaultImports": true,
-      "resolveJsonModule": true,
-      "isolatedModules": true,
-    },
-    "include": [
-        "**/*.ts"
-    ],
-    "exclude": [
-        "rollup.config.ts",
-    ]
-  }
+  "compilerOptions": {
+    // Default
+    "target": "es5",
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "skipLibCheck": true,
+
+    // Added
+    "jsx": "react-jsx",
+    "module": "ESNext",
+    "sourceMap": true,
+    "outDir": "./dist/",
+    "moduleResolution": "node",
+    "allowSyntheticDefaultImports": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true
+  },
+  "include": ["**/*.ts"],
+  "exclude": ["rollup.config.ts"]
+}

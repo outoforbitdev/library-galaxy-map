@@ -8,10 +8,6 @@ div.container {
   position: relative;
 }
 
-.mapItem {
-  z-index: -1;
-}
-
 .optionsWindow {
   background-color: var(--primary-accent-background);
   color: var(--neutral-text);

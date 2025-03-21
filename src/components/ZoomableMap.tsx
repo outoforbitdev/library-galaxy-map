@@ -1,15 +1,11 @@
-import {
-  useEffect,
-  useRef,
-  useState,
-  WheelEventHandler,
-  TouchEventHandler,
-  RefObject,
-} from "react";
+import { RefObject, useState } from "react";
 import PlanetMap, { IPlanet } from "./PlanetMap";
 import SpacelaneMap, { ISpacelane } from "./SpacelaneMap";
 import { IMapOptions } from "./MapOptions";
 import { Draggable } from "../oodreact";
+import Zoomable from "./Zoomable";
+import styles from "../styles/items.module.css";
+import { getDomProps } from "../oodreact/IComponent";
 
 export interface IZoomableMapProps {
   planets: IPlanet[];
@@ -29,118 +25,37 @@ export interface IZoomableMapProps {
   };
 }
 
-interface IGenericEvent {
-  pageX: number;
-  pageY: number;
-}
-
 export default function ZoomableMap(props: IZoomableMapProps) {
-  //
-  // ZOOM PROPERTIES
-  //
-  const mapWidth = props.dimensions.maxX - props.dimensions.minX;
-  const mapHeight = props.dimensions.maxY - props.dimensions.minY;
   const centerX = props.dimensions.minX * -1;
   const centerY = props.dimensions.maxY;
-  const mapRef = useRef<SVGSVGElement>(null);
-  const [offsetX, setOffsetX] = useState(0);
-  const [offsetY, setOffsetY] = useState(0);
-  const [zoomLevel, setZoomLevel] = useState(props.zoom.initial ?? 1);
-  const previousPointerDiff = useRef(-1);
-  const initialPointerPosition = useRef({ pageX: 0, pageY: 0 });
+  const zoomModifier = 0.1;
+  const [zoomClassName, setZoomClassName] = useState(
+    zoomLevelToClassNames(props.zoom.initial || 1, zoomModifier),
+  );
 
-  //
-  // ZOOM FUNCTIONS
-  //
-  useEffect(() => {
-    if (props.containerRef.current) {
-      const container = props.containerRef.current.getBoundingClientRect();
-      setOffsetX((container.width - mapWidth) / 2);
-      setOffsetY((container.height - mapHeight) / 2);
-    }
-  }, []);
-
-  const onPointerDown: TouchEventHandler<SVGElement> = function (event) {
-    if (event.touches.length !== 2) return;
-    previousPointerDiff.current = Math.abs(
-      event.touches[0].pageX - event.touches[1].pageX,
-    );
-    initialPointerPosition.current = {
-      pageX: (event.touches[0].pageX + event.touches[1].pageX) / 2,
-      pageY: (event.touches[0].pageY + event.touches[1].pageY) / 2,
-    };
+  const onZoomChange = (zoomLevel: number) => {
+    setZoomClassName(zoomLevelToClassNames(zoomLevel, zoomModifier));
   };
 
-  const onPointerMove: TouchEventHandler<SVGElement> = function (event) {
-    if (event.touches.length !== 2) return;
-    const currentDiff = Math.abs(
-      event.touches[0].pageX - event.touches[1].pageX,
-    );
-    if (previousPointerDiff.current > 0) {
-      const scaleConstant = 5;
-      if (currentDiff > previousPointerDiff.current) {
-        adjustZoom(-scaleConstant, initialPointerPosition.current);
-      } else if (currentDiff < previousPointerDiff.current) {
-        adjustZoom(scaleConstant, initialPointerPosition.current);
-      }
-    }
-    previousPointerDiff.current = currentDiff;
-  };
-
-  const onPointerUp: TouchEventHandler<SVGElement> = function (_event) {
-    previousPointerDiff.current = -1;
-  };
-
-  const onWheel: WheelEventHandler<SVGElement> = function (e) {
-    adjustZoom(e.deltaY * 0.2, e);
-  };
-
-  const adjustZoom = function (scrollDistance: number, event: IGenericEvent) {
-    if (!mapRef.current) return;
-
-    // Set zoom level
-    let newZoomLevel = zoomLevel + scrollDistance;
-    newZoomLevel = Math.min(newZoomLevel, props.zoom.max ?? newZoomLevel);
-    newZoomLevel = Math.max(newZoomLevel, props.zoom.min ?? newZoomLevel);
-    setZoomLevel(newZoomLevel);
-
-    const oldZoomModifier = zoomLevelToModifier(zoomLevel);
-    const newZoomModifier = zoomLevelToModifier(newZoomLevel);
-
-    // Adjust offset to keep map centered on mouse
-    const oldMousePixel = mouseToPixel(
-      event,
-      mapRef.current.getBoundingClientRect(),
-    );
-    const newMousePixel = calculateNewMousePixel(
-      oldMousePixel,
-      centerX,
-      centerY,
-      oldZoomModifier,
-      newZoomModifier,
-    );
-    setOffsetX(offsetX + oldMousePixel.x - newMousePixel.x);
-    setOffsetY(offsetY + oldMousePixel.y - newMousePixel.y);
+  const zoomProps = {
+    modifier: zoomModifier,
+    ...props.zoom,
   };
 
   return (
     <Draggable initialPosition={{ x: 0, y: 0 }}>
-      <svg
-        style={{
-          // zIndex: -1,
-          position: "relative",
-          top: offsetY,
-          left: offsetX,
-        }}
-        color="currentColor"
-        fill="currentColor"
-        width={`${mapWidth}px`}
-        height={`${mapHeight}px`}
-        onWheel={onWheel}
-        ref={mapRef}
-        onTouchStart={onPointerDown}
-        onTouchMove={onPointerMove}
-        onTouchEnd={onPointerUp}
+      <Zoomable
+        dimensions={props.dimensions}
+        zoom={zoomProps}
+        containerRef={props.containerRef}
+        onZoomChange={onZoomChange}
+        {...getDomProps(
+          {},
+          zoomClassName,
+          props.mapOptions.hidePlanetLabels ? styles.hide_planet_labels : "",
+          props.mapOptions.showAllPlanets ? styles.show_planets : "",
+          props.mapOptions.showAllSpacelanes ? styles.show_spacelanes : "",
+        )}
       >
         {props.spacelanes.map((s: ISpacelane, _i: number) => (
           <SpacelaneMap
@@ -148,9 +63,7 @@ export default function ZoomableMap(props: IZoomableMapProps) {
             centerX={centerX}
             centerY={centerY}
             key={_i}
-            forceShow={props.mapOptions.showAllSpacelanes}
-            hideLabel={props.mapOptions.hideSpacelaneLabels}
-            zoomLevel={zoomLevel}
+            zoomLevel={1}
           />
         ))}
         {props.planets.map((p: IPlanet, _i: number) => (
@@ -158,60 +71,77 @@ export default function ZoomableMap(props: IZoomableMapProps) {
             planet={p}
             centerX={centerX}
             centerY={centerY}
-            forceShow={props.mapOptions.showAllPlanets}
-            hideLabel={props.mapOptions.hidePlanetLabels}
             key={_i}
-            zoomLevel={zoomLevel}
+            zoomLevel={1}
           />
         ))}
-      </svg>
+      </Zoomable>
     </Draggable>
   );
 }
 
-function mouseToPixel(
-  e: IGenericEvent,
-  boundingRect: { x: number; y: number },
-) {
-  return {
-    x: e.pageX - boundingRect.x,
-    y: e.pageY - boundingRect.y,
-  };
+function zoomLevelToClassNames(
+  zoomLevel: number,
+  zoomModifier: number,
+): string {
+  console.log(
+    `zoomLevel: ${zoomLevel}, modifiedZoom: ${zoomLevel * zoomModifier}`,
+  );
+  return (
+    getZoomStyle(zoomLevel) + " " + getHiddenStyles(zoomLevel * zoomModifier)
+  );
 }
 
-export function zoomLevelToModifier(zoomLevel: number) {
-  let zoomModifier;
-  if (zoomLevel === 0) {
-    // No zoom
-    zoomModifier = 1;
-  } else if (zoomLevel > 0) {
-    // Zoom out
-    zoomModifier = (10 + zoomLevel) / 10;
-  } else {
-    // Zoom in
-    zoomModifier = 1 + zoomLevel / 100;
+function getZoomStyle(zoomLevel: number) {
+  let zoomClassName = styles.zoom_1000;
+  if (zoomLevel < 0.01) {
+    zoomClassName = styles.zoom_01;
+  } else if (zoomLevel < 0.02) {
+    zoomClassName = styles.zoom_02;
+  } else if (zoomLevel < 0.04) {
+    zoomClassName = styles.zoom_04;
+  } else if (zoomLevel < 0.05) {
+    zoomClassName = styles.zoom_05;
+  } else if (zoomLevel < 0.1) {
+    zoomClassName = styles.zoom_10;
+  } else if (zoomLevel < 0.2) {
+    zoomClassName = styles.zoom_20;
+  } else if (zoomLevel < 0.25) {
+    zoomClassName = styles.zoom_25;
+  } else if (zoomLevel < 0.5) {
+    zoomClassName = styles.zoom_50;
+  } else if (zoomLevel < 0.75) {
+    zoomClassName = styles.zoom_75;
+  } else if (zoomLevel < 1) {
+    zoomClassName = styles.zoom_100;
+  } else if (zoomLevel < 2) {
+    zoomClassName = styles.zoom_200;
+  } else if (zoomLevel < 4) {
+    zoomClassName = styles.zoom_400;
+  } else if (zoomLevel < 5) {
+    zoomClassName = styles.zoom_500;
+  } else if (zoomLevel < 10) {
+    zoomClassName = styles.zoom_1000;
   }
-  return zoomModifier;
+  return zoomClassName;
 }
 
-function calculateNewMousePixel(
-  oldMousePixel: { x: number; y: number },
-  centerX: number,
-  centerY: number,
-  oldZoomModifier: number,
-  newZoomModifier: number,
-) {
-  const oldDistanceToCenter = {
-    x: oldMousePixel.x - centerX,
-    y: centerY - oldMousePixel.y,
-  };
-  const newDistanceToCenter = {
-    x: (oldDistanceToCenter.x * oldZoomModifier) / newZoomModifier,
-    y: (oldDistanceToCenter.y * oldZoomModifier) / newZoomModifier,
-  };
-  const newMousePixel = {
-    x: newDistanceToCenter.x + centerX,
-    y: centerY - newDistanceToCenter.y,
-  };
-  return newMousePixel;
+function getHiddenStyles(zoomLevel: number): string {
+  let hiddenStyles = "";
+  if (zoomLevel < 0.5) {
+    hiddenStyles += " " + styles.hide_quaternary_label;
+  }
+  if (zoomLevel < 0.2) {
+    hiddenStyles +=
+      " " + styles.hide_tertiary_label + " " + styles.hide_quaternary;
+  }
+  if (zoomLevel < 0.05) {
+    hiddenStyles +=
+      " " + styles.hide_secondary_label + " " + styles.hide_tertiary;
+  }
+  if (zoomLevel < 0.025) {
+    hiddenStyles += " " + styles.hide_secondary;
+  }
+
+  return hiddenStyles;
 }

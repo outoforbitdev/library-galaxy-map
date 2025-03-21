@@ -1,12 +1,13 @@
 import { colorToCss, MapColor } from "./Colors";
-import { zoomLevelToModifier } from "./ZoomableMap";
+import styles from "../styles/items.module.css";
+import { FocusLevel, getFocusClassName } from "./FocusLevels";
 
 export interface IPlanet {
   name: string;
   x: number;
   y: number;
   color: MapColor;
-  focusLevel: number;
+  focusLevel: FocusLevel;
 }
 
 interface IPlanetMapProps {
@@ -19,30 +20,22 @@ interface IPlanetMapProps {
 }
 
 export default function PlanetMap(props: IPlanetMapProps) {
-  const zoomModifier = zoomLevelToModifier(props.zoomLevel);
   const planet = props.planet;
-  const x = props.centerX + planet.x / zoomModifier;
-  const y = props.centerY - planet.y / zoomModifier;
+  const x = props.centerX + planet.x;
+  const y = props.centerY - planet.y;
   const name = planet.name;
   const color = colorToCss(planet.color);
-  const inFocus = planet.focusLevel >= zoomModifier;
-  const radius = inFocus ? 3 : zoomModifier - planet.focusLevel < 10 ? 2 : 1;
-  if (zoomModifier - planet.focusLevel > 20 && !props.forceShow) return;
 
   return (
-    <g fill={color} stroke={color}>
-      <circle cx={x} cy={y} r={radius} />
-      {inFocus && !props.hideLabel ? (
-        <text
-          x={x + 10}
-          y={y + 5}
-          fontWeight={"bold"}
-          strokeWidth={"1px"}
-          stroke="var(--neutral-background)"
-        >
-          {name}
-        </text>
-      ) : null}
+    <g
+      fill={color}
+      stroke={color}
+      className={styles.planet + " " + getFocusClassName(planet.focusLevel)}
+    >
+      <line x1={x} y1={y} x2={x} y2={y} className={styles.map_item} />
+      <text className={styles.map_label} x={x + 10} y={y + 5}>
+        {name}
+      </text>
     </g>
   );
 }
