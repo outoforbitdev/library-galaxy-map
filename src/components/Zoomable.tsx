@@ -18,6 +18,11 @@ export interface IZoomableProps extends IComponentProps {
   };
   zoom: {
     initial?: number;
+    // Zooming in too far on an SVG makes the test render poorly
+    // Setting a modifier < 1 will shrink the initial size of the
+    // map, allowing the user to use more of the zoom range without
+    // reaching the point that the text warps.
+    modifier?: number;
     min?: number;
     max?: number;
   };
@@ -36,7 +41,7 @@ export default function Zoomable(props: IZoomableProps) {
   const svgWidth = props.dimensions.maxX - props.dimensions.minX;
   const svgHeight = props.dimensions.maxY - props.dimensions.minY;
   const svgRef = useRef<SVGSVGElement>(null);
-  const zoomModifier = 0.1;
+  const zoomModifier = props.zoom.modifier ?? 1;
   const [offsetX, setOffsetX] = useState(0);
   const [offsetY, setOffsetY] = useState(0);
   const [zoomLevel, setZoomLevel] = useState(

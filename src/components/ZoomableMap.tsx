@@ -28,19 +28,25 @@ export interface IZoomableMapProps {
 export default function ZoomableMap(props: IZoomableMapProps) {
   const centerX = props.dimensions.minX * -1;
   const centerY = props.dimensions.maxY;
+  const zoomModifier = 0.1;
   const [zoomClassName, setZoomClassName] = useState(
-    zoomLevelToClassNames(props.zoom.initial || 1, 0.1),
+    zoomLevelToClassNames(props.zoom.initial || 1, zoomModifier),
   );
 
   const onZoomChange = (zoomLevel: number) => {
-    setZoomClassName(zoomLevelToClassNames(zoomLevel, 0.1));
+    setZoomClassName(zoomLevelToClassNames(zoomLevel, zoomModifier));
+  };
+
+  const zoomProps = {
+    modifier: zoomModifier,
+    ...props.zoom
   };
 
   return (
     <Draggable initialPosition={{ x: 0, y: 0 }}>
       <Zoomable
         dimensions={props.dimensions}
-        zoom={props.zoom}
+        zoom={zoomProps}
         containerRef={props.containerRef}
         onZoomChange={onZoomChange}
         {...getDomProps(
