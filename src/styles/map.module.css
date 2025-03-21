@@ -8,10 +8,6 @@ div.container {
   position: relative;
 }
 
-.mapItem {
-  z-index: -1;
-}
-
 .optionsWindow {
   background-color: var(--primary-accent-background);
   color: var(--neutral-text);
@@ -28,28 +24,4 @@ div.container {
   padding: 0.4em;
   display: flex;
   flex-direction: column;
-}
-
-.planet {
-  stroke-linecap: round;
-}
-.planet.primary {
-  stroke-width: 1rem;
-}
-.planet.secondary {
-  stroke-width: 0.8rem;
-}
-
-.planet_label {
-  font-weight: bold;
-  /* stroke-width: 1px;
-  stroke: var(--neutral-background); */
-}
-
-.planet_label.primary {
-  font-size: 1rem;
-}
-
-.planet_label.secondary {
-  font-size: 0.8rem;
 }

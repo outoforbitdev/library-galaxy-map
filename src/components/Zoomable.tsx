@@ -6,7 +6,7 @@ import {
   TouchEventHandler,
   RefObject,
 } from "react";
-import { IComponentProps } from "../oodreact/IComponent";
+import { getDomProps, IComponentProps } from "../oodreact/IComponent";
 
 export interface IZoomableProps extends IComponentProps {
   containerRef: RefObject<HTMLDivElement>;
@@ -21,6 +21,7 @@ export interface IZoomableProps extends IComponentProps {
     min?: number;
     max?: number;
   };
+  onZoomChange?: (zoomLevel: number) => void;
 }
 
 interface IGenericEvent {
@@ -35,6 +36,7 @@ export default function Zoomable(props: IZoomableProps) {
   const svgWidth = props.dimensions.maxX - props.dimensions.minX;
   const svgHeight = props.dimensions.maxY - props.dimensions.minY;
   const svgRef = useRef<SVGSVGElement>(null);
+  const zoomModifier = 0.1;
   const [offsetX, setOffsetX] = useState(0);
   const [offsetY, setOffsetY] = useState(0);
   const [zoomLevel, setZoomLevel] = useState(
@@ -49,8 +51,10 @@ export default function Zoomable(props: IZoomableProps) {
   useEffect(() => {
     if (props.containerRef.current) {
       const container = props.containerRef.current.getBoundingClientRect();
-      const initialOffsetX = (container.width - svgWidth * zoomLevel) / 2;
-      const initialOffsetY = (container.height - svgHeight * zoomLevel) / 2;
+      const initialOffsetX =
+        (container.width - svgWidth * zoomLevel * zoomModifier) / 2;
+      const initialOffsetY =
+        (container.height - svgHeight * zoomLevel * zoomModifier) / 2;
       setOffsetX(initialOffsetX);
       setOffsetY(initialOffsetY);
     }
@@ -112,17 +116,19 @@ export default function Zoomable(props: IZoomableProps) {
     // Calculate new offset between SVG and mouse based on zoom level
     const newTotalOffset = calculateNewTotalOffset(
       oldTotalOffset,
-      zoomLevel,
-      newZoomLevel,
+      zoomLevel * zoomModifier,
+      newZoomLevel * zoomModifier,
     );
     // Set SVG offset from container to maintain achieve new offset between SVG and mouse
     setOffsetX(offsetX + oldTotalOffset.x - newTotalOffset.x);
     setOffsetY(offsetY + oldTotalOffset.y - newTotalOffset.y);
+    props.onZoomChange && props.onZoomChange(newZoomLevel);
   };
   console.log(` offset: ${offsetX}, ${offsetY}`);
 
   return (
     <svg
+      {...getDomProps(props)}
       style={{
         // zIndex: -1,
         position: "relative",
@@ -132,8 +138,8 @@ export default function Zoomable(props: IZoomableProps) {
       viewBox={`0 0 ${svgWidth} ${svgHeight}`}
       color="currentColor"
       fill="currentColor"
-      width={`${svgWidth * zoomLevel}px`}
-      height={`${svgHeight * zoomLevel}px`}
+      width={`${svgWidth * zoomLevel * zoomModifier}px`}
+      height={`${svgHeight * zoomLevel * zoomModifier}px`}
       onWheel={onWheel}
       ref={svgRef}
       onTouchStart={onPointerDown}

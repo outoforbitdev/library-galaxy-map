@@ -1,4 +1,7 @@
 import { colorToCss, MapColor } from "./Colors";
+import styles from "../styles/items.module.css";
+import { getDomProps } from "../oodreact/IComponent";
+import { FocusLevel, getFocusClassName } from "./FocusLevels";
 
 export interface ISpacelane {
   name: string;
@@ -7,15 +10,13 @@ export interface ISpacelane {
   xTwo: number;
   yTwo: number;
   color: MapColor;
-  focusLevel: number;
+  focusLevel: FocusLevel;
 }
 
 interface ISpacelaneMapProps {
   spacelane: ISpacelane;
   centerX: number;
   centerY: number;
-  forceShow?: boolean;
-  hideLabel?: boolean;
   zoomLevel: number;
 }
 
@@ -36,20 +37,28 @@ export default function SpacelaneMap(props: ISpacelaneMapProps) {
   const textPosition = getTextPosition(xOne, xTwo, yOne, yTwo, textRotation);
 
   return (
-    <g fill={color} stroke={color}>
-      <line x1={xOne} y1={yOne} x2={xTwo} y2={yTwo} strokeWidth={strokeWidth} />
-      {inFocus &&
-      checkIfSpaceForText(xOne, xTwo, yOne, yTwo, name) &&
-      !props.hideLabel ? (
+    <g
+      fill={color}
+      stroke={color}
+      className={
+        styles.spacelane + " " + getFocusClassName(spacelane.focusLevel)
+      }
+    >
+      <line
+        x1={xOne}
+        y1={yOne}
+        x2={xTwo}
+        y2={yTwo}
+        className={styles.map_item}
+      />
+      {checkIfSpaceForText(xOne, xTwo, yOne, yTwo, name) ? (
         <text
           x={textPosition.x}
           y={textPosition.y}
           transform={`rotate(${textRotation} ${textPosition.x} ${textPosition.y})`}
           textAnchor="middle"
           dominantBaseline="middle"
-          fontWeight={"bold"}
-          strokeWidth={"1px"}
-          stroke="var(--neutral-background)"
+          className={styles.map_label}
         >
           {name}
         </text>
@@ -70,7 +79,7 @@ function getTextPosition(
     y: (yOne + yTwo) / 2,
   };
   const xOffsetDirection = textRotation > 0 ? 1 : -1;
-  const offSet = 20;
+  const offSet = 30;
   if (Math.abs(xOne - xTwo) > Math.abs(yOne - yTwo)) {
     textPosition.y =
       textPosition.y -
