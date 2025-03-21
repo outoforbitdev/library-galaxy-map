@@ -39,7 +39,7 @@ export default function ZoomableMap(props: IZoomableMapProps) {
 
   const zoomProps = {
     modifier: zoomModifier,
-    ...props.zoom
+    ...props.zoom,
   };
 
   return (
