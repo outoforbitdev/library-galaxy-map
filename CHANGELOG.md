@@ -1,4 +1,4 @@
-## NEXT
+## 0.0.7 (2025-03-20)
 
 ### Breaking Changes
 
