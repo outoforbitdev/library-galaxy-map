@@ -136,7 +136,6 @@ return (
 | Prop                  | Type          | Default | Description |
 | --------------------- | ------------- | ------- | ----------- |
 | `hidePlanetLabels`    | `boolean`     | `false` | Whether to hide planet text labels at all zoom levels |
-| `hideSpacelaneLabels` | `boolean`     | `false` | Whether to hide spacelane text labels at all zoom levels |
 | `showAllPlanets`      | `boolean`     | `false` | Whether to show all planets at all zoom levels |
 | `showAllSpacelanes`   | `boolean`     | `false` | Whether to show all spacelanes at all zoom levels |
 | `customOptions`       | `MapOption[]` | `[]`    | Additional options to show in the options window |
