@@ -22,8 +22,8 @@ export interface IPosition {
 const defaultPosition: IPosition = { x: 0, y: 0 };
 
 export function Draggable(props: IDraggableProps) {
-  const draggableRef = useRef<HTMLDivElement>(null);
-  const staticRef = useRef<HTMLDivElement>(null);
+  const draggableRef = useRef<HTMLDivElement | null>(null);
+  const staticRef = useRef<HTMLDivElement | null>(null);
   const [position, setPosition] = useState(props.initialPosition);
   const [relativePosition, setRelativePosition] = useState(defaultPosition);
   const [isDragging, setIsDragging] = useState(false);
@@ -119,6 +119,6 @@ function diffPositions(first: IPosition, second: IPosition) {
   };
 }
 
-function getPositionFromRef(ref: RefObject<HTMLDivElement>) {
+function getPositionFromRef(ref: RefObject<HTMLDivElement | null>) {
   return ref.current ? ref.current.getBoundingClientRect() : defaultPosition;
 }
