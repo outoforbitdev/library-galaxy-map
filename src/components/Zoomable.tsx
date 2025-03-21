@@ -9,7 +9,7 @@ import {
 import { getDomProps, IComponentProps } from "../oodreact/IComponent";
 
 export interface IZoomableProps extends IComponentProps {
-  containerRef: RefObject<HTMLDivElement>;
+  containerRef: RefObject<HTMLDivElement | null>;
   dimensions: {
     minX: number;
     minY: number;

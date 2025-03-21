@@ -10,7 +10,7 @@ import { getDomProps } from "../oodreact/IComponent";
 export interface IZoomableMapProps {
   planets: IPlanet[];
   spacelanes: ISpacelane[];
-  containerRef: RefObject<HTMLDivElement>;
+  containerRef: RefObject<HTMLDivElement | null>;
   dimensions: {
     minX: number;
     minY: number;

@@ -23,7 +23,7 @@ export interface IMapProps {
 }
 
 export default function Map(props: IMapProps) {
-  const containerRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement | null>(null);
   const [hidePlanetLabels, setHidePlanetLabels] = useState(
     props.mapOptions?.hidePlanetLabels ?? false,
   );
