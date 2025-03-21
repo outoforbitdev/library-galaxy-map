@@ -1,6 +1,5 @@
 import { colorToCss, MapColor } from "./Colors";
 import styles from "../styles/items.module.css";
-import { getDomProps } from "../oodreact/IComponent";
 import { FocusLevel, getFocusClassName } from "./FocusLevels";
 
 export interface ISpacelane {
@@ -26,11 +25,7 @@ export default function SpacelaneMap(props: ISpacelaneMapProps) {
   const yOne = props.centerY - spacelane.yOne;
   const xTwo = props.centerX + spacelane.xTwo;
   const yTwo = props.centerY - spacelane.yTwo;
-  const name = spacelane.name;
   const color = colorToCss(spacelane.color);
-  const inFocus = true;
-  const strokeWidth = inFocus ? 2 : 1;
-  // if (zoomModifier - spacelane.focusLevel > 5 && !props.forceShow) return;
 
   const textRotation =
     (Math.atan((yTwo - yOne) / (xTwo - xOne)) * 180) / Math.PI;
@@ -51,18 +46,6 @@ export default function SpacelaneMap(props: ISpacelaneMapProps) {
         y2={yTwo}
         className={styles.map_item}
       />
-      {checkIfSpaceForText(xOne, xTwo, yOne, yTwo, name) ? (
-        <text
-          x={textPosition.x}
-          y={textPosition.y}
-          transform={`rotate(${textRotation} ${textPosition.x} ${textPosition.y})`}
-          textAnchor="middle"
-          dominantBaseline="middle"
-          className={styles.map_label}
-        >
-          {name}
-        </text>
-      ) : null}
     </g>
   );
 }

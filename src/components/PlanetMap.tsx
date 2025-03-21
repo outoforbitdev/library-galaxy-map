@@ -1,6 +1,5 @@
 import { colorToCss, MapColor } from "./Colors";
 import styles from "../styles/items.module.css";
-import { getDomProps } from "../oodreact/IComponent";
 import { FocusLevel, getFocusClassName } from "./FocusLevels";
 
 export interface IPlanet {

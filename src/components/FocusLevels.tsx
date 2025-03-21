@@ -8,7 +8,6 @@ export enum FocusLevel {
 }
 
 export function getFocusClassName(focusLevel: string | FocusLevel): string {
-  console.log(focusLevel);
   switch (FocusLevel[focusLevel as keyof typeof FocusLevel]) {
     case FocusLevel.Primary:
       return styles.primary;

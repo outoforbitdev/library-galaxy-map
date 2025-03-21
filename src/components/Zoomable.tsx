@@ -124,7 +124,6 @@ export default function Zoomable(props: IZoomableProps) {
     setOffsetY(offsetY + oldTotalOffset.y - newTotalOffset.y);
     props.onZoomChange && props.onZoomChange(newZoomLevel);
   };
-  console.log(` offset: ${offsetX}, ${offsetY}`);
 
   return (
     <svg

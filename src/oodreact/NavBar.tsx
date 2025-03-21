@@ -1,5 +1,3 @@
-"use client";
-
 import { useState } from "react";
 import { getDomProps, IComponentProps } from "./IComponent";
 import { HamburgerMenu, IconSize, X } from "./icons";

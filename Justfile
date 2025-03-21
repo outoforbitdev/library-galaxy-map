@@ -22,10 +22,3 @@ pack: build
     PACKAGE="../../../library-galaxy-map/outoforbitdev-galaxy-map-$VERSION.tgz"
     cd ../app-galaxy-map/src/client && npm install $PACKAGE && just restart-node
     rm $PACKAGE
-
-link:
-    cd ../app-galaxy-map/src/client && npm link ../../../library-galaxy-map/ --save
-
-clean:
-    cd ../app-galaxy-map/src/client && npm unlink --no-save @outoforbitdev/galaxy-map
-    npm rm --global @outoforbitdev/galaxy-map

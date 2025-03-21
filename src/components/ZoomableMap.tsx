@@ -31,8 +31,6 @@ export default function ZoomableMap(props: IZoomableMapProps) {
   const [zoomClassName, setZoomClassName] = useState(
     zoomLevelToClassNames(props.zoom.initial || 1, 0.1),
   );
-  //   console.log("center");
-  //   console.log(centerX);
 
   const onZoomChange = (zoomLevel: number) => {
     setZoomClassName(zoomLevelToClassNames(zoomLevel, 0.1));
@@ -50,9 +48,6 @@ export default function ZoomableMap(props: IZoomableMapProps) {
           zoomClassName,
           props.mapOptions.hidePlanetLabels ? styles.hide_planet_labels : "",
           props.mapOptions.showAllPlanets ? styles.show_planets : "",
-          props.mapOptions.hideSpacelaneLabels
-            ? styles.hide_spacelane_labels
-            : "",
           props.mapOptions.showAllSpacelanes ? styles.show_spacelanes : "",
         )}
       >
