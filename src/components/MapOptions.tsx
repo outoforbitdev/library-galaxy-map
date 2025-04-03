@@ -1,41 +1,74 @@
 import { Expandable } from "../oodreact";
+import { IComponentProps } from "../oodreact/IComponent";
 import styles from "../styles/map.module.css";
 
-export interface IMapOptions {
-  hidePlanetLabels?: boolean;
-  showAllPlanets?: boolean;
-  showAllSpacelanes?: boolean;
-  customOptions?: MapOption[];
+export type MapItemVisibility = "dynamic" | "show" | "hide";
+
+export interface IMapOptionsProps extends IComponentProps {
+  planetLabelVisibility: MapItemVisibility;
+  setPlanetLabels: (value: MapItemVisibility) => void;
+  planetVisilibity: MapItemVisibility;
+  setPlanetVisibility: (value: MapItemVisibility) => void;
+  spacelaneVisibility: MapItemVisibility;
+  setSpacelaneVisibility: (value: MapItemVisibility) => void;
 }
 
-interface IMapOption<T> {
-  currentValue: T;
-  setValue: (value: T) => void;
-  label: string;
-  inputType: string;
-}
-
-export type MapOption = IMapOption<boolean>;
-
-interface IMapOptionProps {
-  mapOptions: MapOption[];
-}
-
-export function MapOptions(props: IMapOptionProps) {
+export function MapOptions(props: IMapOptionsProps) {
   return (
     <Expandable className={styles.optionsWindow} title="Map Options">
       <div className={styles.optionsWindowContent}>
-        {props.mapOptions.map((p, i) => (
-          <span key={i}>
-            <input
-              type={p.inputType}
-              onChange={(event) => p.setValue(event.target.checked)}
-              checked={p.currentValue}
-            />
-            <label>{p.label}</label>
-          </span>
-        ))}
+        <MapItemVisibilitySelect
+          label="Planet Labels"
+          defaultValue={props.planetLabelVisibility}
+          setVisibility={props.setPlanetLabels}
+        />
+        <MapItemVisibilitySelect
+          label="Planets"
+          defaultValue={props.planetVisilibity}
+          setVisibility={props.setPlanetVisibility}
+        />
+        <MapItemVisibilitySelect
+          label="Spacelanes"
+          defaultValue={props.spacelaneVisibility}
+          setVisibility={props.setSpacelaneVisibility}
+        />
+        {props.children}
       </div>
     </Expandable>
   );
+}
+
+function MapItemVisibilitySelect(props: {
+  label: string;
+  defaultValue: MapItemVisibility;
+  setVisibility: (value: MapItemVisibility) => void;
+}) {
+  return (
+    <span>
+      <label>{props.label}</label>
+      <select
+        defaultValue={props.defaultValue}
+        onChange={(e) =>
+          props.setVisibility(GetDefaultMapItemDisplayOption(e.target.value))
+        }
+      >
+        <option value="dynamic">Dynamic</option>
+        <option value="show">Show</option>
+        <option value="hide">Hide</option>
+      </select>
+    </span>
+  );
+}
+
+function GetDefaultMapItemDisplayOption(value: string): MapItemVisibility {
+  switch (value) {
+    case "dynamic":
+      return value;
+    case "show":
+      return value;
+    case "hide":
+      return value;
+    default:
+      return "dynamic";
+  }
 }

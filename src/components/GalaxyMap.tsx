@@ -1,6 +1,6 @@
 import ZoomableMap from "./ZoomableMap";
-import { IMapOptions, MapOption, MapOptions } from "./MapOptions";
-import { useRef, useState } from "react";
+import { IMapOptionsProps, MapItemVisibility, MapOptions } from "./MapOptions";
+import { ReactNode, useRef, useState } from "react";
 import { IPlanet } from "./PlanetMap";
 import { ISpacelane } from "./SpacelaneMap";
 import styles from "../styles/map.module.css";
@@ -22,89 +22,53 @@ export interface IMapProps {
   };
 }
 
+export interface IMapOptions {
+  planetLabelVisibility?: MapItemVisibility;
+  planetVisibility?: MapItemVisibility;
+  spacelaneVisibility?: MapItemVisibility;
+  customOptions?: ReactNode;
+}
+
 export default function Map(props: IMapProps) {
   const containerRef = useRef<HTMLDivElement | null>(null);
-  const [hidePlanetLabels, setHidePlanetLabels] = useState(
-    props.mapOptions?.hidePlanetLabels ?? false,
+  const [planetLabelVisibility, setPlanetLabelVisibility] =
+    useState<MapItemVisibility>(
+      props.mapOptions?.planetLabelVisibility ?? "dynamic",
+    );
+  const [planetVisibility, setPlanetVisibility] = useState<MapItemVisibility>(
+    props.mapOptions?.planetVisibility ?? "dynamic",
   );
-  const [showAllPlanets, setShowAllPlanets] = useState(
-    props.mapOptions?.showAllPlanets ?? false,
-  );
-  const [showAllSpacelanes, setShowAllSpacelanes] = useState(
-    props.mapOptions?.showAllSpacelanes ?? false,
-  );
+  const [spacelaneVisibility, setSpacelaneVisibility] =
+    useState<MapItemVisibility>(
+      props.mapOptions?.spacelaneVisibility ?? "dynamic",
+    );
 
-  const mapOptions = createMapOptions(
-    hidePlanetLabels,
-    setHidePlanetLabels,
-    showAllPlanets,
-    setShowAllPlanets,
-    showAllSpacelanes,
-    setShowAllSpacelanes,
-    props.mapOptions?.customOptions || [],
-  );
+  const mapOptionsProps: IMapOptionsProps = {
+    planetLabelVisibility: planetLabelVisibility,
+    setPlanetLabels: setPlanetLabelVisibility,
+    planetVisilibity: planetVisibility,
+    setPlanetVisibility: setPlanetVisibility,
+    spacelaneVisibility: spacelaneVisibility,
+    setSpacelaneVisibility: setSpacelaneVisibility,
+  };
 
-  const mapOptionsProps: IMapOptions = {};
-  mapOptionsProps.hidePlanetLabels = hidePlanetLabels;
-  mapOptionsProps.showAllPlanets = showAllPlanets;
-  mapOptionsProps.showAllSpacelanes = showAllSpacelanes;
+  console.log(planetLabelVisibility);
 
   return (
     <div ref={containerRef} className={styles.container}>
-      <MapOptions mapOptions={mapOptions} />
+      <MapOptions {...mapOptionsProps}>
+        {props.mapOptions?.customOptions}
+      </MapOptions>
       <ZoomableMap
         containerRef={containerRef}
         {...props}
-        mapOptions={mapOptionsProps}
+        mapOptions={{
+          planetLabelsVisibility: planetLabelVisibility,
+          planetsVisibility: planetVisibility,
+          spacelanesVisiblity: spacelaneVisibility,
+        }}
         zoom={props.zoom ?? {}}
       />
     </div>
   );
-}
-
-function createMapOptions(
-  hidePlanetLabels: boolean,
-  setHidePlanetLabels: (value: boolean) => void,
-  showAllPlanets: boolean,
-  setShowAllPlanets: (value: boolean) => void,
-  showAllSpacelanes: boolean,
-  setShowAllSpacelanes: (value: boolean) => void,
-  clientMapOptions: MapOption[],
-) {
-  const defaultOptions: MapOption[] = [
-    createSingleMapOption(
-      hidePlanetLabels,
-      setHidePlanetLabels,
-      "Hide planet labels",
-      "checkbox",
-    ),
-    createSingleMapOption(
-      showAllPlanets,
-      setShowAllPlanets,
-      "Show all planets",
-      "checkbox",
-    ),
-    createSingleMapOption(
-      showAllSpacelanes,
-      setShowAllSpacelanes,
-      "Show all spacelanes",
-      "checkbox",
-    ),
-  ];
-
-  return defaultOptions.concat(clientMapOptions);
-}
-
-function createSingleMapOption<T>(
-  value: T,
-  setValue: (value: T) => void,
-  label: string,
-  inputType: string,
-) {
-  return {
-    currentValue: value,
-    setValue: setValue,
-    label: label,
-    inputType: inputType,
-  };
 }

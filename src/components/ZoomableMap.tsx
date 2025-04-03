@@ -1,11 +1,11 @@
 import { RefObject, useState } from "react";
 import PlanetMap, { IPlanet } from "./PlanetMap";
 import SpacelaneMap, { ISpacelane } from "./SpacelaneMap";
-import { IMapOptions } from "./MapOptions";
 import { Draggable } from "../oodreact";
 import Zoomable from "./Zoomable";
 import styles from "../styles/items.module.css";
 import { getDomProps } from "../oodreact/IComponent";
+import { MapItemVisibility } from "./MapOptions";
 
 export interface IZoomableMapProps {
   planets: IPlanet[];
@@ -23,6 +23,12 @@ export interface IZoomableMapProps {
     min?: number;
     max?: number;
   };
+}
+
+interface IMapOptions {
+  planetLabelsVisibility: MapItemVisibility;
+  planetsVisibility: MapItemVisibility;
+  spacelanesVisiblity: MapItemVisibility;
 }
 
 export default function ZoomableMap(props: IZoomableMapProps) {
@@ -52,9 +58,19 @@ export default function ZoomableMap(props: IZoomableMapProps) {
         {...getDomProps(
           {},
           zoomClassName,
-          props.mapOptions.hidePlanetLabels ? styles.hide_planet_labels : "",
-          props.mapOptions.showAllPlanets ? styles.show_planets : "",
-          props.mapOptions.showAllSpacelanes ? styles.show_spacelanes : "",
+          getMapLabelVisibilityStyle(
+            "planet_label",
+            props.mapOptions.planetLabelsVisibility,
+            props.mapOptions.planetsVisibility,
+          ),
+          getMapItemVisilibityStyle(
+            "planet",
+            props.mapOptions.planetsVisibility,
+          ),
+          getMapItemVisilibityStyle(
+            "spacelane",
+            props.mapOptions.spacelanesVisiblity,
+          ),
         )}
       >
         {props.spacelanes.map((s: ISpacelane, _i: number) => (
@@ -144,4 +160,41 @@ function getHiddenStyles(zoomLevel: number): string {
   }
 
   return hiddenStyles;
+}
+
+function getMapItemVisilibityStyle(
+  itemType: "planet" | "spacelane",
+  visibility: MapItemVisibility,
+): string {
+  switch (visibility) {
+    case "show":
+      return itemType === "planet"
+        ? styles.show_planets
+        : styles.show_spacelanes;
+    case "hide":
+      return itemType === "planet"
+        ? styles.hide_planets
+        : styles.hide_spacelanes;
+    case "dynamic":
+    default:
+      return "";
+  }
+}
+
+function getMapLabelVisibilityStyle(
+  itemType: "planet_label" | "spacelane_label",
+  visibility: MapItemVisibility,
+  itemVisibility: MapItemVisibility,
+): string {
+  if (itemVisibility === "hide" || visibility === "hide") {
+    return itemType === "planet_label"
+      ? styles.hide_planet_labels
+      : styles.hide_spacelane_labels;
+  } else if (visibility === "dynamic") {
+    return "";
+  } else {
+    return itemType === "planet_label"
+      ? styles.show_planet_labels
+      : styles.show_spacelane_labels;
+  }
 }
