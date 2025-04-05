@@ -1,14 +1,14 @@
 export type MapItemVisibility = "dynamic" | "show" | "hide";
 
 interface IMapItemVisibilitySelectProps {
-    label: string;
-    defaultValue?: MapItemVisibility;
-    value?: MapItemVisibility;
-    setVisibility: (value: MapItemVisibility) => void;
-    dynamicDisabled?: boolean;
-    showDisabled?: boolean;
-    hideDisabled?: boolean;
-  }
+  label: string;
+  defaultValue?: MapItemVisibility;
+  value?: MapItemVisibility;
+  setVisibility: (value: MapItemVisibility) => void;
+  dynamicDisabled?: boolean;
+  showDisabled?: boolean;
+  hideDisabled?: boolean;
+}
 
 export function MapItemVisibilitySelect(props: IMapItemVisibilitySelectProps) {
   return (
@@ -21,9 +21,15 @@ export function MapItemVisibilitySelect(props: IMapItemVisibilitySelectProps) {
           props.setVisibility(GetDefaultMapItemDisplayOption(e.target.value))
         }
       >
-        <option value="dynamic" disabled={props.dynamicDisabled}>Dynamic</option>
-        <option value="show" disabled={props.showDisabled}>Show</option>
-        <option value="hide" disabled={props.hideDisabled}>Hide</option>
+        <option value="dynamic" disabled={props.dynamicDisabled}>
+          Dynamic
+        </option>
+        <option value="show" disabled={props.showDisabled}>
+          Show
+        </option>
+        <option value="hide" disabled={props.hideDisabled}>
+          Hide
+        </option>
       </select>
     </span>
   );

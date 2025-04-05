@@ -16,12 +16,14 @@ export interface IMapOptionsProps extends IComponentProps {
 }
 
 export function MapOptions(props: IMapOptionsProps) {
-  const setPlanetVisiblityAndLabelVisibility = function (planetVisibility: MapItemVisibility) {
+  const setPlanetVisiblityAndLabelVisibility = function (
+    planetVisibility: MapItemVisibility,
+  ) {
     props.setPlanetVisibility(planetVisibility);
     if (planetVisibility === "hide") {
       props.setPlanetLabels("hide");
     }
-  }
+  };
   return (
     <Expandable className={styles.optionsWindow} title="Map Options">
       <div className={styles.optionsWindowContent}>

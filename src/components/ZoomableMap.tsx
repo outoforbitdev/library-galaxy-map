@@ -185,9 +185,9 @@ function getMapLabelVisibilityStyle(
 ): string {
   switch (visibility) {
     case "show":
-      return styles.show_planet_labels
+      return styles.show_planet_labels;
     case "hide":
-      return styles.hide_planet_labels
+      return styles.hide_planet_labels;
     case "dynamic":
     default:
       return "";
