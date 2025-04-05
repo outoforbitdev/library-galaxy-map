@@ -5,7 +5,7 @@ import { Draggable } from "../oodreact";
 import Zoomable from "./Zoomable";
 import styles from "../styles/items.module.css";
 import { getDomProps } from "../oodreact/IComponent";
-import { MapItemVisibility } from "./MapOptions";
+import { MapItemVisibility } from "./MapItemVisibilitySelect";
 
 export interface IZoomableMapProps {
   planets: IPlanet[];
@@ -183,15 +183,13 @@ function getMapLabelVisibilityStyle(
   visibility: MapItemVisibility,
   itemVisibility: MapItemVisibility,
 ): string {
-  if (itemVisibility === "hide" || visibility === "hide") {
-    return itemType === "planet_label"
-      ? styles.hide_planet_labels
-      : styles.hide_spacelane_labels;
-  } else if (visibility === "dynamic") {
-    return "";
-  } else {
-    return itemType === "planet_label"
-      ? styles.show_planet_labels
-      : styles.show_spacelane_labels;
+  switch (visibility) {
+    case "show":
+      return styles.show_planet_labels
+    case "hide":
+      return styles.hide_planet_labels
+    case "dynamic":
+    default:
+      return "";
   }
 }
