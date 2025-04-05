@@ -1,9 +1,10 @@
 import ZoomableMap from "./ZoomableMap";
-import { IMapOptionsProps, MapItemVisibility, MapOptions } from "./MapOptions";
+import { IMapOptionsProps, MapOptions } from "./MapOptions";
 import { ReactNode, useRef, useState } from "react";
 import { IPlanet } from "./PlanetMap";
 import { ISpacelane } from "./SpacelaneMap";
 import styles from "../styles/map.module.css";
+import { MapItemVisibility } from "./MapItemVisibilitySelect";
 
 export interface IMapProps {
   planets: IPlanet[];
