@@ -52,8 +52,6 @@ export default function Map(props: IMapProps) {
     setSpacelaneVisibility: setSpacelaneVisibility,
   };
 
-  console.log(planetLabelVisibility);
-
   return (
     <div ref={containerRef} className={styles.container}>
       <MapOptions {...mapOptionsProps}>

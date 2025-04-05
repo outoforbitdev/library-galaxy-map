@@ -100,9 +100,6 @@ function zoomLevelToClassNames(
   zoomLevel: number,
   zoomModifier: number,
 ): string {
-  console.log(
-    `zoomLevel: ${zoomLevel}, modifiedZoom: ${zoomLevel * zoomModifier}`,
-  );
   return (
     getZoomStyle(zoomLevel) + " " + getHiddenStyles(zoomLevel * zoomModifier)
   );
