@@ -92,8 +92,11 @@
 }
 
 .hide_quaternary .quaternary .map_item {
-  font-size: 0;
   stroke-width: 0;
+}
+
+.hide_quaternary .quaternary text.map_label {
+  font-size: 0;
 }
 
 .hide_tertiary_label .tertiary .map_label {
@@ -101,8 +104,11 @@
 }
 
 .hide_tertiary .tertiary .map_item {
-  font-size: 0;
   stroke-width: 0;
+}
+
+.hide_tertiary .tertiary text.map_label {
+  font-size: 0;
 }
 
 .hide_secondary_label .secondary .map_label {
@@ -110,16 +116,18 @@
 }
 
 .hide_secondary .secondary .map_item {
-  font-size: 0;
   stroke-width: 0;
 }
 
-.hide_planets .planet {
-  stroke-width: 0;
+.hide_secondary .secondary text.map_label {
   font-size: 0;
 }
 
-.hide_planet_labels .planet .map_label {
+.hide_planets .planet .map_item {
+  stroke-width: 0;
+}
+
+.hide_planet_labels .planet text.map_label {
   font-size: 0;
 }
 
@@ -128,7 +136,15 @@
   stroke-width: calc(0.5 * (var(--size-modifier) * var(--text-size)));
 }
 
-.hide_spacelanes .spacelane {
+.show_planets.show_planet_labels .planet .map_label {
+  font-size: calc(var(--size-modifier) * var(--text-size));
+}
+
+.show_planet_labels .planet .map_label {
+  font-size: calc(var(--size-modifier) * var(--text-size));
+}
+
+.hide_spacelanes .spacelane .map_item {
   stroke-width: 0;
   font-size: 0;
 }

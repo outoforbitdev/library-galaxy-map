@@ -175,6 +175,5 @@ function calculateNewTotalOffset(
     x: (oldTotalOffset.x / oldZoomModifier) * newZoomModifier,
     y: (oldTotalOffset.y / oldZoomModifier) * newZoomModifier,
   };
-  // console.log(`oldMouseX: ${oldTotalOffset.x}, newMouseX: ${newTotalOffset.x}, oldZoom: ${oldZoomModifier}, newZoom: ${newZoomModifier}`);
   return newTotalOffset;
 }

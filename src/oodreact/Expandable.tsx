@@ -13,6 +13,9 @@ export function Expandable(props: IExpandableProps) {
     <div {...getDomProps(props, styles.expandable)}>
       {expanded ? (
         <span>
+          {expanded && props.title ? (
+            <span className={styles.title}>{props.title}</span>
+          ) : null}
           <DoubleArrowUp
             onClick={() => setExpanded(false)}
             className={styles.toggle}

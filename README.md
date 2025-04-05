@@ -103,18 +103,18 @@ return (
 
 ### Component Props
 
-| Prop              | Type            | Default  | Description                                   |
-| ----------------- | --------------- | -------- | --------------------------------------------- |
-| `planets`         | `IPlanet[]`     | Required | List of planets to display on the map         |
-| `spacelanes`      | `ISpacelane[]`  | Required | List of spacelanes to display on the map      |
-| `dimensions.minX` | `number`        | Required | Minimum x coordinate that should be displayed |
-| `dimensions.minY` | `number`        | Required | Minimum y coordinate that should be displayed |
-| `dimensions.maxX` | `number`        | Required | Maximum x coordinate that should be displayed |
-| `dimensions.maxY` | `number`        | Required | Maximum y coordinate that should be displayed |
-| `mapOptions`      | `IMapOptions[]` | `[]`     | Options for the options window in the map     |
-| `zoom.initial`    | `number`        | `1`      | Initial zoom level for the map                |
-| `zoom.min`        | `number`        |          | Minimum zoom level                            |
-| `zoom.max`        | `number`        |          | Maximum zoom level                            |
+| Prop              | Type           | Default     | Description                                   |
+| ----------------- | -------------- | ----------- | --------------------------------------------- |
+| `planets`         | `IPlanet[]`    | Required    | List of planets to display on the map         |
+| `spacelanes`      | `ISpacelane[]` | Required    | List of spacelanes to display on the map      |
+| `dimensions.minX` | `number`       | Required    | Minimum x coordinate that should be displayed |
+| `dimensions.minY` | `number`       | Required    | Minimum y coordinate that should be displayed |
+| `dimensions.maxX` | `number`       | Required    | Maximum x coordinate that should be displayed |
+| `dimensions.maxY` | `number`       | Required    | Maximum y coordinate that should be displayed |
+| `mapOptions`      | `IMapOptions`  | `undefined` | Options for the options window in the map     |
+| `zoom.initial`    | `number`       | `1`         | Initial zoom level for the map                |
+| `zoom.min`        | `number`       |             | Minimum zoom level                            |
+| `zoom.max`        | `number`       |             | Maximum zoom level                            |
 
 ### IPlanet Props
 
@@ -138,20 +138,11 @@ return (
 | `color`      | `MapColor`   | Required | Color of the spacelane                             |
 | `focusLevel` | `FocusLevel` | Required | Zoom level at which the spacelane comes into focus |
 
-### IMapOptionsProps
+### IMapOptions
 
-| Prop                | Type          | Default | Description                                           |
-| ------------------- | ------------- | ------- | ----------------------------------------------------- |
-| `hidePlanetLabels`  | `boolean`     | `false` | Whether to hide planet text labels at all zoom levels |
-| `showAllPlanets`    | `boolean`     | `false` | Whether to show all planets at all zoom levels        |
-| `showAllSpacelanes` | `boolean`     | `false` | Whether to show all spacelanes at all zoom levels     |
-| `customOptions`     | `MapOption[]` | `[]`    | Additional options to show in the options window      |
-
-### MapOption Props
-
-| Prop           | Type                | Default  | Description                                      |
-| -------------- | ------------------- | -------- | ------------------------------------------------ |
-| `currentValue` | `boolean`           | Required | Current value of the option                      |
-| `setValue`     | `(boolean) => void` | Required | Callback when the value of the option is changed |
-| `label`        | `string`            | Required | Text label for the option                        |
-| `inputType`    | `string`            | Required | Input type for the input element of the option   |
+| Prop                    | Type                        | Default     | Description                                           |
+| ----------------------- | --------------------------- | ----------- | ----------------------------------------------------- |
+| `planetLabelVisibility` | `"dynamic"\|"show"\|"hide"` | `dynamic`   | Whether to hide planet text labels at all zoom levels |
+| `planetVisibility`      | `"dynamic"\|"show"\|"hide"` | `dynamic`   | Whether to show all planets at all zoom levels        |
+| `spacelaneVisibility`   | `"dynamic"\|"show"\|"hide"` | `dynamic`   | Whether to show all spacelanes at all zoom levels     |
+| `customOptions`         | `ReactNode`                 | `undefined` | Additional options to show in the options window      |

@@ -25,3 +25,8 @@ div.container {
   display: flex;
   flex-direction: column;
 }
+
+.optionsWindowContent select {
+  float: right;
+  margin-left: 1rem;
+}
