@@ -7,7 +7,7 @@ export type MapItemVisibility = "dynamic" | "show" | "hide";
 export interface IMapOptionsProps extends IComponentProps {
   planetLabelVisibility: MapItemVisibility;
   setPlanetLabels: (value: MapItemVisibility) => void;
-  planetVisilibity: MapItemVisibility;
+  planetVisibility: MapItemVisibility;
   setPlanetVisibility: (value: MapItemVisibility) => void;
   spacelaneVisibility: MapItemVisibility;
   setSpacelaneVisibility: (value: MapItemVisibility) => void;
@@ -24,7 +24,7 @@ export function MapOptions(props: IMapOptionsProps) {
         />
         <MapItemVisibilitySelect
           label="Planets"
-          defaultValue={props.planetVisilibity}
+          defaultValue={props.planetVisibility}
           setVisibility={props.setPlanetVisibility}
         />
         <MapItemVisibilitySelect

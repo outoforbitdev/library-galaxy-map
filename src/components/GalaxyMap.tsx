@@ -46,7 +46,7 @@ export default function Map(props: IMapProps) {
   const mapOptionsProps: IMapOptionsProps = {
     planetLabelVisibility: planetLabelVisibility,
     setPlanetLabels: setPlanetLabelVisibility,
-    planetVisilibity: planetVisibility,
+    planetVisibility: planetVisibility,
     setPlanetVisibility: setPlanetVisibility,
     spacelaneVisibility: spacelaneVisibility,
     setSpacelaneVisibility: setSpacelaneVisibility,
