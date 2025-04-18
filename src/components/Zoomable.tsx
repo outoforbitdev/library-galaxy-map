@@ -96,7 +96,7 @@ export default function Zoomable(props: IZoomableProps) {
   };
 
   const onWheel: WheelEventHandler<SVGElement> = function (e) {
-    adjustZoom(e.deltaY * 0.01, e);
+    adjustZoom(e.deltaY * -0.01, e);
   };
 
   const onClick = function (e: React.MouseEvent<SVGElement, MouseEvent>) {

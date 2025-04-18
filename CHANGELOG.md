@@ -1,3 +1,11 @@
+## Next
+
+### Breaking Changes
+
+- The zoom direction for scrolling has been reversed to match Google Maps:
+  - On Windows scrolling up zooms in and scrolling down zooms out
+  - On MacOS scrolling up zooms out and scrolling down zooms in
+
 ## 0.0.8 (2025-04-05)
 
 ### Breaking Changes
