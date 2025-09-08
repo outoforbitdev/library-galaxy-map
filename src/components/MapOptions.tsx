@@ -25,7 +25,10 @@ export function MapOptions(props: IMapOptionsProps) {
     }
   };
   return (
-    <Expandable className={`${styles.optionsWindow} ood-accent-block`} title="Map Options">
+    <Expandable
+      className={`${styles.optionsWindow} ood-accent-block`}
+      title="Map Options"
+    >
       <div className={styles.optionsWindowContent}>
         <MapItemVisibilitySelect
           label="Planet Labels"
