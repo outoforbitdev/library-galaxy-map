@@ -6,10 +6,11 @@ export enum MapColor {
   Yellow,
   Magenta,
   Aqua,
+  Brown,
 }
 
 export function colorToCss(color: MapColor) {
   const colorName = color.toString().toLowerCase();
 
-  return `var(--color-${colorName})`;
+  return `var(--ood-color-${colorName})`;
 }

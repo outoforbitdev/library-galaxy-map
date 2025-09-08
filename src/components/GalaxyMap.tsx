@@ -21,6 +21,7 @@ export interface IMapProps {
     min?: number;
     max?: number;
   };
+  className?: string;
 }
 
 export interface IMapOptions {
@@ -54,7 +55,7 @@ export default function Map(props: IMapProps) {
   };
 
   return (
-    <div ref={containerRef} className={styles.container}>
+    <div ref={containerRef} className={`${styles.container} ${props.className}`}>
       <MapOptions {...mapOptionsProps}>
         {props.mapOptions?.customOptions}
       </MapOptions>

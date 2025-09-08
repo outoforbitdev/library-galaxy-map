@@ -4,13 +4,11 @@ div.container {
   max-width: 100%;
   max-height: 100vh;
   height: 74vh;
-  border: 1px solid var(--neutral-text);
+  border: 1px solid;
   position: relative;
 }
 
 .optionsWindow {
-  background-color: var(--primary-accent-background);
-  color: var(--neutral-text);
   position: absolute;
   z-index: 1;
   /* float: right; */
