@@ -5,8 +5,9 @@ import { IPlanet } from "./PlanetMap";
 import { ISpacelane } from "./SpacelaneMap";
 import styles from "../styles/map.module.css";
 import { MapItemVisibility } from "./MapItemVisibilitySelect";
+import { IChildlessComponentProps } from "@outoforbitdev/ood-react";
 
-export interface IMapProps {
+export interface IMapProps extends IChildlessComponentProps {
   planets: IPlanet[];
   spacelanes: ISpacelane[];
   dimensions: {
@@ -21,7 +22,6 @@ export interface IMapProps {
     min?: number;
     max?: number;
   };
-  className?: string;
 }
 
 export interface IMapOptions {
