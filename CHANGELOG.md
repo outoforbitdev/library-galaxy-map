@@ -1,4 +1,4 @@
-## Next
+## 0.0.9 (2025-09-08)
 
 ### Breaking Changes
 
