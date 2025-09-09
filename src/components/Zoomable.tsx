@@ -6,7 +6,7 @@ import {
   TouchEventHandler,
   RefObject,
 } from "react";
-import { getDomProps, IComponentProps } from "../oodreact/IComponent";
+import { lib, IComponentProps } from "@outoforbitdev/ood-react";
 
 export interface IZoomableProps extends IComponentProps {
   containerRef: RefObject<HTMLDivElement | null>;
@@ -132,7 +132,7 @@ export default function Zoomable(props: IZoomableProps) {
 
   return (
     <svg
-      {...getDomProps(props)}
+      {...lib.getDomProps(props)}
       style={{
         // zIndex: -1,
         position: "relative",

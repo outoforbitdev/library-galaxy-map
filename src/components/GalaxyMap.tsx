@@ -5,8 +5,9 @@ import { IPlanet } from "./PlanetMap";
 import { ISpacelane } from "./SpacelaneMap";
 import styles from "../styles/map.module.css";
 import { MapItemVisibility } from "./MapItemVisibilitySelect";
+import { lib, IChildlessComponentProps } from "@outoforbitdev/ood-react";
 
-export interface IMapProps {
+export interface IMapProps extends IChildlessComponentProps {
   planets: IPlanet[];
   spacelanes: ISpacelane[];
   dimensions: {
@@ -54,7 +55,7 @@ export default function Map(props: IMapProps) {
   };
 
   return (
-    <div ref={containerRef} className={styles.container}>
+    <div ref={containerRef} {...lib.getDomProps(props, styles.container)}>
       <MapOptions {...mapOptionsProps}>
         {props.mapOptions?.customOptions}
       </MapOptions>

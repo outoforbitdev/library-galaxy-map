@@ -1,10 +1,9 @@
 import { RefObject, useState } from "react";
 import PlanetMap, { IPlanet } from "./PlanetMap";
 import SpacelaneMap, { ISpacelane } from "./SpacelaneMap";
-import { Draggable } from "../oodreact";
+import { Draggable, lib } from "@outoforbitdev/ood-react";
 import Zoomable from "./Zoomable";
 import styles from "../styles/items.module.css";
-import { getDomProps } from "../oodreact/IComponent";
 import { MapItemVisibility } from "./MapItemVisibilitySelect";
 
 export interface IZoomableMapProps {
@@ -55,7 +54,7 @@ export default function ZoomableMap(props: IZoomableMapProps) {
         zoom={zoomProps}
         containerRef={props.containerRef}
         onZoomChange={onZoomChange}
-        {...getDomProps(
+        {...lib.getDomProps(
           {},
           zoomClassName,
           getMapLabelVisibilityStyle(
