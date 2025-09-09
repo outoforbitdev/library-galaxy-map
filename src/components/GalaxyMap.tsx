@@ -55,10 +55,7 @@ export default function Map(props: IMapProps) {
   };
 
   return (
-    <div
-      ref={containerRef}
-      {...lib.getDomProps(props, styles.container)}
-    >
+    <div ref={containerRef} {...lib.getDomProps(props, styles.container)}>
       <MapOptions {...mapOptionsProps}>
         {props.mapOptions?.customOptions}
       </MapOptions>
