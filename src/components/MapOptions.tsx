@@ -1,5 +1,4 @@
-import { Expandable } from "@outoforbitdev/ood-react";
-import { IComponentProps } from "@outoforbitdev/ood-react";
+import { Expandable, IComponentProps } from "@outoforbitdev/ood-react";
 import {
   MapItemVisibility,
   MapItemVisibilitySelect,

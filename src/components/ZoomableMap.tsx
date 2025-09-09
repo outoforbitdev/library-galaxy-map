@@ -1,10 +1,9 @@
 import { RefObject, useState } from "react";
 import PlanetMap, { IPlanet } from "./PlanetMap";
 import SpacelaneMap, { ISpacelane } from "./SpacelaneMap";
-import { Draggable } from "@outoforbitdev/ood-react";
+import { Draggable, lib } from "@outoforbitdev/ood-react";
 import Zoomable from "./Zoomable";
 import styles from "../styles/items.module.css";
-import { lib } from "@outoforbitdev/ood-react";
 import { MapItemVisibility } from "./MapItemVisibilitySelect";
 
 export interface IZoomableMapProps {
