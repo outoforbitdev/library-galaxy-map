@@ -34,10 +34,14 @@ export default function PlanetMap(props: IPlanetMapProps) {
     <g
       fill={color}
       stroke={color}
-      className={styles.planet + " " + getFocusClassName(props.planet.focusLevel)}
+      className={
+        styles.planet + " " + getFocusClassName(props.planet.focusLevel)
+      }
       onClick={() => props.onClick?.(props.planet)}
     >
-      {props.selected ? <line x1={x} y1={y} x2={x} y2={y} className={styles.planet_outline} /> : null}
+      {props.selected ? (
+        <line x1={x} y1={y} x2={x} y2={y} className={styles.planet_outline} />
+      ) : null}
       <line x1={x} y1={y} x2={x} y2={y} className={styles.map_item} />
       <text className={styles.map_label} x={x + 10} y={y + 5}>
         {name}

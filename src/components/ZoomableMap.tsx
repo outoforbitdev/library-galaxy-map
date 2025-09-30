@@ -107,14 +107,14 @@ export default function ZoomableMap(props: IZoomableMapProps) {
         })}
         {selectedPlanet ? (
           <PlanetMap
-                planet={selectedPlanet}
-                centerX={centerX}
-                centerY={centerY}
-                zoomLevel={1}
-                onClick={props.onPlanetSelect}
-                selected={true}
-              />
-            ) : null}
+            planet={selectedPlanet}
+            centerX={centerX}
+            centerY={centerY}
+            zoomLevel={1}
+            onClick={props.onPlanetSelect}
+            selected={true}
+          />
+        ) : null}
       </Zoomable>
     </Draggable>
   );

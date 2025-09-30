@@ -79,7 +79,8 @@
   stroke-width: calc(var(--size-modifier) * var(--text-size) * 0.05);
 }
 
-.planet, .spacelane {
+.planet,
+.spacelane {
   cursor: pointer;
 }
 

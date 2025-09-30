@@ -62,7 +62,10 @@ export default function Map(props: IMapProps) {
 
   return (
     <div ref={containerRef} {...lib.getDomProps(props, styles.container)}>
-      <MapUI mapOptions={mapOptionsProps} customOptions={props.mapOptions?.customOptions}>
+      <MapUI
+        mapOptions={mapOptionsProps}
+        customOptions={props.mapOptions?.customOptions}
+      >
         {props.children}
       </MapUI>
       <ZoomableMap
