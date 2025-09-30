@@ -1,13 +1,14 @@
 import ZoomableMap from "./ZoomableMap";
-import { IMapOptionsProps, MapOptions } from "./MapOptions";
+import { IMapOptionsProps } from "./MapOptions";
 import { ReactNode, useRef, useState } from "react";
 import { IPlanet } from "./PlanetMap";
 import { ISpacelane } from "./SpacelaneMap";
 import styles from "../styles/map.module.css";
 import { MapItemVisibility } from "./MapItemVisibilitySelect";
-import { lib, IChildlessComponentProps } from "@outoforbitdev/ood-react";
+import { lib, IComponentProps } from "@outoforbitdev/ood-react";
+import { MapUI } from "./MapUI";
 
-export interface IMapProps extends IChildlessComponentProps {
+export interface IMapProps extends IComponentProps {
   planets: IPlanet[];
   spacelanes: ISpacelane[];
   dimensions: {
@@ -22,6 +23,9 @@ export interface IMapProps extends IChildlessComponentProps {
     min?: number;
     max?: number;
   };
+  onPlanetSelect?: (planet: IPlanet) => void;
+  onSpacelaneSelect?: (spacelane: ISpacelane) => void;
+  selectedPlanetId?: string;
 }
 
 export interface IMapOptions {
@@ -45,6 +49,8 @@ export default function Map(props: IMapProps) {
       props.mapOptions?.spacelaneVisibility ?? "dynamic",
     );
 
+  console.log("galaxy map", props.selectedPlanetId);
+
   const mapOptionsProps: IMapOptionsProps = {
     planetLabelVisibility: planetLabelVisibility,
     setPlanetLabels: setPlanetLabelVisibility,
@@ -56,9 +62,9 @@ export default function Map(props: IMapProps) {
 
   return (
     <div ref={containerRef} {...lib.getDomProps(props, styles.container)}>
-      <MapOptions {...mapOptionsProps}>
-        {props.mapOptions?.customOptions}
-      </MapOptions>
+      <MapUI mapOptions={mapOptionsProps} customOptions={props.mapOptions?.customOptions}>
+        {props.children}
+      </MapUI>
       <ZoomableMap
         containerRef={containerRef}
         {...props}
@@ -68,6 +74,10 @@ export default function Map(props: IMapProps) {
           spacelanesVisiblity: spacelaneVisibility,
         }}
         zoom={props.zoom ?? {}}
+        selectedPlanetId={props.selectedPlanetId}
+        onPlanetSelect={(planet) => {
+          props.onPlanetSelect?.(planet);
+        }}
       />
     </div>
   );

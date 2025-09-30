@@ -3,6 +3,7 @@ import styles from "../styles/items.module.css";
 import { FocusLevel, getFocusClassName } from "./FocusLevels";
 
 export interface ISpacelane {
+  id: string;
   name: string;
   xOne: number;
   yOne: number;
@@ -17,6 +18,7 @@ interface ISpacelaneMapProps {
   centerX: number;
   centerY: number;
   zoomLevel: number;
+  onClick?: (spacelane: ISpacelane) => void;
 }
 
 export default function SpacelaneMap(props: ISpacelaneMapProps) {
@@ -38,6 +40,7 @@ export default function SpacelaneMap(props: ISpacelaneMapProps) {
       className={
         styles.spacelane + " " + getFocusClassName(spacelane.focusLevel)
       }
+      onClick={() => props.onClick?.(spacelane)}
     >
       <line
         x1={xOne}

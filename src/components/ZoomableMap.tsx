@@ -22,6 +22,9 @@ export interface IZoomableMapProps {
     min?: number;
     max?: number;
   };
+  onPlanetSelect?: (planet: IPlanet) => void;
+  onSpacelaneSelect?: (spacelane: ISpacelane) => void;
+  selectedPlanetId?: string;
 }
 
 interface IMapOptions {
@@ -46,6 +49,9 @@ export default function ZoomableMap(props: IZoomableMapProps) {
     modifier: zoomModifier,
     ...props.zoom,
   };
+
+  let selectedPlanet = null;
+  let selectedSpacelane = null;
 
   return (
     <Draggable initialPosition={{ x: 0, y: 0 }}>
@@ -79,17 +85,36 @@ export default function ZoomableMap(props: IZoomableMapProps) {
             centerY={centerY}
             key={_i}
             zoomLevel={1}
+            onClick={props.onSpacelaneSelect}
           />
         ))}
-        {props.planets.map((p: IPlanet, _i: number) => (
+        {props.planets.map((p: IPlanet, i: number) => {
+          if (props.selectedPlanetId !== p.id) {
+            return (
+              <PlanetMap
+                planet={p}
+                centerX={centerX}
+                centerY={centerY}
+                key={i}
+                zoomLevel={1}
+                onClick={props.onPlanetSelect}
+                selected={false}
+              />
+            );
+          }
+          selectedPlanet = p;
+          return null;
+        })}
+        {selectedPlanet ? (
           <PlanetMap
-            planet={p}
-            centerX={centerX}
-            centerY={centerY}
-            key={_i}
-            zoomLevel={1}
-          />
-        ))}
+                planet={selectedPlanet}
+                centerX={centerX}
+                centerY={centerY}
+                zoomLevel={1}
+                onClick={props.onPlanetSelect}
+                selected={true}
+              />
+            ) : null}
       </Zoomable>
     </Draggable>
   );

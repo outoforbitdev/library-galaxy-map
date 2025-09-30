@@ -63,6 +63,12 @@ export default function Zoomable(props: IZoomableProps) {
       setOffsetX(initialOffsetX);
       setOffsetY(initialOffsetY);
     }
+
+    svgRef.current?.addEventListener("wheel", (event) => {
+      event.preventDefault();
+    }, {
+      passive: false,
+    });
   }, []);
 
   const onPointerDown: TouchEventHandler<SVGElement> = function (event) {
