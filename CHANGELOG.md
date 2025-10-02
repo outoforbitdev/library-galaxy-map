@@ -1,3 +1,9 @@
+## 0.0.10 (2025-10-02)
+
+### Features
+
+- This update adds support for selecting a planet, via a `onPlanetSelect` function included in the component props.
+
 ## 0.0.9 (2025-09-08)
 
 ### Breaking Changes

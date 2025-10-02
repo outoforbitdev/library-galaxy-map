@@ -22,6 +22,9 @@ export interface IZoomableMapProps {
     min?: number;
     max?: number;
   };
+  onPlanetSelect?: (planet: IPlanet) => void;
+  onSpacelaneSelect?: (spacelane: ISpacelane) => void;
+  selectedPlanetId?: string;
 }
 
 interface IMapOptions {
@@ -37,6 +40,10 @@ export default function ZoomableMap(props: IZoomableMapProps) {
   const [zoomClassName, setZoomClassName] = useState(
     zoomLevelToClassNames(props.zoom.initial || 1, zoomModifier),
   );
+  const [isDragging, setIsDragging] = useState(false);
+  const [wasDragging, setWasDragging] = useState(false);
+
+  if (isDragging && !wasDragging) setWasDragging(true);
 
   const onZoomChange = (zoomLevel: number) => {
     setZoomClassName(zoomLevelToClassNames(zoomLevel, zoomModifier));
@@ -47,8 +54,19 @@ export default function ZoomableMap(props: IZoomableMapProps) {
     ...props.zoom,
   };
 
+  let selectedPlanet = null;
+  let selectedSpacelane = null;
+
+  const onPlanetSelect = (planet: IPlanet) => {
+    if (wasDragging) {
+      setWasDragging(false);
+      return;
+    }
+    props.onPlanetSelect?.(planet);
+  };
+
   return (
-    <Draggable initialPosition={{ x: 0, y: 0 }}>
+    <Draggable initialPosition={{ x: 0, y: 0 }} setIsDragging={setIsDragging}>
       <Zoomable
         dimensions={props.dimensions}
         zoom={zoomProps}
@@ -79,17 +97,36 @@ export default function ZoomableMap(props: IZoomableMapProps) {
             centerY={centerY}
             key={_i}
             zoomLevel={1}
+            onClick={props.onSpacelaneSelect}
           />
         ))}
-        {props.planets.map((p: IPlanet, _i: number) => (
+        {props.planets.map((p: IPlanet, i: number) => {
+          if (props.selectedPlanetId !== p.id) {
+            return (
+              <PlanetMap
+                planet={p}
+                centerX={centerX}
+                centerY={centerY}
+                key={i}
+                zoomLevel={1}
+                onClick={onPlanetSelect}
+                selected={false}
+              />
+            );
+          }
+          selectedPlanet = p;
+          return null;
+        })}
+        {selectedPlanet ? (
           <PlanetMap
-            planet={p}
+            planet={selectedPlanet}
             centerX={centerX}
             centerY={centerY}
-            key={_i}
             zoomLevel={1}
+            onClick={onPlanetSelect}
+            selected={true}
           />
-        ))}
+        ) : null}
       </Zoomable>
     </Draggable>
   );
