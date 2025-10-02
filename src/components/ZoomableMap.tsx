@@ -63,7 +63,7 @@ export default function ZoomableMap(props: IZoomableMapProps) {
       return;
     }
     props.onPlanetSelect?.(planet);
-  }
+  };
 
   return (
     <Draggable initialPosition={{ x: 0, y: 0 }} setIsDragging={setIsDragging}>

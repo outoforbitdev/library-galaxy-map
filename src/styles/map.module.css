@@ -16,8 +16,6 @@ div.mapOverlay {
   z-index: 1;
   height: 0;
   overflow: visible;
-  /* background: rgba(0, 0, 0, 0.5); */
-  /* pointer-events: none; */
 }
 
 .optionsWindow {
@@ -31,7 +29,6 @@ div.mapOverlay {
 }
 
 .optionsWindowContent {
-  /* padding: 0.4em; */
   display: flex;
   flex-direction: column;
 }
