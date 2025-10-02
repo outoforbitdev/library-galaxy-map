@@ -40,6 +40,10 @@ export default function ZoomableMap(props: IZoomableMapProps) {
   const [zoomClassName, setZoomClassName] = useState(
     zoomLevelToClassNames(props.zoom.initial || 1, zoomModifier),
   );
+  const [isDragging, setIsDragging] = useState(false);
+  const [wasDragging, setWasDragging] = useState(false);
+
+  if (isDragging && !wasDragging) setWasDragging(true);
 
   const onZoomChange = (zoomLevel: number) => {
     setZoomClassName(zoomLevelToClassNames(zoomLevel, zoomModifier));
@@ -53,8 +57,16 @@ export default function ZoomableMap(props: IZoomableMapProps) {
   let selectedPlanet = null;
   let selectedSpacelane = null;
 
+  const onPlanetSelect = (planet: IPlanet) => {
+    if (wasDragging) {
+      setWasDragging(false);
+      return;
+    }
+    props.onPlanetSelect?.(planet);
+  }
+
   return (
-    <Draggable initialPosition={{ x: 0, y: 0 }}>
+    <Draggable initialPosition={{ x: 0, y: 0 }} setIsDragging={setIsDragging}>
       <Zoomable
         dimensions={props.dimensions}
         zoom={zoomProps}
@@ -97,7 +109,7 @@ export default function ZoomableMap(props: IZoomableMapProps) {
                 centerY={centerY}
                 key={i}
                 zoomLevel={1}
-                onClick={props.onPlanetSelect}
+                onClick={onPlanetSelect}
                 selected={false}
               />
             );
@@ -111,7 +123,7 @@ export default function ZoomableMap(props: IZoomableMapProps) {
             centerX={centerX}
             centerY={centerY}
             zoomLevel={1}
-            onClick={props.onPlanetSelect}
+            onClick={onPlanetSelect}
             selected={true}
           />
         ) : null}
