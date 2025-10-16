@@ -1,8 +1,12 @@
-## Next
+## 0.0.11 (2025-10-16)
 
 ### Features
 
 - Added a map legend
+
+### Bug Fixes
+
+- Allow selecting a planet immediately after dragging.
 
 ## 0.0.10 (2025-10-02)
 
