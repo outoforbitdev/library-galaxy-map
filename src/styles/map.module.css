@@ -26,12 +26,14 @@ div.mapOverlay {
   float: right;
 }
 
-.legendWindow, .optionsWindow {
+.legendWindow,
+.optionsWindow {
   border: 1px solid;
   padding: 0.2rem;
 }
 
-.optionsWindow button, .legendWindow button {
+.optionsWindow button,
+.legendWindow button {
   border: none;
 }
 
