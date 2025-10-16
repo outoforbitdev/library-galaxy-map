@@ -18,13 +18,22 @@ div.mapOverlay {
   overflow: visible;
 }
 
+.legendWindow {
+  float: left;
+}
+
 .optionsWindow {
   float: right;
+}
+
+.legendWindow,
+.optionsWindow {
   border: 1px solid;
   padding: 0.2rem;
 }
 
-.optionsWindow button {
+.optionsWindow button,
+.legendWindow button {
   border: none;
 }
 
