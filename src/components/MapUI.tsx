@@ -12,7 +12,7 @@ interface IMapUIProps extends IComponentProps {
 export function MapUI(props: IMapUIProps) {
   return (
     <div className={styles.mapOverlay}>
-      <MapLegend entries={props.legendEntries} />
+      {props.legendEntries && props.legendEntries.length > 0 ? <MapLegend entries={props.legendEntries} /> : null}
       <MapOptions {...props.mapOptions}>{props.customOptions}</MapOptions>
       {props.children}
     </div>
