@@ -1,3 +1,9 @@
+## Next
+
+### Features
+
+- Added a map legend
+
 ## 0.0.10 (2025-10-02)
 
 ### Features

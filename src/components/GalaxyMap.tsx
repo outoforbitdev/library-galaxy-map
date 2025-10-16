@@ -7,6 +7,7 @@ import styles from "../styles/map.module.css";
 import { MapItemVisibility } from "./MapItemVisibilitySelect";
 import { lib, IComponentProps } from "@outoforbitdev/ood-react";
 import { MapUI } from "./MapUI";
+import { LegendEntry } from "./MapLegend";
 
 export interface IMapProps extends IComponentProps {
   planets: IPlanet[];
@@ -18,6 +19,7 @@ export interface IMapProps extends IComponentProps {
     maxY: number;
   };
   mapOptions?: IMapOptions;
+  legendEntries?: LegendEntry[];
   zoom?: {
     initial?: number;
     min?: number;
@@ -49,8 +51,6 @@ export default function Map(props: IMapProps) {
       props.mapOptions?.spacelaneVisibility ?? "dynamic",
     );
 
-  console.log("galaxy map", props.selectedPlanetId);
-
   const mapOptionsProps: IMapOptionsProps = {
     planetLabelVisibility: planetLabelVisibility,
     setPlanetLabels: setPlanetLabelVisibility,
@@ -65,6 +65,7 @@ export default function Map(props: IMapProps) {
       <MapUI
         mapOptions={mapOptionsProps}
         customOptions={props.mapOptions?.customOptions}
+        legendEntries={props.legendEntries}
       >
         {props.children}
       </MapUI>
