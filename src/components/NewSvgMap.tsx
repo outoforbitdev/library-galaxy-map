@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import NewZoomable from "./NewZoomable";
+import NewDraggable from "./NewDraggable";
 import PlanetMap, { IPlanet } from "./PlanetMap";
 import { ISpacelane } from "./SpacelaneMap";
 import styles from "../styles/newmap.module.css";
@@ -55,6 +56,21 @@ export default function NewSvgMap(props: INewSvgMapProps) {
 
   const zoomStyle = getZoomStyle(zoomFactor);
 
+  const onDrag = function(delta:IVector2) {
+    const oldCenterCoordinates = centerCoordinatesRef.current;
+    const newCenterCoordinates = {
+      x: oldCenterCoordinates.x - delta.x / zoomFactorRef.current,
+      y: oldCenterCoordinates.y + delta.y / zoomFactorRef.current,
+    }
+
+    centerCoordinatesRef.current = newCenterCoordinates;
+    setCenterCoordinates(newCenterCoordinates);
+
+    const newMinMaxCoordinates = getMinMaxCoordinates(newCenterCoordinates, zoomFactorRef.current, containerDimensions);
+    minMaxCoordinatesRef.current = newMinMaxCoordinates;
+    setMinMaxCoordinates(newMinMaxCoordinates);
+  }
+
   const onZoomChange = function (
     newZoomFactor: number,
     mouseContainerPosition: IVector2,
@@ -104,55 +120,57 @@ export default function NewSvgMap(props: INewSvgMapProps) {
 
   const planetsToRender = props.planets
     .filter((planet) =>
-      isCoordinateWithinMinMax(
+      shouldCoordinateBeRendered(
         { x: planet.x, y: planet.y },
         minMaxCoordinatesRef.current,
       ),
     )
-    .slice(0, 100);
+    .slice(0, 300);
 
   return (
-    <NewZoomable
-      onZoomChange={onZoomChange}
-      maxZoom={32}
-      minZoom={0.01}
-      initialZoom={props.zoom?.initial || 1}
-    >
-      <svg
-        ref={containerRef}
-        viewBox={`${containerDimensions.x / -2} ${containerDimensions.y / -2} ${containerDimensions.x} ${containerDimensions.y}`}
-        className={zoomStyle + " " + styles.map}
+    <NewDraggable onDrag={onDrag}>
+      <NewZoomable
+        onZoomChange={onZoomChange}
+        maxZoom={32}
+        minZoom={0.01}
+        initialZoom={props.zoom?.initial || 1}
       >
-        <g
-          transform={`scale(${zoomFactor} -${zoomFactor}) translate(${-centerCoordinates.x} ${-centerCoordinates.y})`}
+        <svg
+          ref={containerRef}
+          viewBox={`${containerDimensions.x / -2} ${containerDimensions.y / -2} ${containerDimensions.x} ${containerDimensions.y}`}
+          className={zoomStyle + " " + styles.map}
         >
-          {planetsToRender.map((planet) => (
-            <g key={planet.id}>
-              <circle
-                cx={planet.x}
-                cy={planet.y}
-                fill="red"
-                className={styles.planet}
-              />
-              <text
-                className={styles.label}
-                x={planet.x + 10 / zoomFactor}
-                y={planet.y * -1 + 5 / zoomFactor}
-                transform={`scale(1 -1)`}
-              >
-                {planet.name}
-              </text>
-            </g>
-          ))}
-          <circle
-            cx={centerCoordinates.x}
-            cy={centerCoordinates.y}
-            className={styles.planet}
-            fill="blue"
-          />
-        </g>
-      </svg>
-    </NewZoomable>
+          <g
+            transform={`scale(${zoomFactor} -${zoomFactor}) translate(${-centerCoordinates.x} ${-centerCoordinates.y})`}
+          >
+            {planetsToRender.map((planet) => (
+              <g key={planet.id}>
+                <circle
+                  cx={planet.x}
+                  cy={planet.y}
+                  fill="red"
+                  className={styles.planet}
+                />
+                <text
+                  className={styles.label}
+                  x={planet.x + 10 / zoomFactor}
+                  y={planet.y * -1 + 5 / zoomFactor}
+                  transform={`scale(1 -1)`}
+                >
+                  {planet.name}
+                </text>
+              </g>
+            ))}
+            <circle
+              cx={centerCoordinates.x}
+              cy={centerCoordinates.y}
+              className={styles.planet}
+              fill="blue"
+            />
+          </g>
+        </svg>
+      </NewZoomable>
+    </NewDraggable>
   );
 }
 
@@ -216,10 +234,30 @@ function isCoordinateWithinMinMax(
     coordinate.x < minMaxCoordinates.max.x &&
     coordinate.y > minMaxCoordinates.min.y &&
     coordinate.y < minMaxCoordinates.max.y;
-  if (ret) {
-    // console.log(coordinate);
-  }
+    
   return ret;
+}
+
+function shouldCoordinateBeRendered(
+  coordinate: IVector2,
+  minMaxCoordinates: MinMaxCoordinates,
+) {
+  const dimensions = {
+    x: minMaxCoordinates.max.x - minMaxCoordinates.min.x,
+    y: minMaxCoordinates.max.y - minMaxCoordinates.min.y,
+  };
+  const renderWindow = {
+    min: {
+      x: minMaxCoordinates.min.x - dimensions.x / 2,
+      y: minMaxCoordinates.min.y - dimensions.y / 2,
+    },
+    max: {
+      x: minMaxCoordinates.max.x + dimensions.x / 2,
+      y: minMaxCoordinates.max.y + dimensions.y / 2,
+    },
+  };
+
+  return isCoordinateWithinMinMax(coordinate, renderWindow);
 }
 
 function containerPositionToMapCoordinates(
