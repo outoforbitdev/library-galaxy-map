@@ -65,6 +65,13 @@ export default function Zoomable(props: IZoomableProps) {
     }
   }, []);
 
+  // Disable page scrolling when zooming
+  useEffect(() => {
+    if (svgRef.current) {
+      svgRef.current.onwheel = (e) => e.preventDefault();
+    }
+  }, [svgRef]);
+
   const onPointerDown: TouchEventHandler<SVGElement> = function (event) {
     if (event.touches.length !== 2) return;
     previousPointerDiff.current = Math.abs(

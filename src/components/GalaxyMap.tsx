@@ -8,6 +8,7 @@ import { MapItemVisibility } from "./MapItemVisibilitySelect";
 import { lib, IComponentProps } from "@outoforbitdev/ood-react";
 import { MapUI } from "./MapUI";
 import { LegendEntry } from "./MapLegend";
+import NewSvgMap from "./NewSvgMap";
 
 export interface IMapProps extends IComponentProps {
   planets: IPlanet[];
@@ -69,19 +70,13 @@ export default function Map(props: IMapProps) {
       >
         {props.children}
       </MapUI>
-      <ZoomableMap
-        containerRef={containerRef}
-        {...props}
-        mapOptions={{
-          planetLabelsVisibility: planetLabelVisibility,
-          planetsVisibility: planetVisibility,
-          spacelanesVisiblity: spacelaneVisibility,
+      <NewSvgMap
+        planets={props.planets}
+        zoom={{
+          initial: 0.25,
         }}
-        zoom={props.zoom ?? {}}
-        selectedPlanetId={props.selectedPlanetId}
-        onPlanetSelect={(planet) => {
-          props.onPlanetSelect?.(planet);
-        }}
+        center={{ x: 4750, y: 125 }}
+        // center={{x:300, y: 300}}
       />
     </div>
   );
