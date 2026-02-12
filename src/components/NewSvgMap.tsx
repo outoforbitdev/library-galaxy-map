@@ -56,20 +56,24 @@ export default function NewSvgMap(props: INewSvgMapProps) {
 
   const zoomStyle = getZoomStyle(zoomFactor);
 
-  const onDrag = function(delta:IVector2) {
+  const onDrag = function (delta: IVector2) {
     const oldCenterCoordinates = centerCoordinatesRef.current;
     const newCenterCoordinates = {
       x: oldCenterCoordinates.x - delta.x / zoomFactorRef.current,
       y: oldCenterCoordinates.y + delta.y / zoomFactorRef.current,
-    }
+    };
 
     centerCoordinatesRef.current = newCenterCoordinates;
     setCenterCoordinates(newCenterCoordinates);
 
-    const newMinMaxCoordinates = getMinMaxCoordinates(newCenterCoordinates, zoomFactorRef.current, containerDimensions);
+    const newMinMaxCoordinates = getMinMaxCoordinates(
+      newCenterCoordinates,
+      zoomFactorRef.current,
+      containerDimensions,
+    );
     minMaxCoordinatesRef.current = newMinMaxCoordinates;
     setMinMaxCoordinates(newMinMaxCoordinates);
-  }
+  };
 
   const onZoomChange = function (
     newZoomFactor: number,
@@ -234,7 +238,7 @@ function isCoordinateWithinMinMax(
     coordinate.x < minMaxCoordinates.max.x &&
     coordinate.y > minMaxCoordinates.min.y &&
     coordinate.y < minMaxCoordinates.max.y;
-    
+
   return ret;
 }
 
