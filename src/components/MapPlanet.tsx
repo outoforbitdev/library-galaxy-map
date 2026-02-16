@@ -6,7 +6,7 @@ import { IVector2 } from "./Vector2";
 export interface IPlanet {
   id: string;
   name: string;
-  coordinates: IVector2
+  coordinates: IVector2;
   color: MapColor;
   focusLevel: FocusLevel;
   selected?: boolean;
@@ -25,11 +25,11 @@ export default function MapPlanet(props: IMapPlanetProps) {
   const y = props.planet.coordinates.y;
 
   return (
-    <circle 
+    <circle
       fill={color}
       stroke={color}
       onClick={() => props.onClick?.(props.planet.id)}
-      className={styles.planet} 
+      className={styles.planet}
       cx={x}
       cy={y}
     />

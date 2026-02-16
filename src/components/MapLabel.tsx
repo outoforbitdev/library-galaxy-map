@@ -6,7 +6,7 @@ import { IVector2 } from "./Vector2";
 export interface IPlanet {
   id: string;
   name: string;
-  coordinates: IVector2
+  coordinates: IVector2;
   color: MapColor;
   focusLevel: FocusLevel;
   selected?: boolean;
@@ -23,7 +23,7 @@ interface IMapLabelProps {
 export default function MapLabel(props: IMapLabelProps) {
   const label = props.label;
   const color = colorToCss(props.color);
-  const {x, y} = props.coordinates
+  const { x, y } = props.coordinates;
 
   return (
     <g
@@ -33,12 +33,12 @@ export default function MapLabel(props: IMapLabelProps) {
       key={props.id}
       onClick={() => props.onClick?.(props.id)}
     >
-      <text 
+      <text
         className={styles.map_label}
         x={x + 10}
         y={y + 5}
         vectorEffect="non-scaling-stroke"
-        >
+      >
         {label}
       </text>
     </g>

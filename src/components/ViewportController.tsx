@@ -165,8 +165,7 @@ export default function ViewportController(props: IViewportControllerProps) {
       const timeSinceLastWheelEvent = performance.now() - lastWheelTime.current;
       if (timeSinceLastWheelEvent > 120) {
         props.onZoomEnd();
-      }
-      else {
+      } else {
         requestAnimationFrame(checkZoomEnd);
       }
     }

@@ -31,11 +31,7 @@ export default function MapSpacelane(props: IMapSpacelaneProps) {
   const textPosition = getTextPosition(xOne, xTwo, yOne, yTwo, textRotation);
 
   return (
-    <g
-      fill={color}
-      stroke={color}
-      onClick={() => props.onClick?.(spacelane)}
-    >
+    <g fill={color} stroke={color} onClick={() => props.onClick?.(spacelane)}>
       <line
         x1={xOne}
         y1={yOne}
