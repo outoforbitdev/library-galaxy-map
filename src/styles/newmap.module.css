@@ -41,7 +41,7 @@
   --ood-galaxy-map-zoom-factor: 32;
 }
 .planet {
-  r: calc(0.2rem / var(--ood-galaxy-map-zoom-factor));
+  r: calc(0.1rem / var(--ood-galaxy-map-zoom-factor));
   transition: r 0.1s;
 }
 .label {

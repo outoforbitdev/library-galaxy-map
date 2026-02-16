@@ -2,7 +2,6 @@ import { Expandable, IChildlessComponentProps } from "@outoforbitdev/ood-react";
 
 import styles from "../styles/map.module.css";
 import { colorToCss, MapColor } from "./Colors";
-import PlanetMap from "./PlanetMap";
 
 export interface LegendEntry {
   id: string;

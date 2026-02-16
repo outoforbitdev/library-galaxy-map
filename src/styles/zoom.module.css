@@ -1,0 +1,42 @@
+.zoom01 {
+    --ood-galaxy-map-zoom-factor: 0.01;
+  }
+  .zoom02 {
+    --ood-galaxy-map-zoom-factor: 0.02;
+  }
+  .zoom03 {
+    --ood-galaxy-map-zoom-factor: 0.03;
+  }
+  .zoom05 {
+    --ood-galaxy-map-zoom-factor: 0.05;
+  }
+  .zoom10 {
+    --ood-galaxy-map-zoom-factor: 0.1;
+  }
+  .zoom15 {
+    --ood-galaxy-map-zoom-factor: 0.15;
+  }
+  .zoom25 {
+    --ood-galaxy-map-zoom-factor: 0.25;
+  }
+  .zoom50 {
+    --ood-galaxy-map-zoom-factor: 0.5;
+  }
+  .zoom100 {
+    --ood-galaxy-map-zoom-factor: 1;
+  }
+  .zoom200 {
+    --ood-galaxy-map-zoom-factor: 2;
+  }
+  .zoom400 {
+    --ood-galaxy-map-zoom-factor: 4;
+  }
+  .zoom800 {
+    --ood-galaxy-map-zoom-factor: 8;
+  }
+  .zoom1600 {
+    --ood-galaxy-map-zoom-factor: 16;
+  }
+  .zoom3200 {
+    --ood-galaxy-map-zoom-factor: 32;
+  }

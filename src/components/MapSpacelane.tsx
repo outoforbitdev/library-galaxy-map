@@ -13,20 +13,17 @@ export interface ISpacelane {
   focusLevel: FocusLevel;
 }
 
-interface ISpacelaneMapProps {
+interface IMapSpacelaneProps {
   spacelane: ISpacelane;
-  centerX: number;
-  centerY: number;
-  zoomLevel: number;
   onClick?: (spacelane: ISpacelane) => void;
 }
 
-export default function SpacelaneMap(props: ISpacelaneMapProps) {
+export default function MapSpacelane(props: IMapSpacelaneProps) {
   const spacelane = props.spacelane;
-  const xOne = props.centerX + spacelane.xOne;
-  const yOne = props.centerY - spacelane.yOne;
-  const xTwo = props.centerX + spacelane.xTwo;
-  const yTwo = props.centerY - spacelane.yTwo;
+  const xOne = spacelane.xOne;
+  const yOne = spacelane.yOne;
+  const xTwo = spacelane.xTwo;
+  const yTwo = spacelane.yTwo;
   const color = colorToCss(spacelane.color);
 
   const textRotation =
@@ -37,9 +34,6 @@ export default function SpacelaneMap(props: ISpacelaneMapProps) {
     <g
       fill={color}
       stroke={color}
-      className={
-        styles.spacelane + " " + getFocusClassName(spacelane.focusLevel)
-      }
       onClick={() => props.onClick?.(spacelane)}
     >
       <line
@@ -47,7 +41,7 @@ export default function SpacelaneMap(props: ISpacelaneMapProps) {
         y1={yOne}
         x2={xTwo}
         y2={yTwo}
-        className={styles.map_item}
+        className={styles.spacelane}
       />
     </g>
   );
