@@ -12,12 +12,6 @@ import MapSvg from "./MapSvg";
 export interface IMapProps extends IComponentProps {
   planets: IPlanet[];
   spacelanes: ISpacelane[];
-  dimensions: {
-    minX: number;
-    minY: number;
-    maxX: number;
-    maxY: number;
-  };
   mapOptions?: IMapOptions;
   legendEntries?: LegendEntry[];
   zoom?: {

@@ -1,6 +1,10 @@
 import { IComponentProps } from "@outoforbitdev/ood-react";
 import React, { useEffect, useRef } from "react";
 import { IVector2 } from "./Vector2";
+import {
+  clientPositionToContainerPosition,
+  distance,
+} from "./ViewportControllerHelpers";
 
 interface IViewportControllerProps extends IComponentProps {
   onDragStart?: () => void;
@@ -16,39 +20,38 @@ interface IViewportControllerProps extends IComponentProps {
 
 export default function ViewportController(props: IViewportControllerProps) {
   // Pan properties
-  const previousPosition = useRef<IVector2>({ x: 0, y: 0 });
-  const activePointerId = useRef<number | null>(null);
-  const pointerCount = useRef(0);
+  const previousPanPointerPosition = useRef<IVector2>({ x: 0, y: 0 });
+  const activePanPointerId = useRef<number | null>(null);
+  const panPointerCount = useRef(0);
 
   // Zoom properties
-  const zoomRef = useRef(props.initialZoom || 1);
+  const currentZoomRef = useRef(props.initialZoom || 1);
   const containerRef = useRef<HTMLDivElement>(null);
-  const rafRef = useRef<number | null>(null);
+  const zoomRafRef = useRef<number | null>(null);
 
   const pendingZoomRef = useRef<number | null>(null);
   const pendingFocusRef = useRef<IVector2 | null>(null);
 
-  const pointersRef = useRef<Map<number, IVector2>>(new Map());
-  const initialPinchDistanceRef = useRef<number | null>(null);
-  const initialPinchZoomRef = useRef<number>(zoomRef.current);
+  const zoomPointersRef = useRef<Map<number, IVector2>>(new Map());
+  const initialZoomPinchDistanceRef = useRef<number | null>(null);
+  const initialZoomPinchZoomRef = useRef<number>(currentZoomRef.current);
 
   const lastWheelTime = useRef<number>(0);
-  const zooming = useRef<boolean>(false);
+  const isWheelZooming = useRef<boolean>(false);
 
   function cancelDrag(element: HTMLDivElement) {
-    if (activePointerId.current !== null) {
+    if (activePanPointerId.current !== null) {
       if (props.onDragEnd) props.onDragEnd();
-      //   element.releasePointerCapture(activePointerId.current);
+      element.releasePointerCapture(activePanPointerId.current);
     }
 
-    activePointerId.current = null;
+    activePanPointerId.current = null;
   }
 
-  const onPointerDown: React.PointerEventHandler<HTMLDivElement> = (event) => {
-    // Pan
-    pointerCount.current++;
+  function handlePanStart(event: React.PointerEvent<HTMLDivElement>) {
+    panPointerCount.current++;
     // If we already have an active pointer, cancel drag (multi-touch detected)
-    if (activePointerId.current !== null) {
+    if (activePanPointerId.current !== null) {
       cancelDrag(event.currentTarget);
       return;
     }
@@ -58,63 +61,111 @@ export default function ViewportController(props: IViewportControllerProps) {
       return;
     }
 
-    activePointerId.current = event.pointerId;
-    previousPosition.current = {
+    activePanPointerId.current = event.pointerId;
+    previousPanPointerPosition.current = {
       x: event.clientX,
       y: event.clientY,
     };
+  }
 
-    // event.currentTarget.setPointerCapture(event.pointerId);
-
-    // Zoom
-    pointersRef.current.set(event.pointerId, {
-      x: event.clientX,
-      y: event.clientY,
-    });
-
-    if (pointersRef.current.size === 2) {
-      const [p1, p2] = Array.from(pointersRef.current.values());
-      const currentDistance = distance(p1, p2);
-      initialPinchDistanceRef.current = currentDistance;
-      initialPinchZoomRef.current = zoomRef.current;
-    }
-  };
-
-  const onPointerMove: React.PointerEventHandler<HTMLDivElement> = (event) => {
-    // Pan
-    if (event.pointerId !== activePointerId.current) return;
+  function handlePanMove(event: React.PointerEvent<HTMLDivElement>) {
+    if (event.pointerId !== activePanPointerId.current) return;
 
     const delta = {
-      x: event.clientX - previousPosition.current.x,
-      y: event.clientY - previousPosition.current.y,
+      x: event.clientX - previousPanPointerPosition.current.x,
+      y: event.clientY - previousPanPointerPosition.current.y,
     };
 
     if (props.onDragMove) props.onDragMove(delta);
 
-    previousPosition.current = {
+    previousPanPointerPosition.current = {
       x: event.clientX,
       y: event.clientY,
     };
 
-    // Zoom
-    if (!pointersRef.current.has(event.pointerId)) return;
+    event.currentTarget.setPointerCapture(event.pointerId);
+  }
 
-    pointersRef.current.set(event.pointerId, {
+  function handlePanEnd(event: React.PointerEvent<HTMLDivElement>) {
+    panPointerCount.current = Math.max(0, panPointerCount.current - 1);
+
+    if (event.pointerId !== activePanPointerId.current) return;
+
+    cancelDrag(event.currentTarget);
+  }
+
+  function checkZoomEnd() {
+    if (!props.onZoomEnd) return;
+    if (isWheelZooming.current) {
+      const timeSinceLastWheelEvent = performance.now() - lastWheelTime.current;
+      if (timeSinceLastWheelEvent > 120) {
+        props.onZoomEnd();
+        isWheelZooming.current = false;
+      } else {
+        requestAnimationFrame(checkZoomEnd);
+      }
+    }
+  }
+
+  function applyZoom(newZoom: number, mouseContainerPosition: IVector2) {
+    if (props.maxZoom !== undefined && newZoom > props.maxZoom) return;
+    if (props.minZoom !== undefined && newZoom < props.minZoom) return;
+
+    currentZoomRef.current = newZoom;
+    props.onZoomChange?.(newZoom, mouseContainerPosition);
+  }
+
+  function scheduleZoom(newZoom: number, focus: IVector2) {
+    pendingZoomRef.current = newZoom;
+    pendingFocusRef.current = focus;
+
+    if (zoomRafRef.current !== null) return;
+
+    zoomRafRef.current = requestAnimationFrame(() => {
+      zoomRafRef.current = null;
+
+      if (pendingZoomRef.current !== null && pendingFocusRef.current !== null) {
+        applyZoom(pendingZoomRef.current, pendingFocusRef.current);
+      }
+
+      pendingZoomRef.current = null;
+      pendingFocusRef.current = null;
+    });
+  }
+
+  function handleZoomPinchStart(event: React.PointerEvent<HTMLDivElement>) {
+    zoomPointersRef.current.set(event.pointerId, {
       x: event.clientX,
       y: event.clientY,
     });
 
-    if (pointersRef.current.size !== 2) return;
+    if (zoomPointersRef.current.size === 2) {
+      const [p1, p2] = Array.from(zoomPointersRef.current.values());
+      const currentDistance = distance(p1, p2);
+      initialZoomPinchDistanceRef.current = currentDistance;
+      initialZoomPinchZoomRef.current = currentZoomRef.current;
+    }
+  }
 
-    if (initialPinchDistanceRef.current === null) return;
+  function handleZoomPinchChange(event: React.PointerEvent<HTMLDivElement>) {
+    if (!zoomPointersRef.current.has(event.pointerId)) return;
 
-    const [p1, p2] = Array.from(pointersRef.current.values());
+    zoomPointersRef.current.set(event.pointerId, {
+      x: event.clientX,
+      y: event.clientY,
+    });
+
+    if (zoomPointersRef.current.size !== 2) return;
+
+    if (initialZoomPinchDistanceRef.current === null) return;
+
+    const [p1, p2] = Array.from(zoomPointersRef.current.values());
 
     const currentDistance = distance(p1, p2);
 
-    const scale = currentDistance / initialPinchDistanceRef.current;
+    const scale = currentDistance / initialZoomPinchDistanceRef.current;
 
-    const newZoom = initialPinchZoomRef.current * scale;
+    const newZoom = initialZoomPinchZoomRef.current * scale;
 
     const midpoint = {
       x: (p1.x + p2.x) / 2,
@@ -127,79 +178,40 @@ export default function ViewportController(props: IViewportControllerProps) {
     );
 
     scheduleZoom(newZoom, mouseContainerPosition);
-  };
+  }
 
-  const onPointerUp: React.PointerEventHandler<HTMLDivElement> = (event) => {
-    // Pan
-    pointerCount.current = Math.max(0, pointerCount.current - 1);
-
-    if (event.pointerId !== activePointerId.current) return;
-
-    cancelDrag(event.currentTarget);
-
-    // Zoom
-    pointersRef.current.delete(event.pointerId);
+  function handleZoomPinchEnd(event: React.PointerEvent<HTMLDivElement>) {
+    zoomPointersRef.current.delete(event.pointerId);
     // event.currentTarget.releasePointerCapture(event.pointerId);
 
-    if (pointersRef.current.size < 2) {
-      initialPinchDistanceRef.current = null;
+    if (zoomPointersRef.current.size < 2) {
+      initialZoomPinchDistanceRef.current = null;
       if (props.onZoomEnd) {
         props.onZoomEnd();
       }
     }
+  }
+
+  const onPointerDown: React.PointerEventHandler<HTMLDivElement> = (event) => {
+    handlePanStart(event);
+    handleZoomPinchStart(event);
+  };
+
+  const onPointerMove: React.PointerEventHandler<HTMLDivElement> = (event) => {
+    handlePanMove(event);
+    handleZoomPinchChange(event);
+  };
+
+  const onPointerUp: React.PointerEventHandler<HTMLDivElement> = (event) => {
+    handlePanEnd(event);
+    handleZoomPinchEnd(event);
   };
 
   const onPointerCancel: React.PointerEventHandler<HTMLDivElement> = (
     event,
   ) => {
-    pointerCount.current = Math.max(0, pointerCount.current - 1);
-
-    if (event.pointerId !== activePointerId.current) return;
-
-    cancelDrag(event.currentTarget);
+    handlePanEnd(event);
   };
-
-  function checkZoomEnd() {
-    if (!props.onZoomEnd) return;
-    if (zooming.current) {
-      const timeSinceLastWheelEvent = performance.now() - lastWheelTime.current;
-      if (timeSinceLastWheelEvent > 120) {
-        props.onZoomEnd();
-      } else {
-        requestAnimationFrame(checkZoomEnd);
-      }
-    }
-  }
-
-  function applyZoom(newZoom: number, mouseContainerPosition: IVector2) {
-    if (
-      (props.maxZoom && newZoom > props.maxZoom) ||
-      (props.minZoom && newZoom < props.minZoom)
-    ) {
-      return;
-    }
-
-    zoomRef.current = newZoom;
-    props.onZoomChange?.(newZoom, mouseContainerPosition);
-  }
-
-  function scheduleZoom(newZoom: number, focus: IVector2) {
-    pendingZoomRef.current = newZoom;
-    pendingFocusRef.current = focus;
-
-    if (rafRef.current !== null) return;
-
-    rafRef.current = requestAnimationFrame(() => {
-      rafRef.current = null;
-
-      if (pendingZoomRef.current !== null && pendingFocusRef.current !== null) {
-        applyZoom(pendingZoomRef.current, pendingFocusRef.current);
-      }
-
-      pendingZoomRef.current = null;
-      pendingFocusRef.current = null;
-    });
-  }
 
   useEffect(() => {
     const container = containerRef.current;
@@ -216,9 +228,9 @@ export default function ViewportController(props: IViewportControllerProps) {
       );
 
       const scale = event.deltaY < 0 ? 1.1 : 0.9;
-      const newZoomFactor = zoomRef.current * scale;
+      const newZoomFactor = currentZoomRef.current * scale;
 
-      zooming.current = true;
+      isWheelZooming.current = true;
       lastWheelTime.current = performance.now();
       scheduleZoom(newZoomFactor, mouseContainerPosition);
       requestAnimationFrame(checkZoomEnd);
@@ -228,8 +240,8 @@ export default function ViewportController(props: IViewportControllerProps) {
 
     return () => {
       container.removeEventListener("wheel", onWheel);
-      if (rafRef.current !== null) {
-        cancelAnimationFrame(rafRef.current);
+      if (zoomRafRef.current !== null) {
+        cancelAnimationFrame(zoomRafRef.current);
       }
     };
   }, []);
@@ -247,24 +259,4 @@ export default function ViewportController(props: IViewportControllerProps) {
       {props.children}
     </div>
   );
-}
-
-function clientPositionToContainerPosition(
-  clientPosition: IVector2,
-  container: HTMLDivElement,
-): IVector2 {
-  const rect = container.getBoundingClientRect();
-
-  const containerPosition = {
-    x: clientPosition.x - rect.left,
-    y: clientPosition.y - rect.top,
-  };
-
-  return containerPosition;
-}
-
-function distance(a: IVector2, b: IVector2) {
-  const dx = a.x - b.x;
-  const dy = a.y - b.y;
-  return Math.sqrt(dx * dx + dy * dy);
 }

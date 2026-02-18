@@ -47,6 +47,7 @@ export default function MapSvg(props: IMapSvgProps) {
   const planetsRef = useRef<IPlanet[]>(props.planets);
   planetsRef.current = props.planets;
   const labelGroupRef = useRef<SVGGElement>(null);
+  const planetGroupRef = useRef<SVGGElement>(null);
 
   useEffect(() => {
     if (containerRef.current) {
@@ -220,14 +221,16 @@ export default function MapSvg(props: IMapSvgProps) {
               spacelane={spacelane}
             />
           ))}
-          {planetsToRender.map((planet) => (
-            <MapPlanet
-              planet={planet}
-              key={planet.id}
-              hideLabel={!planetsToLabel.includes(planet)}
-              onClick={props.onPlanetSelect}
-            />
-          ))}
+          <g ref={planetGroupRef}>
+            {planetsToRender.map((planet) => (
+              <MapPlanet
+                planet={planet}
+                key={planet.id}
+                hideLabel={!planetsToLabel.includes(planet)}
+                onClick={props.onPlanetSelect}
+              />
+            ))}
+          </g>
         </g>
         <g ref={labelGroupRef}>
           {planetsToLabel.map((planet) => {
