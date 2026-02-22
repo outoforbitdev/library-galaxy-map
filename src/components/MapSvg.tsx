@@ -34,9 +34,9 @@ export default function MapSvg(props: IMapSvgProps) {
     center: props.center || { x: 0, y: 0 },
     minMaxCoordinates: getMinMaxCoordinates(
       props.center || { x: 0, y: 0 },
-      props.zoom?.initial || 1, 
-      containerDimensions
-    )
+      props.zoom?.initial || 1,
+      containerDimensions,
+    ),
   });
   const [planetsToRender, setPlanetsToRender] = useState<IPlanet[]>([]);
   const planetsToLabelRef = useRef<IPlanet[]>([]);
@@ -45,7 +45,9 @@ export default function MapSvg(props: IMapSvgProps) {
   const labelGroupRef = useRef<SVGGElement>(null);
   const planetGroupRef = useRef<SVGGElement>(null);
   const selectedPlanetIdRef = useRef(props.selectedPlanetId);
-  const [selectedPlanetId, setSelectedPlanetId] = useState<string | undefined>(props.selectedPlanetId);
+  const [selectedPlanetId, setSelectedPlanetId] = useState<string | undefined>(
+    props.selectedPlanetId,
+  );
 
   useEffect(() => {
     if (containerRef.current) {
@@ -146,7 +148,7 @@ export default function MapSvg(props: IMapSvgProps) {
       center: newCenterCoordinates,
       minMaxCoordinates: newMinMaxCoordinates,
       zoomFactor: newZoomFactor,
-    }
+    };
 
     transformGroupRef.current?.setAttribute(
       "transform",
@@ -179,7 +181,7 @@ export default function MapSvg(props: IMapSvgProps) {
       planetsRef,
       setPlanetsToRender,
       planetsToLabelRef,
-        selectedPlanetIdRef.current,
+      selectedPlanetIdRef.current,
     );
   }
 
@@ -227,15 +229,17 @@ export default function MapSvg(props: IMapSvgProps) {
                 onClick={props.onPlanetSelect}
               />
             ))}
-            {
-              props.selectedPlanetId ? 
-              <MapPlanet 
-                planet={planetsToRender.find(value => value.id === props.selectedPlanetId)!}
+            {props.selectedPlanetId ? (
+              <MapPlanet
+                planet={
+                  planetsToRender.find(
+                    (value) => value.id === props.selectedPlanetId,
+                  )!
+                }
                 onClick={props.onPlanetSelect}
                 selected
-              /> :
-              null
-            }
+              />
+            ) : null}
           </g>
         </g>
         <g ref={labelGroupRef}>
@@ -404,34 +408,39 @@ function getAndSetComponentsToRender(
 
   const labels: { x: number; y: number; planet: string }[] = [];
   if (selectedPlanetId) {
-    const selectedPlanet = planets.current.find(value => value.id === selectedPlanetId);
+    const selectedPlanet = planets.current.find(
+      (value) => value.id === selectedPlanetId,
+    );
     if (selectedPlanet) {
-      labels.push({x: selectedPlanet.coordinates.x, y: selectedPlanet.coordinates.y, planet: selectedPlanet.name })
+      labels.push({
+        x: selectedPlanet.coordinates.x,
+        y: selectedPlanet.coordinates.y,
+        planet: selectedPlanet.name,
+      });
     }
   }
-  const planetsToLabel: IPlanet[] = planetsToRender
-    .filter((planet) => {
-      if (planet.id === selectedPlanetId) {
-        return true;
-      }
-      const { x, y } = planet.coordinates;
-      const xMin = x - 120 / zoomFactor;
-      const xMax = x + 120 / zoomFactor;
-      const yMin = y - 10 / zoomFactor;
-      const yMax = y + 10 / zoomFactor;
-      const collisions = labels.filter(
-        (collision) =>
-          xMin < collision.x &&
-          collision.x < xMax &&
-          yMin < collision.y &&
-          collision.y < yMax,
-      );
-      if (collisions.length === 0) {
-        labels.push({ ...planet.coordinates, planet: planet.name });
-        return true;
-      }
-      return false;
-    });
+  const planetsToLabel: IPlanet[] = planetsToRender.filter((planet) => {
+    if (planet.id === selectedPlanetId) {
+      return true;
+    }
+    const { x, y } = planet.coordinates;
+    const xMin = x - 120 / zoomFactor;
+    const xMax = x + 120 / zoomFactor;
+    const yMin = y - 10 / zoomFactor;
+    const yMax = y + 10 / zoomFactor;
+    const collisions = labels.filter(
+      (collision) =>
+        xMin < collision.x &&
+        collision.x < xMax &&
+        yMin < collision.y &&
+        collision.y < yMax,
+    );
+    if (collisions.length === 0) {
+      labels.push({ ...planet.coordinates, planet: planet.name });
+      return true;
+    }
+    return false;
+  });
 
   setPlanetsToRender(planetsToRender);
   labelsToRenderRef.current = planetsToLabel;

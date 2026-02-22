@@ -28,17 +28,15 @@ export default function MapPlanet(props: IMapPlanetProps) {
 
   return (
     <Fragment>
-      {
-        props.selected ?
-          <circle
-            fill="white"
-            stroke="white"
-            className={styles.selected}
-            cx={x}
-            cy={y}
-          /> :
-          null
-      }
+      {props.selected ? (
+        <circle
+          fill="white"
+          stroke="white"
+          className={styles.selected}
+          cx={x}
+          cy={y}
+        />
+      ) : null}
       <circle
         fill={color}
         stroke={color}
