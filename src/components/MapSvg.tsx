@@ -19,35 +19,33 @@ export interface IMapSvgProps {
   };
   center?: IVector2;
   onPlanetSelect?: (planetId: string) => void;
+  selectedPlanetId?: string;
 }
 
 export default function MapSvg(props: IMapSvgProps) {
   const containerRef = useRef<SVGSVGElement>(null);
   const transformGroupRef = useRef<SVGGElement>(null);
-  const zoomFactorRef = useRef<number>(props.zoom?.initial || 1);
   const [containerDimensions, setContainerDimensions] = useState<IVector2>({
     x: 800,
     y: 800,
   });
-  const containerDimensionsRef = useRef<IVector2>(containerDimensions);
-  const [centerCoordinates, setCenterCoordinates] = useState<IVector2>(
-    props.center || { x: 0, y: 0 },
-  );
-  const centerCoordinatesRef = useRef<IVector2>(centerCoordinates);
-  const minMaxCoordinatesRef = useRef<MinMaxCoordinates>(
-    getMinMaxCoordinates(
-      centerCoordinates,
-      zoomFactorRef.current,
-      containerDimensions,
-    ),
-  );
+  const mapRef = useRef({
+    zoomFactor: props.zoom?.initial || 1,
+    center: props.center || { x: 0, y: 0 },
+    minMaxCoordinates: getMinMaxCoordinates(
+      props.center || { x: 0, y: 0 },
+      props.zoom?.initial || 1, 
+      containerDimensions
+    )
+  });
   const [planetsToRender, setPlanetsToRender] = useState<IPlanet[]>([]);
-  const [planetsToLabel, setPlanetsToLabel] = useState<IPlanet[]>([]);
   const planetsToLabelRef = useRef<IPlanet[]>([]);
   const planetsRef = useRef<IPlanet[]>(props.planets);
   planetsRef.current = props.planets;
   const labelGroupRef = useRef<SVGGElement>(null);
   const planetGroupRef = useRef<SVGGElement>(null);
+  const selectedPlanetIdRef = useRef(props.selectedPlanetId);
+  const [selectedPlanetId, setSelectedPlanetId] = useState<string | undefined>(props.selectedPlanetId);
 
   useEffect(() => {
     if (containerRef.current) {
@@ -56,52 +54,53 @@ export default function MapSvg(props: IMapSvgProps) {
         y: containerRef.current.getBoundingClientRect().height,
       };
       setContainerDimensions(newContainerDimensions);
-      containerDimensionsRef.current = newContainerDimensions;
       const newMinMaxCoordinates = getMinMaxCoordinates(
-        centerCoordinatesRef.current,
-        zoomFactorRef.current,
+        mapRef.current.center,
+        mapRef.current.zoomFactor,
         newContainerDimensions,
       );
-      minMaxCoordinatesRef.current = newMinMaxCoordinates;
+      mapRef.current.minMaxCoordinates = newMinMaxCoordinates;
       getAndSetComponentsToRender(
         newMinMaxCoordinates,
-        zoomFactorRef.current,
+        mapRef.current.zoomFactor,
         planetsRef,
         setPlanetsToRender,
-        setPlanetsToLabel,
         planetsToLabelRef,
+        props.selectedPlanetId,
       );
     }
-  }, [containerRef, planetsRef.current]);
 
-  const zoomStyle = getZoomStyle(zoomFactorRef.current);
+    selectedPlanetIdRef.current = props.selectedPlanetId;
+  }, [containerRef, planetsRef.current, props.selectedPlanetId]);
+
+  const zoomStyle = getZoomStyle(mapRef.current.zoomFactor);
 
   const onDrag = function (delta: IVector2) {
-    const oldCenterCoordinates = centerCoordinatesRef.current;
+    const oldCenterCoordinates = mapRef.current.center;
     const newCenterCoordinates = {
-      x: oldCenterCoordinates.x - delta.x / zoomFactorRef.current,
-      y: oldCenterCoordinates.y + delta.y / zoomFactorRef.current,
+      x: oldCenterCoordinates.x - delta.x / mapRef.current.zoomFactor,
+      y: oldCenterCoordinates.y + delta.y / mapRef.current.zoomFactor,
     };
 
-    centerCoordinatesRef.current = newCenterCoordinates;
+    mapRef.current.center = newCenterCoordinates;
 
     const newMinMaxCoordinates = getMinMaxCoordinates(
       newCenterCoordinates,
-      zoomFactorRef.current,
+      mapRef.current.zoomFactor,
       containerDimensions,
     );
-    minMaxCoordinatesRef.current = newMinMaxCoordinates;
+    mapRef.current.minMaxCoordinates = newMinMaxCoordinates;
 
     transformGroupRef.current?.setAttribute(
       "transform",
-      `scale(${zoomFactorRef.current} -${zoomFactorRef.current}) translate(${-newCenterCoordinates.x} ${-newCenterCoordinates.y})`,
+      `scale(${mapRef.current.zoomFactor} -${mapRef.current.zoomFactor}) translate(${-newCenterCoordinates.x} ${-newCenterCoordinates.y})`,
     );
     updateLabelPositions(
       labelGroupRef,
       planetsToLabelRef,
-      containerDimensionsRef,
-      zoomFactorRef,
-      centerCoordinatesRef,
+      containerDimensions,
+      mapRef.current.zoomFactor,
+      mapRef.current.center,
     );
   };
 
@@ -113,8 +112,8 @@ export default function MapSvg(props: IMapSvgProps) {
 
     const svg = containerRef.current;
 
-    const oldZoomFactor = zoomFactorRef.current;
-    const oldCenterCoordinates = centerCoordinatesRef.current;
+    const oldZoomFactor = mapRef.current.zoomFactor;
+    const oldCenterCoordinates = mapRef.current.center;
 
     const mouseMapCoordinates = containerPositionToMapCoordinates(
       mouseContainerPosition,
@@ -138,15 +137,16 @@ export default function MapSvg(props: IMapSvgProps) {
       y: mouseMapCoordinates.y + newMouseCoordinateOffset.y,
     };
 
-    centerCoordinatesRef.current = newCenterCoordinates;
-
     const newMinMaxCoordinates = getMinMaxCoordinates(
       newCenterCoordinates,
       newZoomFactor,
       containerDimensions,
     );
-    minMaxCoordinatesRef.current = newMinMaxCoordinates;
-    zoomFactorRef.current = newZoomFactor;
+    mapRef.current = {
+      center: newCenterCoordinates,
+      minMaxCoordinates: newMinMaxCoordinates,
+      zoomFactor: newZoomFactor,
+    }
 
     transformGroupRef.current?.setAttribute(
       "transform",
@@ -155,33 +155,31 @@ export default function MapSvg(props: IMapSvgProps) {
     updateLabelPositions(
       labelGroupRef,
       planetsToLabelRef,
-      containerDimensionsRef,
-      zoomFactorRef,
-      centerCoordinatesRef,
+      containerDimensions,
+      mapRef.current.zoomFactor,
+      mapRef.current.center,
     );
   };
 
   function onZoomEnd() {
-    setCenterCoordinates(centerCoordinatesRef.current);
     getAndSetComponentsToRender(
-      minMaxCoordinatesRef.current,
-      zoomFactorRef.current,
+      mapRef.current.minMaxCoordinates,
+      mapRef.current.zoomFactor,
       planetsRef,
       setPlanetsToRender,
-      setPlanetsToLabel,
       planetsToLabelRef,
+      selectedPlanetIdRef.current,
     );
   }
 
   function onDragEnd() {
-    setCenterCoordinates(centerCoordinatesRef.current);
     getAndSetComponentsToRender(
-      minMaxCoordinatesRef.current,
-      zoomFactorRef.current,
+      mapRef.current.minMaxCoordinates,
+      mapRef.current.zoomFactor,
       planetsRef,
       setPlanetsToRender,
-      setPlanetsToLabel,
       planetsToLabelRef,
+        selectedPlanetIdRef.current,
     );
   }
 
@@ -203,7 +201,7 @@ export default function MapSvg(props: IMapSvgProps) {
       >
         <g
           ref={transformGroupRef}
-          transform={`scale(${zoomFactorRef.current} -${zoomFactorRef.current}) translate(${-centerCoordinates.x} ${-centerCoordinates.y})`}
+          transform={`scale(${mapRef.current.zoomFactor} -${mapRef.current.zoomFactor}) translate(${-mapRef.current.center.x} ${-mapRef.current.center.y})`}
         >
           {props.spacelanes.map((spacelane) => (
             <MapSpacelane
@@ -226,19 +224,27 @@ export default function MapSvg(props: IMapSvgProps) {
               <MapPlanet
                 planet={planet}
                 key={planet.id}
-                hideLabel={!planetsToLabel.includes(planet)}
                 onClick={props.onPlanetSelect}
               />
             ))}
+            {
+              props.selectedPlanetId ? 
+              <MapPlanet 
+                planet={planetsToRender.find(value => value.id === props.selectedPlanetId)!}
+                onClick={props.onPlanetSelect}
+                selected
+              /> :
+              null
+            }
           </g>
         </g>
         <g ref={labelGroupRef}>
-          {planetsToLabel.map((planet) => {
+          {planetsToLabelRef.current.map((planet) => {
             const screenPosition = mapCoordinatesToContainerPosition(
               planet.coordinates,
               containerDimensions,
-              zoomFactorRef.current,
-              centerCoordinates,
+              mapRef.current.zoomFactor,
+              mapRef.current.center,
             );
 
             return (
@@ -389,17 +395,25 @@ function getAndSetComponentsToRender(
   zoomFactor: number,
   planets: React.RefObject<IPlanet[]>,
   setPlanetsToRender: (planets: IPlanet[]) => void,
-  setLabelsToRender: (planets: IPlanet[]) => void,
   labelsToRenderRef: React.RefObject<IPlanet[]>,
+  selectedPlanetId?: string,
 ): void {
   const planetsToRender = planets.current.filter((planet) =>
     shouldCoordinateBeRendered(planet.coordinates, minMaxCoordinates),
   );
 
   const labels: { x: number; y: number; planet: string }[] = [];
+  if (selectedPlanetId) {
+    const selectedPlanet = planets.current.find(value => value.id === selectedPlanetId);
+    if (selectedPlanet) {
+      labels.push({x: selectedPlanet.coordinates.x, y: selectedPlanet.coordinates.y, planet: selectedPlanet.name })
+    }
+  }
   const planetsToLabel: IPlanet[] = planetsToRender
-    .slice(0, 100)
     .filter((planet) => {
+      if (planet.id === selectedPlanetId) {
+        return true;
+      }
       const { x, y } = planet.coordinates;
       const xMin = x - 120 / zoomFactor;
       const xMax = x + 120 / zoomFactor;
@@ -420,21 +434,19 @@ function getAndSetComponentsToRender(
     });
 
   setPlanetsToRender(planetsToRender);
-  setLabelsToRender(planetsToLabel);
   labelsToRenderRef.current = planetsToLabel;
 }
 
 function updateLabelPositions(
   labelGroupRef: React.RefObject<SVGGElement | null>,
   planetsToLabelRef: React.RefObject<IPlanet[]>,
-  containerDimensionsRef: React.RefObject<IVector2>,
-  zoomFactorRef: React.RefObject<number>,
-  centerCoordinatesRef: React.RefObject<IVector2>,
+  containerDimensions: IVector2,
+  zoomFactor: number,
+  centerCoordinates: IVector2,
 ) {
   if (!labelGroupRef.current) return;
 
   const planetsToLabel = planetsToLabelRef.current;
-  const containerDimensions = containerDimensionsRef.current;
 
   const labels = labelGroupRef.current.children;
 
@@ -447,8 +459,8 @@ function updateLabelPositions(
     const screenPosition = mapCoordinatesToContainerPosition(
       planet.coordinates,
       containerDimensions,
-      zoomFactorRef.current,
-      centerCoordinatesRef.current,
+      zoomFactor,
+      centerCoordinates,
     );
 
     textElement.setAttribute(

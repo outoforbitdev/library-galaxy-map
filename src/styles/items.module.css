@@ -8,7 +8,11 @@
   transition: r 0.1s;
 }
 
+.selected {
+  r: calc(0.2rem / var(--ood-galaxy-map-zoom-factor));
+}
+
 .spacelane {
-  stroke-width: 0.04rem;
+  stroke-width: 0.1rem;
   vector-effect: non-scaling-stroke;
 }

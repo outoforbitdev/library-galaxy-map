@@ -71,6 +71,7 @@ export default function Map(props: IMapProps) {
         }}
         center={{ x: 0, y: 0 }}
         onPlanetSelect={props.onPlanetSelect}
+        selectedPlanetId={props.selectedPlanetId}
       />
     </div>
   );
