@@ -1,5 +1,12 @@
 import type { Meta, StoryObj } from "@storybook/react";
-import { expect, fn, userEvent, fireEvent, waitFor, within } from "storybook/test";
+import {
+  expect,
+  fn,
+  userEvent,
+  fireEvent,
+  waitFor,
+  within,
+} from "storybook/test";
 import GalaxyMap from "./GalaxyMap";
 import { MapColor } from "./Colors";
 import { FocusLevel } from "./FocusLevels";
@@ -158,10 +165,38 @@ export const PinchZoom: Story = {
     const initialWidth = svg.getAttribute("width");
 
     // Real browsers require Touch objects — plain objects are rejected by the Touch constructor
-    const t1start = new Touch({ identifier: 1, target: svg, pageX: 300, pageY: 250, clientX: 300, clientY: 250 });
-    const t2start = new Touch({ identifier: 2, target: svg, pageX: 500, pageY: 250, clientX: 500, clientY: 250 });
-    const t1end = new Touch({ identifier: 1, target: svg, pageX: 200, pageY: 250, clientX: 200, clientY: 250 });
-    const t2end = new Touch({ identifier: 2, target: svg, pageX: 600, pageY: 250, clientX: 600, clientY: 250 });
+    const t1start = new Touch({
+      identifier: 1,
+      target: svg,
+      pageX: 300,
+      pageY: 250,
+      clientX: 300,
+      clientY: 250,
+    });
+    const t2start = new Touch({
+      identifier: 2,
+      target: svg,
+      pageX: 500,
+      pageY: 250,
+      clientX: 500,
+      clientY: 250,
+    });
+    const t1end = new Touch({
+      identifier: 1,
+      target: svg,
+      pageX: 200,
+      pageY: 250,
+      clientX: 200,
+      clientY: 250,
+    });
+    const t2end = new Touch({
+      identifier: 2,
+      target: svg,
+      pageX: 600,
+      pageY: 250,
+      clientX: 600,
+      clientY: 250,
+    });
 
     await fireEvent.touchStart(svg, {
       touches: [t1start, t2start],
@@ -227,9 +262,7 @@ export const ClickAndDragPan: Story = {
 /** Verifies that clicking a planet calls the `onPlanetSelect` callback with the planet data. */
 export const PlanetSelectCallback: Story = {
   play: async ({ canvasElement, args }) => {
-    const planetGroup = canvasElement.querySelector(
-      '[data-testid="velarion"]',
-    );
+    const planetGroup = canvasElement.querySelector('[data-testid="velarion"]');
     if (!planetGroup) throw new Error("Planet group not found");
 
     await userEvent.click(planetGroup);
