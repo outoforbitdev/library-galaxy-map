@@ -15,6 +15,9 @@
     "@rollup/plugin-node-resolve": "^16.0.1",
     "@rollup/plugin-terser": "^0.4.4",
     "@rollup/plugin-typescript": "^12.1.2",
+    "@storybook/addon-docs": "^10.2.19",
+    "@storybook/react-vite": "^10.2.19",
+    "@storybook/test-runner": "^0.24.2",
     "@types/react": "^19.1.12",
     "commitlint": "^20.1.0",
     "husky": "^9.1.7",
@@ -25,13 +28,18 @@
     "rollup-plugin-peer-deps-external": "^2.2.4",
     "rollup-plugin-postcss": "^4.0.2",
     "rollup-plugin-sourcemaps2": "^0.5.0",
+    "storybook": "^10.2.19",
     "tslib": "^2.8.1",
-    "typescript": "^5.7.3"
+    "typescript": "^5.7.3",
+    "vite": "^5.4.21"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "test-storybook",
     "build": "rollup -c --bundleConfigAsCjs",
-    "prepare": "husky"
+    "prepare": "husky",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build",
+    "test-storybook": "test-storybook"
   },
   "repository": {
     "type": "git",

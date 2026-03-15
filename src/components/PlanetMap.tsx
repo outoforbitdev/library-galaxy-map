@@ -38,6 +38,7 @@ export default function PlanetMap(props: IPlanetMapProps) {
         styles.planet + " " + getFocusClassName(props.planet.focusLevel)
       }
       onClick={() => props.onClick?.(props.planet)}
+      data-testid={props.planet.id}
     >
       {props.selected ? (
         <line x1={x} y1={y} x2={x} y2={y} className={styles.planet_outline} />

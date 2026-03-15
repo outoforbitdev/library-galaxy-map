@@ -10,7 +10,7 @@ export enum MapColor {
 }
 
 export function colorToCss(color: MapColor) {
-  const colorName = color.toString().toLowerCase();
+  const colorName = MapColor[color].toLowerCase();
 
   return `var(--ood-color-${colorName})`;
 }
