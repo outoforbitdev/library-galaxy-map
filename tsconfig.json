@@ -12,11 +12,11 @@
     "module": "ESNext",
     "sourceMap": true,
     "outDir": "./dist/",
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "allowSyntheticDefaultImports": true,
     "resolveJsonModule": true,
     "isolatedModules": true
   },
-  "include": ["**/*.ts"],
+  "include": ["**/*.ts", "**/*.tsx"],
   "exclude": ["rollup.config.ts"]
 }

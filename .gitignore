@@ -36,3 +36,7 @@ yarn-error.log*
 next-env.d.ts
 /dist
 /.rollup.cache
+/storybook-static
+
+# agent work-in-progress
+.agent-wip/
