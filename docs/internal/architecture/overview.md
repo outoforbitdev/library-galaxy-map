@@ -21,16 +21,16 @@ GalaxyMap (IMapProps)
 
 ## Responsibilities
 
-| Component | Responsibility |
-|-----------|----------------|
-| `GalaxyMap` | Owns visibility state; bridges MapUI and ZoomableMap |
-| `MapUI` | Renders overlay UI (options panel, legend, children) |
-| `MapOptions` | Provides visibility controls to the user (Edward) |
-| `MapLegend` | Renders an optional color legend |
-| `ZoomableMap` | Manages the SVG viewport and renders map items |
-| `Zoomable` | Handles mouse/touch zoom and pan events |
-| `PlanetMap` | Renders a single planet as an SVG element with label |
-| `SpacelaneMap` | Renders a single spacelane as an SVG line |
+| Component      | Responsibility                                       |
+| -------------- | ---------------------------------------------------- |
+| `GalaxyMap`    | Owns visibility state; bridges MapUI and ZoomableMap |
+| `MapUI`        | Renders overlay UI (options panel, legend, children) |
+| `MapOptions`   | Provides visibility controls to the user (Edward)    |
+| `MapLegend`    | Renders an optional color legend                     |
+| `ZoomableMap`  | Manages the SVG viewport and renders map items       |
+| `Zoomable`     | Handles mouse/touch zoom and pan events              |
+| `PlanetMap`    | Renders a single planet as an SVG element with label |
+| `SpacelaneMap` | Renders a single spacelane as an SVG line            |
 
 ## Data Flow
 
@@ -47,6 +47,7 @@ GalaxyMap (IMapProps)
 - **CSS custom properties for theming** — Colors resolve to `--ood-color-*` variables.
 
 See also:
+
 - [Data Model](./data-model.md)
 - [API Design](./api-design.md)
 - [Tech Stack](./tech-stack.md)

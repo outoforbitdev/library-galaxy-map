@@ -9,14 +9,14 @@
 
 ## Tradeoffs
 
-| Decision | Choice | Rationale |
-|----------|--------|-----------|
-| SVG vs Canvas | SVG | Simpler DOM integration, easier styling, sufficient performance for typical map sizes |
-| React dependency | Required peer dep | Keeps bundle lean; consumers already have React |
-| No built-in data fetching | Consumers pass data as props | Keeps the component pure and composable; avoids opinionated data layer |
-| FocusLevel enum for visibility | Coarse 4-level system | Simpler than continuous zoom thresholds; covers most use cases |
-| CSS variables for colors | `var(--ood-color-*)` | Enables theming without JS; piggybacks on the ood design system |
-| No unit tests yet | Known gap | Accepted early-stage tradeoff; test infrastructure is a backlog priority |
+| Decision                       | Choice                       | Rationale                                                                             |
+| ------------------------------ | ---------------------------- | ------------------------------------------------------------------------------------- |
+| SVG vs Canvas                  | SVG                          | Simpler DOM integration, easier styling, sufficient performance for typical map sizes |
+| React dependency               | Required peer dep            | Keeps bundle lean; consumers already have React                                       |
+| No built-in data fetching      | Consumers pass data as props | Keeps the component pure and composable; avoids opinionated data layer                |
+| FocusLevel enum for visibility | Coarse 4-level system        | Simpler than continuous zoom thresholds; covers most use cases                        |
+| CSS variables for colors       | `var(--ood-color-*)`         | Enables theming without JS; piggybacks on the ood design system                       |
+| No unit tests yet              | Known gap                    | Accepted early-stage tradeoff; test infrastructure is a backlog priority              |
 
 ## What We Are Not Building
 

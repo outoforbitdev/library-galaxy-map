@@ -17,11 +17,11 @@ Before merging a release PR, verify:
 
 Follow [Semantic Versioning](https://semver.org/):
 
-| Change Type | Version Part |
-|-------------|-------------|
-| Bug fix | Patch (`0.0.x`) |
+| Change Type                       | Version Part    |
+| --------------------------------- | --------------- |
+| Bug fix                           | Patch (`0.0.x`) |
 | New feature, backwards-compatible | Minor (`0.x.0`) |
-| Breaking API change | Major (`x.0.0`) |
+| Breaking API change               | Major (`x.0.0`) |
 
 ## What Happens on Merge
 

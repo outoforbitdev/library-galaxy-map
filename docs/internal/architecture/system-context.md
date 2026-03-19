@@ -25,10 +25,10 @@
 
 ## External Dependencies
 
-| Dependency | Type | Role |
-|------------|------|------|
-| `react` | Peer | UI rendering |
-| `react-dom` | Peer | DOM mounting |
+| Dependency                 | Type    | Role                                                |
+| -------------------------- | ------- | --------------------------------------------------- |
+| `react`                    | Peer    | UI rendering                                        |
+| `react-dom`                | Peer    | DOM mounting                                        |
 | `@outoforbitdev/ood-react` | Runtime | Base `IComponentProps`, `lib.getDomProps()` utility |
 
 ## Publishing and Distribution

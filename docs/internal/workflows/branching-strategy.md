@@ -13,6 +13,7 @@ Branch names should follow the pattern:
 ```
 
 Examples:
+
 - `89-docs-create-internal-documentation`
 - `42-feat-planet-click-handler`
 - `17-fix-zoom-clamp`

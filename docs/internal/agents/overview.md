@@ -8,13 +8,13 @@ This section provides guidance for AI coding agents (e.g., Claude Code) working 
 
 ## Key Files to Understand
 
-| File | Why It Matters |
-|------|---------------|
-| `src/index.ts` | Public API surface — only what's exported here is part of the contract |
-| `src/components/GalaxyMap.tsx` | Root component; owns visibility state |
-| `package.json` | Version and dependency management |
-| `CHANGELOG.md` | Must be updated on every release |
-| `README.md` | Consumer-facing documentation |
+| File                           | Why It Matters                                                         |
+| ------------------------------ | ---------------------------------------------------------------------- |
+| `src/index.ts`                 | Public API surface — only what's exported here is part of the contract |
+| `src/components/GalaxyMap.tsx` | Root component; owns visibility state                                  |
+| `package.json`                 | Version and dependency management                                      |
+| `CHANGELOG.md`                 | Must be updated on every release                                       |
+| `README.md`                    | Consumer-facing documentation                                          |
 
 ## Important Constraints for Agents
 

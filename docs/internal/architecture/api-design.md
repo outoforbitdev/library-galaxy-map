@@ -18,22 +18,22 @@ import GalaxyMap, { MapColor, FocusLevel } from "@outoforbitdev/galaxy-map";
 
 ## `GalaxyMap` Component Props (`IMapProps`)
 
-| Prop | Type | Required | Default | Description |
-|------|------|----------|---------|-------------|
-| `planets` | `IPlanet[]` | Yes | — | Planets to render |
-| `spacelanes` | `ISpacelane[]` | Yes | — | Spacelanes to render |
-| `dimensions.minX` | `number` | Yes | — | Left bound of the coordinate space |
-| `dimensions.minY` | `number` | Yes | — | Top bound of the coordinate space |
-| `dimensions.maxX` | `number` | Yes | — | Right bound of the coordinate space |
-| `dimensions.maxY` | `number` | Yes | — | Bottom bound of the coordinate space |
-| `mapOptions` | `IMapOptions` | No | `undefined` | Visibility defaults and custom options |
-| `legendEntries` | `LegendEntry[]` | No | `undefined` | Entries for the legend overlay |
-| `zoom.initial` | `number` | No | `1` | Starting zoom level |
-| `zoom.min` | `number` | No | — | Minimum zoom level (clamp) |
-| `zoom.max` | `number` | No | — | Maximum zoom level (clamp) |
-| `onPlanetSelect` | `(planet: IPlanet) => void` | No | `undefined` | Called when a planet is clicked |
-| `onSpacelaneSelect` | `(spacelane: ISpacelane) => void` | No | `undefined` | Called when a spacelane is clicked |
-| `selectedPlanetId` | `string` | No | `undefined` | ID of the currently selected planet |
+| Prop                | Type                              | Required | Default     | Description                            |
+| ------------------- | --------------------------------- | -------- | ----------- | -------------------------------------- |
+| `planets`           | `IPlanet[]`                       | Yes      | —           | Planets to render                      |
+| `spacelanes`        | `ISpacelane[]`                    | Yes      | —           | Spacelanes to render                   |
+| `dimensions.minX`   | `number`                          | Yes      | —           | Left bound of the coordinate space     |
+| `dimensions.minY`   | `number`                          | Yes      | —           | Top bound of the coordinate space      |
+| `dimensions.maxX`   | `number`                          | Yes      | —           | Right bound of the coordinate space    |
+| `dimensions.maxY`   | `number`                          | Yes      | —           | Bottom bound of the coordinate space   |
+| `mapOptions`        | `IMapOptions`                     | No       | `undefined` | Visibility defaults and custom options |
+| `legendEntries`     | `LegendEntry[]`                   | No       | `undefined` | Entries for the legend overlay         |
+| `zoom.initial`      | `number`                          | No       | `1`         | Starting zoom level                    |
+| `zoom.min`          | `number`                          | No       | —           | Minimum zoom level (clamp)             |
+| `zoom.max`          | `number`                          | No       | —           | Maximum zoom level (clamp)             |
+| `onPlanetSelect`    | `(planet: IPlanet) => void`       | No       | `undefined` | Called when a planet is clicked        |
+| `onSpacelaneSelect` | `(spacelane: ISpacelane) => void` | No       | `undefined` | Called when a spacelane is clicked     |
+| `selectedPlanetId`  | `string`                          | No       | `undefined` | ID of the currently selected planet    |
 
 `IMapProps` also extends `IComponentProps` from `@outoforbitdev/ood-react`, which passes through standard HTML div attributes.
 

@@ -55,9 +55,9 @@ See [README](../README.md) for the full structure.
 
 ## `Justfile` — Common Commands
 
-| Command | What It Does |
-|---------|-------------|
-| `just install` | Install deps + set up git hooks |
-| `just build` | Build the library |
-| `just lint` | Run linters (requires Docker) |
-| `just pack` | Build, pack, and test in app-galaxy-map |
+| Command        | What It Does                            |
+| -------------- | --------------------------------------- |
+| `just install` | Install deps + set up git hooks         |
+| `just build`   | Build the library                       |
+| `just lint`    | Run linters (requires Docker)           |
+| `just pack`    | Build, pack, and test in app-galaxy-map |

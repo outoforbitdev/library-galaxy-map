@@ -14,15 +14,17 @@ The `GalaxyMap` component owns all state and delegates rendering to two subtrees
 `GalaxyMap` holds three pieces of local state via `useState`:
 
 ```typescript
-const [planetLabelVisibility, setPlanetLabelVisibility] = useState<MapItemVisibility>(
-  props.mapOptions?.planetLabelVisibility ?? "dynamic"
-);
+const [planetLabelVisibility, setPlanetLabelVisibility] =
+  useState<MapItemVisibility>(
+    props.mapOptions?.planetLabelVisibility ?? "dynamic",
+  );
 const [planetVisibility, setPlanetVisibility] = useState<MapItemVisibility>(
-  props.mapOptions?.planetVisibility ?? "dynamic"
+  props.mapOptions?.planetVisibility ?? "dynamic",
 );
-const [spacelaneVisibility, setSpacelaneVisibility] = useState<MapItemVisibility>(
-  props.mapOptions?.spacelaneVisibility ?? "dynamic"
-);
+const [spacelaneVisibility, setSpacelaneVisibility] =
+  useState<MapItemVisibility>(
+    props.mapOptions?.spacelaneVisibility ?? "dynamic",
+  );
 ```
 
 These are initialized from props and subsequently controlled by the options panel. They are not synchronized back to props (no controlled component pattern here).
@@ -34,6 +36,7 @@ The `dimensions` prop defines the viewBox of the SVG. Planets and spacelanes use
 ## Zoom and Pan
 
 The `Zoomable` component listens for:
+
 - `wheel` events → zoom
 - `mousedown` + `mousemove` + `mouseup` → drag pan
 - `touchstart` + `touchmove` → single-finger pan and two-finger pinch zoom

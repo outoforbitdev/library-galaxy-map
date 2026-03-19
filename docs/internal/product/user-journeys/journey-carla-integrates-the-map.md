@@ -1,7 +1,6 @@
 # User Journey: Carla Integrates the Map
 
-> **Persona:** [Carla the Consumer](../personas/persona-carla-the-consumer.md)
-> **Status:** Draft
+> **Persona:** [Carla the Consumer](../personas/persona-carla-the-consumer.md) > **Status:** Draft
 
 ## Scenario
 

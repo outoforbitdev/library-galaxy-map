@@ -30,12 +30,14 @@ Edward represents the **end user** who interacts with a deployed application tha
 ## How He Interacts With the Map
 
 **Desktop:**
+
 - Clicks and drags to pan the map.
 - Scrolls the mouse wheel to zoom in and out.
 - Clicks on a planet to trigger the application's selection action.
 - Opens the options panel to toggle visibility of labels, planets, or spacelanes.
 
 **Mobile:**
+
 - Single-finger drag to pan.
 - Two-finger pinch to zoom.
 - Taps on a planet to select it.
