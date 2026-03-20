@@ -18,7 +18,7 @@
 
 - **NFR-S1** The architecture MUST support adding new `MapColor` values without breaking existing consumers.
 - **NFR-S2** The architecture MUST support adding new `FocusLevel` values in a backwards-compatible way.
-- **NFR-S3** The component MUST remain usable when `planets` contains up to 500 items, though performance may degrade beyond 100.
+- **NFR-S3** The component MUST remain usable when `planets` contains up to 10000 items, though performance may degrade beyond 5000.
 - **NFR-S4** The library MUST be publishable to npm and consumable via both ESM and CJS module formats.
 
 ## Usability

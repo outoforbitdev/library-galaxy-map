@@ -23,7 +23,7 @@ Examples:
 1. Branch from `main`.
 2. Work in the feature branch.
 3. Open a PR targeting `main`.
-4. Merge via GitHub (squash or merge commit — no preference enforced).
+4. Merge via GitHub (squash commit only).
 5. Delete the branch after merge.
 
 ## No Long-Lived Feature Branches
