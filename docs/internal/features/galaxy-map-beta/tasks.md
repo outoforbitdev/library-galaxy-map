@@ -41,9 +41,9 @@ Implement `src/types/index.ts` with all public interfaces and enums: `IPlanet`, 
 Implement `src/components/GalaxyMap/constants.ts` with the three named debounce durations. Initial values are defaults to be tuned during implementation; keeping them named and centralized makes them easy to adjust independently.
 
 ```typescript
-export const PLANET_SIZE_DEBOUNCE_MS = 100;     // planet dot zoom-bucket update
-export const LABEL_COLLISION_DEBOUNCE_MS = 100;  // label placement recomputation
-export const RENDER_LIMIT_DEBOUNCE_MS = 300;     // options panel input settling
+export const PLANET_SIZE_DEBOUNCE_MS = 100; // planet dot zoom-bucket update
+export const LABEL_COLLISION_DEBOUNCE_MS = 100; // label placement recomputation
+export const RENDER_LIMIT_DEBOUNCE_MS = 300; // options panel input settling
 ```
 
 **References:** TDD § Constant Object Size During Zoom § Named debounce constants
@@ -124,6 +124,7 @@ Implement `src/utils/labelCollision.ts`:
 Implement `src/components/GalaxyMap/hooks/useZoomPan.ts`. This hook owns all zoom and pan state and produces the SVG transform string consumed by `ZoomableCanvas`.
 
 Responsibilities:
+
 - Mouse wheel zoom with zoom-to-cursor formula (point under cursor stays fixed)
 - Click-and-drag pan (1:1 map-coordinate delta)
 - Single-finger touch pan; two-finger pinch zoom with simultaneous pan
@@ -256,6 +257,7 @@ Implement `src/components/GalaxyMap/MapOverlay/MapOverlay.tsx` and `MapOverlay.m
 Implement `src/components/GalaxyMap/GalaxyMap.tsx`. This is the root component that owns all state and wires everything together.
 
 Responsibilities:
+
 - `useZoomPan` for `zoom`, `center`, `svgTransform`, `animateTo`, `isDragging`
 - `useState` for `currentLimits`, initialized from `props.renderLimits`
 - `containerSize` via `ResizeObserver` on the wrapper div, stored in a `useRef`

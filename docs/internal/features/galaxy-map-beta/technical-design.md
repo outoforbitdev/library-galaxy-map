@@ -12,11 +12,11 @@ The beta adds no new runtime dependencies. All implementation relies on the exis
 
 New **dev dependencies** are permitted for testing:
 
-| Package | Purpose |
-| --- | --- |
-| Storybook | Visual component development and UI testing |
-| A React testing library (e.g., React Testing Library) | Unit tests for hooks and components |
-| A test runner (e.g., Vitest or Jest) | Test execution |
+| Package                                               | Purpose                                     |
+| ----------------------------------------------------- | ------------------------------------------- |
+| Storybook                                             | Visual component development and UI testing |
+| A React testing library (e.g., React Testing Library) | Unit tests for hooks and components         |
+| A test runner (e.g., Vitest or Jest)                  | Test execution                              |
 
 Specific package choices for the testing stack should be confirmed before implementation begins.
 
@@ -91,16 +91,16 @@ GalaxyMap
 
 ### Component Responsibilities
 
-| Component          | Responsibility                                                                           |
-| ------------------ | ---------------------------------------------------------------------------------------- |
+| Component          | Responsibility                                                                                                                           |
+| ------------------ | ---------------------------------------------------------------------------------------------------------------------------------------- |
 | `GalaxyMap`        | Owns all state; computes viewport; runs selectRendered; wires callbacks and ref; accepts and forwards `IComponentProps` to container div |
-| `ZoomableCanvas`   | Renders the SVG; owns drag/pinch gesture state; fires zoom and pan events                |
-| `SpacelaneLayer`   | Renders selected spacelanes as grouped `<line>` segments                                 |
-| `PlanetDotLayer`   | Renders selected planets as `<circle>` elements                                          |
-| `PlanetLabelLayer` | Renders collision-filtered planet labels as `<text>` elements; positioned in screen space outside the zoom transform |
-| `MapOverlay`       | Flex-row container spanning the top of the map; hosts all five overlay slots             |
-| `MapLegend`        | Collapsible panel; renders `legendEntries` as mini-SVG indicator list; absent when entries are absent or empty |
-| `MapOptions`       | Collapsible panel; render limit controls + `customOptions`; calls back into GalaxyMap    |
+| `ZoomableCanvas`   | Renders the SVG; owns drag/pinch gesture state; fires zoom and pan events                                                                |
+| `SpacelaneLayer`   | Renders selected spacelanes as grouped `<line>` segments                                                                                 |
+| `PlanetDotLayer`   | Renders selected planets as `<circle>` elements                                                                                          |
+| `PlanetLabelLayer` | Renders collision-filtered planet labels as `<text>` elements; positioned in screen space outside the zoom transform                     |
+| `MapOverlay`       | Flex-row container spanning the top of the map; hosts all five overlay slots                                                             |
+| `MapLegend`        | Collapsible panel; renders `legendEntries` as mini-SVG indicator list; absent when entries are absent or empty                           |
+| `MapOptions`       | Collapsible panel; render limit controls + `customOptions`; calls back into GalaxyMap                                                    |
 
 ---
 
@@ -116,7 +116,9 @@ const [center, setCenter] = useState<IMapCoordinate>(
   props.initialCenter ?? mapCenter(props.dimensions),
 );
 const [labelSet, setLabelSet] = useState<Set<string>>(new Set());
-const [currentLimits, setCurrentLimits] = useState<IRenderLimits>(props.renderLimits);
+const [currentLimits, setCurrentLimits] = useState<IRenderLimits>(
+  props.renderLimits,
+);
 ```
 
 - **`zoom`** — current zoom level, clamped to `[zoom.min, zoom.max]`.
@@ -194,7 +196,7 @@ function useZoomPan(options: {
   svgTransform: string;
   handlers: ZoomPanHandlers;
   animateTo: (target: { coordinate: IMapCoordinate; zoom?: number }) => void;
-}
+};
 ```
 
 ### Mouse Wheel Zoom
@@ -326,7 +328,10 @@ function isPlanetInViewport(planet: IPlanet, viewport: IViewport): boolean {
 A spacelane is in the viewport if at least one segment endpoint falls within the viewport rectangle. Segments that cross the viewport with both endpoints outside are not detected by this test — this is an acceptable approximation for the beta.
 
 ```typescript
-function isPointInViewport(point: IMapCoordinate, viewport: IViewport): boolean {
+function isPointInViewport(
+  point: IMapCoordinate,
+  viewport: IViewport,
+): boolean {
   return (
     point.x >= viewport.minX &&
     point.x <= viewport.maxX &&
@@ -335,7 +340,10 @@ function isPointInViewport(point: IMapCoordinate, viewport: IViewport): boolean 
   );
 }
 
-function isSpaceLaneInViewport(spacelane: ISpacelane, viewport: IViewport): boolean {
+function isSpaceLaneInViewport(
+  spacelane: ISpacelane,
+  viewport: IViewport,
+): boolean {
   return spacelane.segments.some(
     (seg) =>
       isPointInViewport(seg.origin, viewport) ||
@@ -384,8 +392,12 @@ function computeLabelSet(
   // The selected planet is always a candidate and receives first consideration,
   // even if it falls beyond the label limit.
   const selected = planets.find((p) => p.id === selectedPlanetId);
-  const others = selected ? planets.filter((p) => p.id !== selectedPlanetId) : planets;
-  const candidates = selected ? [selected, ...others.slice(0, limit)] : others.slice(0, limit);
+  const others = selected
+    ? planets.filter((p) => p.id !== selectedPlanetId)
+    : planets;
+  const candidates = selected
+    ? [selected, ...others.slice(0, limit)]
+    : others.slice(0, limit);
 
   const placed: Array<{ x: number; y: number; w: number; h: number }> = [];
   const result = new Set<string>();
@@ -407,10 +419,10 @@ function computeLabelSet(
 Label dimensions cannot be measured without DOM access. The beta uses an estimation approach:
 
 ```typescript
-const CHAR_WIDTH_PX = 7;    // approximate average character width
+const CHAR_WIDTH_PX = 7; // approximate average character width
 const LABEL_HEIGHT_PX = 14; // font-size in screen pixels
-const LABEL_OFFSET_X = 10;  // horizontal offset from planet center (screen px)
-const LABEL_OFFSET_Y = -5;  // vertical offset from planet center (screen px)
+const LABEL_OFFSET_X = 10; // horizontal offset from planet center (screen px)
+const LABEL_OFFSET_Y = -5; // vertical offset from planet center (screen px)
 
 function estimateLabelBox(planet: IPlanet, zoom: number) {
   // Convert screen-pixel offsets to map coordinates
@@ -434,10 +446,7 @@ Dividing pixel dimensions by `zoom` converts them to map coordinate space, where
 ### Overlap Test
 
 ```typescript
-function overlapsAny(
-  box: LabelBox,
-  placed: LabelBox[],
-): boolean {
+function overlapsAny(box: LabelBox, placed: LabelBox[]): boolean {
   return placed.some(
     (p) =>
       box.x < p.x + p.w &&
@@ -548,14 +557,18 @@ The hit-area line makes narrow spacelanes clickable without requiring pixel-perf
   {spacelane.segments.map((seg, i) => (
     <g key={i}>
       <line
-        x1={seg.origin.x} y1={seg.origin.y}
-        x2={seg.destination.x} y2={seg.destination.y}
+        x1={seg.origin.x}
+        y1={seg.origin.y}
+        x2={seg.destination.x}
+        y2={seg.destination.y}
         stroke={resolveColor(seg.color)}
         strokeWidth={selectedSpaceLaneId === spacelane.id ? 3 : 1.5}
       />
       <line
-        x1={seg.origin.x} y1={seg.origin.y}
-        x2={seg.destination.x} y2={seg.destination.y}
+        x1={seg.origin.x}
+        y1={seg.origin.y}
+        x2={seg.destination.x}
+        y2={seg.destination.y}
         stroke="transparent"
         strokeWidth={8}
       />
@@ -635,9 +648,9 @@ Bucket boundaries and exact `r` values per bucket are implementation details. Se
 All three debounce durations are defined as named constants in `src/components/GalaxyMap/constants.ts` so they can be tuned independently during implementation:
 
 ```typescript
-export const PLANET_SIZE_DEBOUNCE_MS = 100;     // planet dot zoom-bucket update
+export const PLANET_SIZE_DEBOUNCE_MS = 100; // planet dot zoom-bucket update
 export const LABEL_COLLISION_DEBOUNCE_MS = 100; // label placement recomputation
-export const RENDER_LIMIT_DEBOUNCE_MS = 300;    // options panel input settling
+export const RENDER_LIMIT_DEBOUNCE_MS = 300; // options panel input settling
 ```
 
 ---
@@ -798,7 +811,7 @@ const LARGE_SCREEN_BREAKPOINT = "(min-width: 768px)";
 
 function useInitiallyExpanded(): boolean {
   return useState<boolean>(
-    () => window.matchMedia(LARGE_SCREEN_BREAKPOINT).matches
+    () => window.matchMedia(LARGE_SCREEN_BREAKPOINT).matches,
   )[0];
 }
 ```

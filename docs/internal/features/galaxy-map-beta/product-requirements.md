@@ -81,12 +81,12 @@ When placing planet labels, the component tracks the bounding boxes of already-p
 
 The component supports the following user-initiated navigation interactions:
 
-| Interaction       | Mechanism               |
-| ----------------- | ----------------------- |
-| Zoom in/out       | Mouse scroll wheel      |
-| Pan               | Click-and-drag          |
-| Pinch to zoom     | Two-finger touch        |
-| Touch pan         | Single-finger drag      |
+| Interaction   | Mechanism          |
+| ------------- | ------------------ |
+| Zoom in/out   | Mouse scroll wheel |
+| Pan           | Click-and-drag     |
+| Pinch to zoom | Two-finger touch   |
+| Touch pan     | Single-finger drag |
 
 Zoom is bounded by optional `zoom.min` and `zoom.max` props.
 
@@ -147,19 +147,19 @@ If animation proves too costly for the beta scope, an instant jump (immediate tr
 
 ### `ISpacelane`
 
-| Field      | Type                  | Required | Description                                      |
-| ---------- | --------------------- | -------- | ------------------------------------------------ |
-| `id`       | `string`              | Yes      | Unique identifier                                |
+| Field      | Type                  | Required | Description                                                              |
+| ---------- | --------------------- | -------- | ------------------------------------------------------------------------ |
+| `id`       | `string`              | Yes      | Unique identifier                                                        |
 | `name`     | `string`              | No       | Display name (not rendered by the component; available for consumer use) |
-| `segments` | `ISpaceLaneSegment[]` | Yes      | Ordered list of segments forming the lane        |
+| `segments` | `ISpaceLaneSegment[]` | Yes      | Ordered list of segments forming the lane                                |
 
 ### `ISpaceLaneSegment`
 
-| Field         | Type             | Required | Description                      |
-| ------------- | ---------------- | -------- | -------------------------------- |
-| `origin`      | `IMapCoordinate` | Yes      | Start coordinate of the segment  |
-| `destination` | `IMapCoordinate` | Yes      | End coordinate of the segment    |
-| `color`       | `MapColor`       | Yes      | Color of this segment            |
+| Field         | Type             | Required | Description                     |
+| ------------- | ---------------- | -------- | ------------------------------- |
+| `origin`      | `IMapCoordinate` | Yes      | Start coordinate of the segment |
+| `destination` | `IMapCoordinate` | Yes      | End coordinate of the segment   |
+| `color`       | `MapColor`       | Yes      | Color of this segment           |
 
 ### `IMapCoordinate`
 
@@ -174,22 +174,22 @@ interface IMapCoordinate {
 
 ### `IMapDimensions`
 
-| Field  | Type     | Required | Description                        |
-| ------ | -------- | -------- | ---------------------------------- |
-| `minX` | `number` | Yes      | Left bound of the coordinate space |
-| `minY` | `number` | Yes      | Top bound of the coordinate space  |
-| `maxX` | `number` | Yes      | Right bound of the coordinate space|
-| `maxY` | `number` | Yes      | Bottom bound of the coordinate space|
+| Field  | Type     | Required | Description                          |
+| ------ | -------- | -------- | ------------------------------------ |
+| `minX` | `number` | Yes      | Left bound of the coordinate space   |
+| `minY` | `number` | Yes      | Top bound of the coordinate space    |
+| `maxX` | `number` | Yes      | Right bound of the coordinate space  |
+| `maxY` | `number` | Yes      | Bottom bound of the coordinate space |
 
 ### `IRenderLimits`
 
 Specifies the default render limits shown in the options panel when the component mounts. These are the consumer's recommended values; the user may adjust them in either direction at runtime.
 
-| Field          | Type     | Required | Description                                                                    |
-| -------------- | -------- | -------- | ------------------------------------------------------------------------------ |
-| `planets`      | `number` | Yes      | Default number of planets rendered                                             |
-| `planetLabels` | `number` | Yes      | Default number of planet labels rendered (after collision filtering)           |
-| `spacelanes`   | `number` | Yes      | Default number of spacelanes rendered                                          |
+| Field          | Type     | Required | Description                                                          |
+| -------------- | -------- | -------- | -------------------------------------------------------------------- |
+| `planets`      | `number` | Yes      | Default number of planets rendered                                   |
+| `planetLabels` | `number` | Yes      | Default number of planet labels rendered (after collision filtering) |
+| `spacelanes`   | `number` | Yes      | Default number of spacelanes rendered                                |
 
 ### `ILegendEntry`
 
@@ -203,9 +203,9 @@ Specifies the default render limits shown in the options panel when the componen
 
 Optional configuration for the options panel. All fields are optional.
 
-| Field             | Type        | Default  | Description                                            |
-| ----------------- | ----------- | -------- | ------------------------------------------------------ |
-| `customOptions`   | `ReactNode` | —        | Additional controls rendered inside the options panel  |
+| Field           | Type        | Default | Description                                           |
+| --------------- | ----------- | ------- | ----------------------------------------------------- |
+| `customOptions` | `ReactNode` | —       | Additional controls rendered inside the options panel |
 
 ### `MapColor` (unchanged from alpha)
 
@@ -242,28 +242,28 @@ interface IGalaxyMapHandle {
 
 `GalaxyMap` extends `IComponentProps` from `@outoforbitdev/ood-react`. Standard HTML div props (`className`, `id`, `style`, etc.) are accepted and forwarded to the component's container `div` via `lib.getDomProps()`.
 
-| Prop                  | Type                              | Required | Default | Description                                               |
-| --------------------- | --------------------------------- | -------- | ------- | --------------------------------------------------------- |
-| `planets`             | `IPlanet[]`                       | Yes      | —       | Priority-ordered list of planets to render                |
-| `spacelanes`          | `ISpacelane[]`                    | Yes      | —       | Priority-ordered list of spacelanes to render             |
-| `dimensions`          | `IMapDimensions`                  | Yes      | —       | Coordinate space bounds                                   |
-| `renderLimits`        | `IRenderLimits`                   | Yes      | —       | Default render limits; user may adjust at runtime via the options panel |
-| `zoom.initial`        | `number`                          | No       | `1`     | Starting zoom level                                       |
-| `zoom.min`            | `number`                          | No       | —       | Minimum zoom level                                        |
-| `zoom.max`            | `number`                          | No       | —       | Maximum zoom level                                        |
-| `initialCenter`       | `IMapCoordinate`                       | No       | —       | Starting center position in coordinate space              |
-| `onPlanetSelect`      | `(planet: IPlanet) => void`       | No       | —       | Called when a planet is clicked                           |
-| `onSpaceLaneSelect`   | `(spacelane: ISpacelane) => void` | No       | —       | Called when any segment of a spacelane is clicked         |
-| `selectedPlanetId`    | `string`                          | No       | —       | ID of the currently selected planet                       |
-| `selectedSpaceLaneId` | `string`                          | No       | —       | ID of the currently selected spacelane                    |
-| `onZoomChange`        | `(zoom: number) => void`          | No       | —       | Called when the zoom level changes                        |
-| `onCenterChange`      | `(center: IMapCoordinate) => void`| No       | —       | Called when the center position changes                   |
-| `legendEntries`       | `ILegendEntry[]`                  | No       | —       | Entries for the legend panel; legend absent when not provided |
-| `mapOptions`          | `IMapOptions`                     | No       | —       | Custom options panel content                              |
-| `children`            | `ReactNode`                       | No       | —       | Consumer UI rendered in the center overlay slot           |
-| `leftChildren`        | `ReactNode`                       | No       | —       | Consumer UI rendered left of the legend panel             |
-| `rightChildren`       | `ReactNode`                       | No       | —       | Consumer UI rendered right of the options panel           |
-| `ref`                 | `React.Ref<IGalaxyMapHandle>`     | No       | —       | Imperative handle for programmatic navigation             |
+| Prop                  | Type                               | Required | Default | Description                                                             |
+| --------------------- | ---------------------------------- | -------- | ------- | ----------------------------------------------------------------------- |
+| `planets`             | `IPlanet[]`                        | Yes      | —       | Priority-ordered list of planets to render                              |
+| `spacelanes`          | `ISpacelane[]`                     | Yes      | —       | Priority-ordered list of spacelanes to render                           |
+| `dimensions`          | `IMapDimensions`                   | Yes      | —       | Coordinate space bounds                                                 |
+| `renderLimits`        | `IRenderLimits`                    | Yes      | —       | Default render limits; user may adjust at runtime via the options panel |
+| `zoom.initial`        | `number`                           | No       | `1`     | Starting zoom level                                                     |
+| `zoom.min`            | `number`                           | No       | —       | Minimum zoom level                                                      |
+| `zoom.max`            | `number`                           | No       | —       | Maximum zoom level                                                      |
+| `initialCenter`       | `IMapCoordinate`                   | No       | —       | Starting center position in coordinate space                            |
+| `onPlanetSelect`      | `(planet: IPlanet) => void`        | No       | —       | Called when a planet is clicked                                         |
+| `onSpaceLaneSelect`   | `(spacelane: ISpacelane) => void`  | No       | —       | Called when any segment of a spacelane is clicked                       |
+| `selectedPlanetId`    | `string`                           | No       | —       | ID of the currently selected planet                                     |
+| `selectedSpaceLaneId` | `string`                           | No       | —       | ID of the currently selected spacelane                                  |
+| `onZoomChange`        | `(zoom: number) => void`           | No       | —       | Called when the zoom level changes                                      |
+| `onCenterChange`      | `(center: IMapCoordinate) => void` | No       | —       | Called when the center position changes                                 |
+| `legendEntries`       | `ILegendEntry[]`                   | No       | —       | Entries for the legend panel; legend absent when not provided           |
+| `mapOptions`          | `IMapOptions`                      | No       | —       | Custom options panel content                                            |
+| `children`            | `ReactNode`                        | No       | —       | Consumer UI rendered in the center overlay slot                         |
+| `leftChildren`        | `ReactNode`                        | No       | —       | Consumer UI rendered left of the legend panel                           |
+| `rightChildren`       | `ReactNode`                        | No       | —       | Consumer UI rendered right of the options panel                         |
+| `ref`                 | `React.Ref<IGalaxyMapHandle>`      | No       | —       | Imperative handle for programmatic navigation                           |
 
 ---
 
