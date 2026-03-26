@@ -176,10 +176,10 @@ interface IMapCoordinate {
 
 ### `IMapDimensions`
 
-| Field | Type             | Required | Description                          |
-| ----- | ---------------- | -------- | ------------------------------------ |
-| `min` | `IMapCoordinate` | Yes      | Left and bottom bound of the coordinate space   |
-| `max` | `IMapCoordinate` | Yes      | Right and top bound of the coordinate space  |
+| Field | Type             | Required | Description                                   |
+| ----- | ---------------- | -------- | --------------------------------------------- |
+| `min` | `IMapCoordinate` | Yes      | Left and bottom bound of the coordinate space |
+| `max` | `IMapCoordinate` | Yes      | Right and top bound of the coordinate space   |
 
 ### `IRenderLimits`
 
