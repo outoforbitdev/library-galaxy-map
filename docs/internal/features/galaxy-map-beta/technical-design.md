@@ -148,34 +148,45 @@ The SVG element's `viewBox` is **not** set to `dimensions`. Instead, the SVG fil
 
 The center of the SVG in pixel space is `(svgWidth / 2, svgHeight / 2)`. The default map center (when `initialCenter` is not provided) is the midpoint of `dimensions`.
 
+### Y-Axis Convention
+
+Map coordinates use a **standard mathematical Y axis**: `y` increases upward. SVG's native Y axis increases downward. The component bridges this by negating the Y scale in the transform, so that map content renders with the correct orientation without requiring consumers to pre-flip their data.
+
 ### Transform Formula
 
 The transform applied to the content `<g>` element:
 
 ```
 translate(svgWidth/2, svgHeight/2)
-scale(zoom)
+scale(zoom, -zoom)
 translate(-center.x, -center.y)
 ```
 
-This positions `center` (a map coordinate) at the center of the screen, then scales around it.
+The negative Y scale in `scale(zoom, -zoom)` flips the Y axis so that map coordinates increase upward, matching standard mathematical convention. This positions `center` (a map coordinate) at the center of the screen, then scales around it with the correct orientation.
 
 As an SVG `transform` attribute string:
 
 ```
-translate({svgWidth/2}, {svgHeight/2}) scale({zoom}) translate({-center.x}, {-center.y})
+translate({svgWidth/2}, {svgHeight/2}) scale({zoom}, {-zoom}) translate({-center.x}, {-center.y})
 ```
 
 ### Coordinate Conversion
 
-Converting a screen position `(sx, sy)` to map coordinates given the current state:
+The forward transform maps a map point `(mx, my)` to a screen point `(sx, sy)`:
 
 ```
-mapX = (sx - svgWidth/2) / zoom + center.x
-mapY = (sy - svgHeight/2) / zoom + center.y
+sx = zoom  * (mx - center.x) + svgWidth/2
+sy = -zoom * (my - center.y) + svgHeight/2
 ```
 
-This is used when determining which planet or spacelane segment was clicked, and when computing the new center after a zoom-to-cursor operation.
+Inverting these equations gives the screen-to-map conversion:
+
+```
+mapX = center.x + (sx - svgWidth/2) / zoom
+mapY = center.y - (sy - svgHeight/2) / zoom
+```
+
+Both results are anchored to `center`, so the output reflects the current pan position. For example, if the map is panned such that only positive `y` values are visible (`center.y = 500`), a click anywhere on screen still yields a positive `mapY`. This is used when determining which planet or spacelane segment was clicked, and when computing the new center after a zoom-to-cursor operation.
 
 ---
 
@@ -201,19 +212,26 @@ function useZoomPan(options: {
 
 ### Mouse Wheel Zoom
 
-Zoom is applied around the cursor position so the point under the mouse stays fixed:
+Zoom is applied around the cursor position so the point under the mouse stays fixed.
+
+First, compute the map coordinate currently under the cursor using the screen-to-map conversion:
 
 ```
-// Current map coordinate under cursor
-px = (mouseX - svgWidth/2) / zoom + center.x
-py = (mouseY - svgHeight/2) / zoom + center.y
+px = center.x + (mouseX - svgWidth/2) / zoom
+py = center.y - (mouseY - svgHeight/2) / zoom
+```
 
-// New zoom (clamped)
+Apply the new zoom (clamped):
+
+```
 zoom' = clamp(zoom * scaleFactor, zoom.min, zoom.max)
+```
 
-// Adjust center so (px, py) stays under cursor
-center'.x = px - (mouseX - svgWidth/2) / zoom'
-center'.y = py - (mouseY - svgHeight/2) / zoom'
+Then solve for the new center that keeps `(px, py)` under the cursor after the zoom change. Using the forward transform equations:
+
+```
+mouseX = zoom'  * (px - center'.x) + svgWidth/2   → center'.x = px - (mouseX - svgWidth/2) / zoom'
+mouseY = -zoom' * (py - center'.y) + svgHeight/2  → center'.y = py + (mouseY - svgHeight/2) / zoom'
 ```
 
 ### Click-and-Drag Pan
@@ -303,9 +321,9 @@ function computeViewport(
   const halfH = containerHeight / 2 / zoom;
   return {
     minX: center.x - halfW,
-    minY: center.y - halfH,
+    minY: center.y - halfH, // lower map y = bottom of screen (upward axis)
     maxX: center.x + halfW,
-    maxY: center.y + halfH,
+    maxY: center.y + halfH, // higher map y = top of screen (upward axis)
   };
 }
 ```

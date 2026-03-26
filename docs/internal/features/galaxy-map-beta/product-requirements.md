@@ -172,14 +172,14 @@ interface IMapCoordinate {
 }
 ```
 
+**Coordinate system:** The map uses a standard mathematical Y axis — `y` increases upward. A planet with a lower `y` value appears lower on screen; a planet with a higher `y` value appears higher. This is the inverse of SVG's native coordinate system (where `y` increases downward), and the component is responsible for applying the axis flip internally.
+
 ### `IMapDimensions`
 
-| Field  | Type     | Required | Description                          |
-| ------ | -------- | -------- | ------------------------------------ |
-| `minX` | `number` | Yes      | Left bound of the coordinate space   |
-| `minY` | `number` | Yes      | Top bound of the coordinate space    |
-| `maxX` | `number` | Yes      | Right bound of the coordinate space  |
-| `maxY` | `number` | Yes      | Bottom bound of the coordinate space |
+| Field | Type             | Required | Description                          |
+| ----- | ---------------- | -------- | ------------------------------------ |
+| `min` | `IMapCoordinate` | Yes      | Left and bottom bound of the coordinate space   |
+| `max` | `IMapCoordinate` | Yes      | Right and top bound of the coordinate space  |
 
 ### `IRenderLimits`
 
@@ -269,6 +269,7 @@ interface IGalaxyMapHandle {
 
 ## Acceptance Criteria
 
+- [ ] Planets with higher `y` coordinate values appear higher on screen than planets with lower `y` values (Y axis is upward, inverse of SVG).
 - [ ] Render caps apply to viewport-visible items only — items outside the current viewport do not consume capacity.
 - [ ] Planets render at their specified coordinates in priority order, up to `renderLimits.planets` within the viewport.
 - [ ] Spacelanes render as multi-segment polylines in priority order, up to `renderLimits.spacelanes` within the viewport.
