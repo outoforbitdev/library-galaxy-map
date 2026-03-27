@@ -1,0 +1,4 @@
+- Common commands for this repo are defined in Justfile
+- The lint command is just lint
+- Packages are managed with npm, not yarn.
+- There is a PR template for this repo, look at previous PRs to see examples.
