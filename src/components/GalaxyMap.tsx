@@ -1,23 +1,17 @@
-import ZoomableMap from "./ZoomableMap";
 import { IMapOptionsProps } from "./MapOptions";
 import { ReactNode, useRef, useState } from "react";
-import { IPlanet } from "./PlanetMap";
-import { ISpacelane } from "./SpacelaneMap";
+import { IPlanet } from "./MapPlanet";
+import { ISpacelane } from "./MapSpacelane";
 import styles from "../styles/map.module.css";
 import { MapItemVisibility } from "./MapItemVisibilitySelect";
 import { lib, IComponentProps } from "@outoforbitdev/ood-react";
 import { MapUI } from "./MapUI";
 import { LegendEntry } from "./MapLegend";
+import MapSvg from "./MapSvg";
 
 export interface IMapProps extends IComponentProps {
   planets: IPlanet[];
   spacelanes: ISpacelane[];
-  dimensions: {
-    minX: number;
-    minY: number;
-    maxX: number;
-    maxY: number;
-  };
   mapOptions?: IMapOptions;
   legendEntries?: LegendEntry[];
   zoom?: {
@@ -25,7 +19,7 @@ export interface IMapProps extends IComponentProps {
     min?: number;
     max?: number;
   };
-  onPlanetSelect?: (planet: IPlanet) => void;
+  onPlanetSelect?: (planetId: string) => void;
   onSpacelaneSelect?: (spacelane: ISpacelane) => void;
   selectedPlanetId?: string;
 }
@@ -69,19 +63,15 @@ export default function Map(props: IMapProps) {
       >
         {props.children}
       </MapUI>
-      <ZoomableMap
-        containerRef={containerRef}
-        {...props}
-        mapOptions={{
-          planetLabelsVisibility: planetLabelVisibility,
-          planetsVisibility: planetVisibility,
-          spacelanesVisiblity: spacelaneVisibility,
+      <MapSvg
+        planets={props.planets}
+        spacelanes={props.spacelanes}
+        zoom={{
+          initial: 0.25,
         }}
-        zoom={props.zoom ?? {}}
+        center={{ x: 0, y: 0 }}
+        onPlanetSelect={props.onPlanetSelect}
         selectedPlanetId={props.selectedPlanetId}
-        onPlanetSelect={(planet) => {
-          props.onPlanetSelect?.(planet);
-        }}
       />
     </div>
   );
