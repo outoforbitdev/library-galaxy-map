@@ -1,1 +1,14 @@
-/* TODO: MapOverlay styles */
+.overlay {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  width: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.center {
+  flex: 1;
+}
+
