@@ -470,7 +470,7 @@ function overlapsAny(box: LabelBox, placed: LabelBox[]): boolean {
       box.x < p.x + p.w &&
       box.x + box.w > p.x &&
       box.y < p.y + p.h &&
-      box.y + p.h > p.y,
+      box.y + box.h > p.y,
   );
 }
 ```
@@ -822,7 +822,11 @@ The rationale for `leftChildren` and `rightChildren` alongside the center `child
 
 ### Panel initial collapse state is responsive
 
-Both `MapLegend` and `MapOptions` own their own `expanded: boolean` state locally (it does not need to live in `GalaxyMap`). The initial value is determined at mount time by a `window.matchMedia` check:
+Both `MapLegend` and `MapOptions` own their own `expanded: boolean` state locally (it does not need to live in `GalaxyMap`), and each renders its own toggle control rather than wrapping `Expandable` from `@outoforbitdev/ood-react`. `Expandable`'s current implementation hardcodes `useState(false)` with no way to seed an initial value, which cannot satisfy the responsive-initial-state requirement below. See [Decisions: Custom collapsible panels instead of `ood-react`'s `Expandable`](./decisions.md#custom-collapsible-panels-instead-of-ood-reacts-expandable).
+
+**TODO:** Once `Expandable` supports seeding its initial expanded state, migrate `MapLegend` and `MapOptions` to use it instead of custom collapse UI.
+
+The initial value is determined at mount time by a `window.matchMedia` check:
 
 ```typescript
 const LARGE_SCREEN_BREAKPOINT = "(min-width: 768px)";

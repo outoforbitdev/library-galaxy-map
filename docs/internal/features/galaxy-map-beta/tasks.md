@@ -219,6 +219,7 @@ Implement `src/components/GalaxyMap/MapLegend/MapLegend.tsx` and `MapLegend.modu
 
 - Each entry renders a mini-SVG indicator (round dot → short line → round dot, all in `entry.color`) alongside the entry label; `entry.id` is used as the React key
 - Initial expanded state determined once at mount via `window.matchMedia("(min-width: 768px)")`; not reactive to resize
+- Implements its own toggle control rather than wrapping `Expandable` from `@outoforbitdev/ood-react`, since `Expandable` cannot currently be seeded with an initial expanded value. Leave a `// TODO:` comment noting this should migrate to `Expandable` once it supports an initial/default expanded state. See [Decisions](./decisions.md#custom-collapsible-panels-instead-of-ood-reacts-expandable).
 
 **References:** TDD § Key Design Decisions § Legend entries use a mini-SVG indicator, TDD § Key Design Decisions § Panel initial collapse state is responsive
 
@@ -233,6 +234,7 @@ Implement `src/components/GalaxyMap/MapOptions/MapOptions.tsx` and `MapOptions.m
 - Planet labels input maximum may optionally be capped at `currentLimits.planets` (see TDD § State Management § Optional label cap)
 - `customOptions` rendered below the built-in controls
 - Initial expanded state determined once at mount via `window.matchMedia`
+- Implements its own toggle control rather than wrapping `Expandable` from `@outoforbitdev/ood-react`, since `Expandable` cannot currently be seeded with an initial expanded value. Leave a `// TODO:` comment noting this should migrate to `Expandable` once it supports an initial/default expanded state. See [Decisions](./decisions.md#custom-collapsible-panels-instead-of-ood-reacts-expandable).
 
 **Unit tests:** Debounce prevents intermediate propagation to `setCurrentLimits`; limits can be set both below and above the consumer default; warning indicator appears when a limit exceeds the default; warning absent when at or below default.
 
@@ -278,7 +280,19 @@ Responsibilities:
 
 ## Phase 8 — Exports
 
-### 8.1 Update `src/index.ts`
+### 8.1 Retire the alpha implementation
+
+Delete the superseded alpha component files, now that the beta implementation under `src/components/GalaxyMap/` covers their functionality: `src/components/GalaxyMap.tsx`, `PlanetMap.tsx`, `SpacelaneMap.tsx`, `Zoomable.tsx`, `ZoomableMap.tsx`, `MapUI.tsx`, `MapLegend.tsx`, `MapOptions.tsx`, `MapItemVisibilitySelect.tsx`, `Colors.tsx`, `FocusLevels.tsx`, `GalaxyMap.stories.tsx`, and `src/styles/*.module.css`.
+
+This is not just cleanup: `src/components/GalaxyMap.tsx` (a file) and `src/components/GalaxyMap/` (a directory with its own `index.ts`) currently coexist. With `moduleResolution: "node"`, `import ... from "./components/GalaxyMap"` resolves the file before the directory index — so `src/index.ts` is silently pointing at the **old alpha component** right now, and will continue to do so through every phase until the alpha file is deleted. Task 8.2 cannot correctly wire up the beta component's public export until this collision is removed.
+
+Per the PRD's non-goals, there is no upgrade path or backward-compatibility requirement, so these files are safe to remove outright rather than deprecate.
+
+**References:** PRD § Non-Goals
+
+**Depends on:** 7.1
+
+### 8.2 Update `src/index.ts`
 
 Export all public types and the `GalaxyMap` component from the package root: `GalaxyMap` (default), `IGalaxyMapHandle`, `IPlanet`, `ISpacelane`, `ISpaceLaneSegment`, `IMapCoordinate`, `IMapDimensions`, `IRenderLimits`, `ILegendEntry`, `IMapOptions`, `MapColor`.
 
@@ -286,7 +300,7 @@ Verify that a consumer can import everything they need from the package root wit
 
 **References:** TDD § File Structure (`index.ts`)
 
-**Depends on:** 7.1
+**Depends on:** 8.1
 
 ---
 
@@ -317,4 +331,4 @@ Required stories:
 
 **References:** PRD § Testing Requirements § UI Tests (Storybook)
 
-**Depends on:** 8.1
+**Depends on:** 8.2
