@@ -1,1 +1,16 @@
-/* TODO: MapOptions styles */
+.options {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.field {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.warning {
+  color: var(--ood-color-yellow);
+}
+
