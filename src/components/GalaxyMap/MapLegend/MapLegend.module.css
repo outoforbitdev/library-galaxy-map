@@ -1,1 +1,15 @@
-/* TODO: MapLegend styles */
+.legend {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.entry {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.indicator {
+  height: 1rem;
+}
