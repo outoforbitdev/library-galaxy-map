@@ -1,0 +1,19 @@
+.zoomBucketXs circle {
+  r: 1.5px;
+}
+
+.zoomBucketSm circle {
+  r: 2.5px;
+}
+
+.zoomBucketMd circle {
+  r: 3.5px;
+}
+
+.zoomBucketLg circle {
+  r: 4.5px;
+}
+
+.zoomBucketXl circle {
+  r: 5.5px;
+}
