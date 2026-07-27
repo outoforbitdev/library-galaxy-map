@@ -154,6 +154,8 @@ describe("GalaxyMap", () => {
     const transform = container
       .querySelector("svg > g[transform]")
       ?.getAttribute("transform");
-    expect(transform).toBe("translate(100, 50) scale(3, -3) translate(-40, -60)");
+    expect(transform).toBe(
+      "translate(100, 50) scale(3, -3) translate(-40, -60)",
+    );
   });
 });

@@ -62,9 +62,7 @@ describe("useLabelSet", () => {
       makePlanet("far", -1000, -1000),
     ];
 
-    const { result } = renderHook(() =>
-      useLabelSet(planets, 2, 1, "far"),
-    );
+    const { result } = renderHook(() => useLabelSet(planets, 2, 1, "far"));
 
     act(() => {
       vi.advanceTimersByTime(LABEL_COLLISION_DEBOUNCE_MS);

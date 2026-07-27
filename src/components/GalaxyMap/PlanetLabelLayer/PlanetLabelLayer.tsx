@@ -14,9 +14,10 @@ export interface IPlanetLabelLayerProps {
 }
 
 export function PlanetLabelLayer(props: IPlanetLabelLayerProps) {
-  const labeled = orderForRendering(props.planets, props.selectedPlanetId).filter(
-    (planet) => props.labelSet.has(planet.id),
-  );
+  const labeled = orderForRendering(
+    props.planets,
+    props.selectedPlanetId,
+  ).filter((planet) => props.labelSet.has(planet.id));
 
   return (
     <g data-testid="planet-label-layer">

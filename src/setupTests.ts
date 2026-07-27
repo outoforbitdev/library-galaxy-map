@@ -5,7 +5,12 @@ class ResizeObserverMock implements ResizeObserver {
 
   observe(target: Element) {
     this.callback(
-      [{ target, contentRect: target.getBoundingClientRect() } as ResizeObserverEntry],
+      [
+        {
+          target,
+          contentRect: target.getBoundingClientRect(),
+        } as ResizeObserverEntry,
+      ],
       this,
     );
   }

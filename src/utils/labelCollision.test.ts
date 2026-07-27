@@ -1,5 +1,9 @@
 import { describe, it, expect } from "vitest";
-import { overlapsAny, estimateLabelBox, computeLabelSet } from "./labelCollision";
+import {
+  overlapsAny,
+  estimateLabelBox,
+  computeLabelSet,
+} from "./labelCollision";
 import { IPlanet, MapColor } from "../types";
 
 function makePlanet(name: string, x: number, y: number): IPlanet {

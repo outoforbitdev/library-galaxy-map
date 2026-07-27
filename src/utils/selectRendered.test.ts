@@ -53,11 +53,7 @@ describe("isSpaceLaneInViewport", () => {
   });
 
   it("returns false when both endpoints of every segment are outside", () => {
-    const lane = makeSpacelane(
-      "s1",
-      { x: 500, y: 500 },
-      { x: 600, y: 600 },
-    );
+    const lane = makeSpacelane("s1", { x: 500, y: 500 }, { x: 600, y: 600 });
 
     expect(isSpaceLaneInViewport(lane, viewport)).toBe(false);
   });

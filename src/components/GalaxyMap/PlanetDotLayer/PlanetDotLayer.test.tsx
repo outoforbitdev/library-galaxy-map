@@ -35,11 +35,7 @@ describe("PlanetDotLayer", () => {
 
     const circles = container.querySelectorAll("circle");
     const ids = Array.from(circles).map((c) => c.getAttribute("data-testid"));
-    expect(ids).toEqual([
-      "planet-dot-c",
-      "planet-dot-b",
-      "planet-dot-a",
-    ]);
+    expect(ids).toEqual(["planet-dot-c", "planet-dot-b", "planet-dot-a"]);
   });
 
   it("calls onPlanetSelect when clicked and not dragging", () => {

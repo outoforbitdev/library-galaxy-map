@@ -30,9 +30,9 @@ type _ExportSurfaceCheck = [
 describe("package root exports", () => {
   it("exports GalaxyMap as the default export", () => {
     expect(pkg.default).toBeDefined();
-    expect(typeof pkg.default === "function" || typeof pkg.default === "object").toBe(
-      true,
-    );
+    expect(
+      typeof pkg.default === "function" || typeof pkg.default === "object",
+    ).toBe(true);
   });
 
   it("exports MapColor as a value (enum)", () => {

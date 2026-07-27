@@ -271,9 +271,7 @@ function makeMouseEvent(
   } as unknown as React.MouseEvent<SVGSVGElement>;
 }
 
-function makeWheelEvent(
-  deltaY: number,
-): React.WheelEvent<SVGSVGElement> {
+function makeWheelEvent(deltaY: number): React.WheelEvent<SVGSVGElement> {
   return {
     deltaY,
     clientX: 100,

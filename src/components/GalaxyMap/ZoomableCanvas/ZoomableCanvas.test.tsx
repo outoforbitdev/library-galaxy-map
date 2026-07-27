@@ -13,7 +13,11 @@ function makeSpacelane(id: string): ISpacelane {
   return {
     id,
     segments: [
-      { origin: { x: 0, y: 0 }, destination: { x: 1, y: 1 }, color: MapColor.Red },
+      {
+        origin: { x: 0, y: 0 },
+        destination: { x: 1, y: 1 },
+        color: MapColor.Red,
+      },
     ],
   };
 }

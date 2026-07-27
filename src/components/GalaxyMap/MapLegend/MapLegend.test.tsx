@@ -47,7 +47,9 @@ describe("MapLegend", () => {
     mockMatchMedia(false);
     const { queryByText } = render(
       <MapLegend
-        legendEntries={[{ id: "a", label: "Trade Routes", color: MapColor.Blue }]}
+        legendEntries={[
+          { id: "a", label: "Trade Routes", color: MapColor.Blue },
+        ]}
       />,
     );
 
@@ -58,7 +60,9 @@ describe("MapLegend", () => {
     mockMatchMedia(false);
     const { getByRole, queryByText } = render(
       <MapLegend
-        legendEntries={[{ id: "a", label: "Trade Routes", color: MapColor.Blue }]}
+        legendEntries={[
+          { id: "a", label: "Trade Routes", color: MapColor.Blue },
+        ]}
       />,
     );
 

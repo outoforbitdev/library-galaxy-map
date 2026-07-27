@@ -129,8 +129,14 @@ export function useZoomPan(options: UseZoomPanOptions) {
     e.preventDefault();
     cancelAnimation();
     const rect = e.currentTarget.getBoundingClientRect();
-    const scaleFactor = e.deltaY < 0 ? WHEEL_ZOOM_FACTOR : 1 / WHEEL_ZOOM_FACTOR;
-    zoomAroundPoint(rect, e.clientX - rect.left, e.clientY - rect.top, scaleFactor);
+    const scaleFactor =
+      e.deltaY < 0 ? WHEEL_ZOOM_FACTOR : 1 / WHEEL_ZOOM_FACTOR;
+    zoomAroundPoint(
+      rect,
+      e.clientX - rect.left,
+      e.clientY - rect.top,
+      scaleFactor,
+    );
   }
 
   function beginDrag(

@@ -1,5 +1,10 @@
 import { describe, it, expect } from "vitest";
-import { mapCenter, computeViewport, mapToScreen, screenToMap } from "./coordinates";
+import {
+  mapCenter,
+  computeViewport,
+  mapToScreen,
+  screenToMap,
+} from "./coordinates";
 import { IMapDimensions } from "../types";
 
 describe("mapCenter", () => {
@@ -58,8 +63,22 @@ describe("screen/map coordinate round-trip", () => {
     const screenX = 321;
     const screenY = 214;
 
-    const mapPoint = screenToMap(screenX, screenY, center, zoom, svgWidth, svgHeight);
-    const screenPoint = mapToScreen(mapPoint.x, mapPoint.y, center, zoom, svgWidth, svgHeight);
+    const mapPoint = screenToMap(
+      screenX,
+      screenY,
+      center,
+      zoom,
+      svgWidth,
+      svgHeight,
+    );
+    const screenPoint = mapToScreen(
+      mapPoint.x,
+      mapPoint.y,
+      center,
+      zoom,
+      svgWidth,
+      svgHeight,
+    );
 
     expect(screenPoint.x).toBeCloseTo(screenX);
     expect(screenPoint.y).toBeCloseTo(screenY);

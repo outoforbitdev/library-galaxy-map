@@ -45,10 +45,7 @@ export interface IGalaxyMapProps extends IComponentProps {
   rightChildren?: ReactNode;
 }
 
-function GalaxyMapInner(
-  props: IGalaxyMapProps,
-  ref: Ref<IGalaxyMapHandle>,
-) {
+function GalaxyMapInner(props: IGalaxyMapProps, ref: Ref<IGalaxyMapHandle>) {
   const { zoom, center, handlers, isDragging, animateTo } = useZoomPan({
     dimensions: props.dimensions,
     zoom: {

@@ -25,7 +25,11 @@ function planet(id: string, x: number, y: number, color: MapColor): IPlanet {
   return { id, name: id, position: { x, y }, color };
 }
 
-function lane(id: string, points: [number, number][], color: MapColor): ISpacelane {
+function lane(
+  id: string,
+  points: [number, number][],
+  color: MapColor,
+): ISpacelane {
   return {
     id,
     segments: points.slice(0, -1).map((origin, i) => ({
