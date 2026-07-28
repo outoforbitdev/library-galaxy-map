@@ -20,6 +20,7 @@ import {
 } from "../../types";
 import { useZoomPan } from "./hooks/useZoomPan";
 import { useLabelSet } from "./hooks/useLabelSet";
+import { useVisibleDotSet } from "./hooks/useVisibleDotSet";
 import { computeViewport } from "../../utils/coordinates";
 import { selectRendered } from "../../utils/selectRendered";
 import { ZoomableCanvas } from "./ZoomableCanvas/ZoomableCanvas";
@@ -90,8 +91,21 @@ function GalaxyMapInner(props: IGalaxyMapProps, ref: Ref<IGalaxyMapHandle>) {
   const { planets: renderedPlanets, spacelanes: renderedSpaceLanes } =
     selectRendered(props.planets, props.spacelanes, currentLimits, viewport);
 
-  const labelSet = useLabelSet(
+  const visibleDotIds = useVisibleDotSet(
     renderedPlanets,
+    zoom,
+    props.selectedPlanetId,
+  );
+  // A strict subset of renderedPlanets (already capped to
+  // currentLimits.planets by selectRendered) — overlap culling can only
+  // remove planets, never add any, so this can never exceed the render
+  // limit.
+  const visiblePlanets = renderedPlanets.filter((planet) =>
+    visibleDotIds.has(planet.id),
+  );
+
+  const labelSet = useLabelSet(
+    visiblePlanets,
     currentLimits.planetLabels,
     zoom,
     props.selectedPlanetId,
@@ -108,7 +122,7 @@ function GalaxyMapInner(props: IGalaxyMapProps, ref: Ref<IGalaxyMapHandle>) {
   return (
     <div {...domProps} ref={containerRef}>
       <ZoomableCanvas
-        planets={renderedPlanets}
+        planets={visiblePlanets}
         spacelanes={renderedSpaceLanes}
         labelSet={labelSet}
         zoom={zoom}

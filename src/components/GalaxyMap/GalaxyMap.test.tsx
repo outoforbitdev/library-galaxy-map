@@ -158,4 +158,31 @@ describe("GalaxyMap", () => {
       "translate(100, 50) scale(3, -3) translate(-40, -60)",
     );
   });
+
+  it("culls overlapping planet dots without ever exceeding renderLimits.planets", () => {
+    // 15 planets, all at the same position — heavily overlapping regardless
+    // of zoom/radius, and more than renderLimits.planets (10).
+    const overlappingPlanets = Array.from({ length: 15 }, (_, i) =>
+      makePlanet(`p${i}`, 0, 0),
+    );
+
+    const { container } = render(
+      <GalaxyMap
+        planets={overlappingPlanets}
+        spacelanes={[]}
+        dimensions={dimensions}
+        renderLimits={renderLimits}
+      />,
+    );
+
+    act(() => {
+      vi.advanceTimersByTime(100);
+    });
+
+    const circles = container.querySelectorAll(
+      "[data-testid='planet-dot-layer'] circle",
+    );
+    expect(circles.length).toBeLessThanOrEqual(renderLimits.planets);
+    expect(circles.length).toBe(1);
+  });
 });
