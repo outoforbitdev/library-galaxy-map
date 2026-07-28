@@ -1,4 +1,6 @@
+import { RefObject } from "react";
 import { IMapCoordinate, IPlanet } from "../../../types";
+import { colorToCss } from "../../../utils/color";
 import { mapToScreen } from "../../../utils/coordinates";
 import { orderForRendering } from "../../../utils/orderForRendering";
 import styles from "./PlanetLabelLayer.module.css";
@@ -11,6 +13,8 @@ export interface IPlanetLabelLayerProps {
   center: IMapCoordinate;
   svgWidth: number;
   svgHeight: number;
+  onPlanetSelect?: (planet: IPlanet) => void;
+  isDragging: RefObject<boolean>;
 }
 
 export function PlanetLabelLayer(props: IPlanetLabelLayerProps) {
@@ -36,7 +40,13 @@ export function PlanetLabelLayer(props: IPlanetLabelLayerProps) {
             data-testid={`planet-label-${planet.id}`}
             x={x}
             y={y}
+            fill={colorToCss(planet.color)}
             className={styles.label}
+            onClick={() => {
+              if (!props.isDragging.current) {
+                props.onPlanetSelect?.(planet);
+              }
+            }}
           >
             {planet.name}
           </text>

@@ -1,4 +1,13 @@
 .label {
   font-size: 12px;
-  fill: var(--ood-color-gray);
+  cursor: pointer;
+  /*
+   * SVG <text> is selectable by default. Without this, a drag that starts
+   * over a label triggers native text selection instead of (or alongside)
+   * the map's pan gesture, leaving the label highlighted and the next drag
+   * operating on that selection instead of panning. Labels are still
+   * clickable (see onClick in PlanetLabelLayer.tsx) — this only suppresses
+   * the browser's text-selection behavior, not pointer interaction.
+   */
+  user-select: none;
 }

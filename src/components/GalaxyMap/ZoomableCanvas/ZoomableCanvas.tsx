@@ -72,6 +72,8 @@ export function ZoomableCanvas(props: IZoomableCanvasProps) {
         center={props.center}
         svgWidth={size.width}
         svgHeight={size.height}
+        onPlanetSelect={props.onPlanetSelect}
+        isDragging={props.isDragging}
       />
     </svg>
   );
