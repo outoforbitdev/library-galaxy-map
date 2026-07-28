@@ -28,6 +28,7 @@ export interface UseZoomPanOptions {
 }
 
 const WHEEL_ZOOM_FACTOR = 1.1;
+const CLICK_DRAG_THRESHOLD_PX = 4;
 
 function clamp(value: number, min?: number, max?: number): number {
   let result = value;
@@ -48,6 +49,7 @@ export function useZoomPan(options: UseZoomPanOptions) {
   centerRef.current = center;
   const isDragging = useRef(false);
   const dragOriginRef = useRef<IMapCoordinate | null>(null);
+  const dragStartScreenRef = useRef<{ x: number; y: number } | null>(null);
   const pinchRef = useRef<IPinchState | null>(null);
   const callbackFrameRef = useRef<number | null>(null);
   const animationFrameRef = useRef<number | null>(null);
@@ -155,7 +157,11 @@ export function useZoomPan(options: UseZoomPanOptions) {
       rect.width,
       rect.height,
     );
-    isDragging.current = true;
+    dragStartScreenRef.current = { x, y };
+    // Reset for the new gesture. Only real movement (see moveDrag) sets
+    // this true — a plain click has no movement and should not suppress
+    // the click event that follows mouseup/touchend.
+    isDragging.current = false;
   }
 
   function moveDrag(
@@ -163,9 +169,18 @@ export function useZoomPan(options: UseZoomPanOptions) {
     clientX: number,
     clientY: number,
   ) {
-    if (!isDragging.current || !dragOriginRef.current) return;
+    if (!dragOriginRef.current) return;
     const x = clientX - rect.left;
     const y = clientY - rect.top;
+
+    if (!isDragging.current && dragStartScreenRef.current) {
+      const dx = x - dragStartScreenRef.current.x;
+      const dy = y - dragStartScreenRef.current.y;
+      if (Math.sqrt(dx * dx + dy * dy) > CLICK_DRAG_THRESHOLD_PX) {
+        isDragging.current = true;
+      }
+    }
+
     const currentUnderCursor = screenToMap(
       x,
       y,
@@ -183,8 +198,13 @@ export function useZoomPan(options: UseZoomPanOptions) {
   }
 
   function endDrag() {
-    isDragging.current = false;
     dragOriginRef.current = null;
+    dragStartScreenRef.current = null;
+    // isDragging is intentionally left as-is here. The browser's click
+    // event fires synchronously right after mouseup/touchend — if this
+    // gesture was a real drag, isDragging must still be true when that
+    // click reaches a child element's onClick handler, so it can suppress
+    // itself. It's reset at the start of the next gesture (beginDrag).
   }
 
   function onMouseDown(e: React.MouseEvent<SVGSVGElement>) {

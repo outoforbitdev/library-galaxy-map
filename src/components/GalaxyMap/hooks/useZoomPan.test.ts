@@ -75,7 +75,7 @@ describe("useZoomPan drag pan", () => {
     expect(result.current.center).toEqual({ x: 40, y: 50 });
   });
 
-  it("sets isDragging while dragging and clears it on mouseup", () => {
+  it("does not set isDragging for a plain click with no movement", () => {
     const { result } = renderHook(() =>
       useZoomPan({
         dimensions,
@@ -84,16 +84,100 @@ describe("useZoomPan drag pan", () => {
       }),
     );
 
+    act(() => {
+      result.current.handlers.onMouseDown(makeMouseEvent(100, 50));
+    });
+    act(() => {
+      result.current.handlers.onMouseUp(makeMouseEvent(100, 50));
+    });
+
     expect(result.current.isDragging.current).toBe(false);
+  });
+
+  it("sets isDragging once movement exceeds the click threshold", () => {
+    const { result } = renderHook(() =>
+      useZoomPan({
+        dimensions,
+        zoom: { initial: 1 },
+        initialCenter: { x: 50, y: 50 },
+      }),
+    );
 
     act(() => {
       result.current.handlers.onMouseDown(makeMouseEvent(100, 50));
     });
+    act(() => {
+      result.current.handlers.onMouseMove(makeMouseEvent(120, 50));
+    });
+
+    expect(result.current.isDragging.current).toBe(true);
+  });
+
+  it("does not set isDragging for movement within the click threshold (jitter)", () => {
+    const { result } = renderHook(() =>
+      useZoomPan({
+        dimensions,
+        zoom: { initial: 1 },
+        initialCenter: { x: 50, y: 50 },
+      }),
+    );
+
+    act(() => {
+      result.current.handlers.onMouseDown(makeMouseEvent(100, 50));
+    });
+    act(() => {
+      result.current.handlers.onMouseMove(makeMouseEvent(101, 50));
+    });
+
+    expect(result.current.isDragging.current).toBe(false);
+  });
+
+  it("keeps isDragging true after mouseup following a real drag, so a click landing on a child right after mouseup can still see it and suppress itself", () => {
+    const { result } = renderHook(() =>
+      useZoomPan({
+        dimensions,
+        zoom: { initial: 1 },
+        initialCenter: { x: 50, y: 50 },
+      }),
+    );
+
+    act(() => {
+      result.current.handlers.onMouseDown(makeMouseEvent(100, 50));
+    });
+    act(() => {
+      result.current.handlers.onMouseMove(makeMouseEvent(120, 50));
+    });
+    act(() => {
+      result.current.handlers.onMouseUp(makeMouseEvent(120, 50));
+    });
+
+    expect(result.current.isDragging.current).toBe(true);
+  });
+
+  it("resets isDragging at the start of the next gesture", () => {
+    const { result } = renderHook(() =>
+      useZoomPan({
+        dimensions,
+        zoom: { initial: 1 },
+        initialCenter: { x: 50, y: 50 },
+      }),
+    );
+
+    act(() => {
+      result.current.handlers.onMouseDown(makeMouseEvent(100, 50));
+    });
+    act(() => {
+      result.current.handlers.onMouseMove(makeMouseEvent(120, 50));
+    });
+    act(() => {
+      result.current.handlers.onMouseUp(makeMouseEvent(120, 50));
+    });
     expect(result.current.isDragging.current).toBe(true);
 
     act(() => {
-      result.current.handlers.onMouseUp(makeMouseEvent(110, 50));
+      result.current.handlers.onMouseDown(makeMouseEvent(120, 50));
     });
+
     expect(result.current.isDragging.current).toBe(false);
   });
 });
