@@ -122,6 +122,71 @@ describe("ZoomableCanvas", () => {
     expect(handlers.onWheel).toHaveBeenCalled();
   });
 
+  it("prevents the browser's native scroll/zoom on wheel, so the page doesn't scroll along with map zoom", () => {
+    const isDragging: RefObject<boolean> = { current: false };
+    const { container } = render(
+      <ZoomableCanvas
+        planets={[]}
+        spacelanes={[]}
+        labelSet={new Set()}
+        zoom={1}
+        center={{ x: 0, y: 0 }}
+        handlers={makeHandlers()}
+        isDragging={isDragging}
+      />,
+    );
+
+    const svg = container.querySelector("svg")!;
+    const event = new WheelEvent("wheel", {
+      bubbles: true,
+      cancelable: true,
+      deltaY: -1,
+    });
+    svg.dispatchEvent(event);
+
+    expect(event.defaultPrevented).toBe(true);
+  });
+
+  it("prevents the browser's native pinch-zoom/scroll on touchstart and touchmove, so the page doesn't move along with map gestures", () => {
+    const isDragging: RefObject<boolean> = { current: false };
+    const handlers = makeHandlers();
+    const { container } = render(
+      <ZoomableCanvas
+        planets={[]}
+        spacelanes={[]}
+        labelSet={new Set()}
+        zoom={1}
+        center={{ x: 0, y: 0 }}
+        handlers={handlers}
+        isDragging={isDragging}
+      />,
+    );
+
+    const svg = container.querySelector("svg")!;
+
+    const touchStart = new Event("touchstart", {
+      bubbles: true,
+      cancelable: true,
+    });
+    Object.defineProperty(touchStart, "touches", {
+      value: [{ clientX: 10, clientY: 10 }],
+    });
+    svg.dispatchEvent(touchStart);
+    expect(touchStart.defaultPrevented).toBe(true);
+    expect(handlers.onTouchStart).toHaveBeenCalled();
+
+    const touchMove = new Event("touchmove", {
+      bubbles: true,
+      cancelable: true,
+    });
+    Object.defineProperty(touchMove, "touches", {
+      value: [{ clientX: 20, clientY: 20 }],
+    });
+    svg.dispatchEvent(touchMove);
+    expect(touchMove.defaultPrevented).toBe(true);
+    expect(handlers.onTouchMove).toHaveBeenCalled();
+  });
+
   it("passes the measured svg size to PlanetLabelLayer for screen-space positioning", () => {
     const isDragging: RefObject<boolean> = { current: false };
     const { container } = render(
