@@ -1,36 +1,36 @@
-import { useState } from "react";
+import { Expandable } from "@outoforbitdev/ood-react";
 import { ILegendEntry, MapColor } from "../../../types";
 import { colorToCss } from "../../../utils/color";
-import { useInitiallyExpanded } from "../hooks/useInitiallyExpanded";
 import styles from "./MapLegend.module.css";
 
 export interface IMapLegendProps {
   legendEntries?: ILegendEntry[];
 }
 
-// TODO: migrate to ood-react's Expandable once it supports seeding an
-// initial expanded value (see decisions.md § Custom collapsible panels
-// instead of ood-react's Expandable).
+// TODO: ood-react's Expandable always starts collapsed and has no way to
+// seed an initial expanded value. Once it gains that capability (e.g. a
+// defaultExpanded prop), use it to restore the responsive
+// expanded-on-large-screens default described in the TDD (§ Panel
+// initial collapse state is responsive) instead of always starting
+// collapsed. See decisions.md.
 export function MapLegend(props: IMapLegendProps) {
-  const [expanded, setExpanded] = useState(useInitiallyExpanded());
-
   if (!props.legendEntries || props.legendEntries.length === 0) {
     return null;
   }
 
   return (
-    <div className={styles.legend}>
-      <button type="button" onClick={() => setExpanded(!expanded)}>
-        Legend
-      </button>
-      {expanded &&
-        props.legendEntries.map((entry) => (
-          <span key={entry.id} className={styles.entry}>
-            <LegendIndicator color={entry.color} />
-            {entry.label}
-          </span>
-        ))}
-    </div>
+    <Expandable
+      title="Legend"
+      titleAlwaysVisible
+      className={`${styles.legend} ood-accent-block`}
+    >
+      {props.legendEntries.map((entry) => (
+        <span key={entry.id} className={styles.entry}>
+          <LegendIndicator color={entry.color} />
+          {entry.label}
+        </span>
+      ))}
+    </Expandable>
   );
 }
 

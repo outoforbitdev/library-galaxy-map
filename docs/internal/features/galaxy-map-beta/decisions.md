@@ -16,12 +16,12 @@ Debouncing was chosen instead for two reasons:
 
 If a future mode introduces consumer-side data fetching triggered by limit changes (e.g., server-side pagination), revisiting an explicit apply button at that point would be warranted.
 
-## Custom collapsible panels instead of `ood-react`'s `Expandable`
+## `MapLegend` and `MapOptions` use `ood-react`'s `Expandable` directly, always collapsed at mount
 
-`MapLegend` and `MapOptions` implement their own collapse/expand UI rather than wrapping `Expandable` from `@outoforbitdev/ood-react`, which the alpha used for the same purpose.
+`MapLegend` and `MapOptions` wrap `Expandable` from `@outoforbitdev/ood-react` directly, rather than implementing their own collapse/expand UI.
 
-The beta requires each panel's initial expanded state to depend on screen size at mount (`window.matchMedia("(min-width: 768px)")` — expanded on large screens, collapsed on small screens; see TDD § Panel initial collapse state is responsive). `Expandable`'s current implementation (`library-react-core/src/components/Expandable.tsx`) hardcodes `useState(false)` with no prop to seed an initial value and no controlled mode, so it cannot satisfy this requirement as it stands today.
+The beta originally called for each panel's initial expanded state to depend on screen size at mount (`window.matchMedia("(min-width: 768px)")` — expanded on large screens, collapsed on small screens; see TDD § Panel initial collapse state is responsive). `Expandable`'s current implementation (`library-react-core/src/components/Expandable.tsx`) hardcodes `useState(false)` with no prop to seed an initial value and no controlled mode, so it cannot satisfy this today.
 
-Rather than block the beta on an `ood-react` API change, `MapLegend` and `MapOptions` each own their local `expanded` state and render their own toggle control directly.
+A custom collapsible replica was considered (and briefly built) to restore the responsive initial state, but was rejected in favor of using `Expandable` as-is: consistency with the rest of the `ood-react` design system (styling, icons, behavior) outweighs the responsive-default-open behavior for now. Both panels therefore always start collapsed, regardless of screen size, until `Expandable` supports seeding an initial value.
 
-**TODO:** Once `Expandable` gains a way to seed its initial expanded state (e.g., a `defaultExpanded` prop), migrate `MapLegend` and `MapOptions` to wrap it instead of maintaining custom collapse UI, for visual and behavioral consistency with the rest of the `ood-react` design system.
+**TODO:** Once `Expandable` gains a way to seed its initial expanded state (e.g., a `defaultExpanded` prop), pass the `window.matchMedia`-based responsive initial state described in the TDD instead of always starting collapsed.

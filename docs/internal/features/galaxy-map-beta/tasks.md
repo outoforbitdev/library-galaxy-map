@@ -219,7 +219,7 @@ Implement `src/components/GalaxyMap/MapLegend/MapLegend.tsx` and `MapLegend.modu
 
 - Each entry renders a mini-SVG indicator (round dot → short line → round dot, all in `entry.color`) alongside the entry label; `entry.id` is used as the React key
 - Initial expanded state determined once at mount via `window.matchMedia("(min-width: 768px)")`; not reactive to resize
-- Implements its own toggle control rather than wrapping `Expandable` from `@outoforbitdev/ood-react`, since `Expandable` cannot currently be seeded with an initial expanded value. Leave a `// TODO:` comment noting this should migrate to `Expandable` once it supports an initial/default expanded state. See [Decisions](./decisions.md#custom-collapsible-panels-instead-of-ood-reacts-expandable).
+- Wraps `Expandable` from `@outoforbitdev/ood-react` directly (title, titleAlwaysVisible). Since `Expandable` cannot currently be seeded with an initial expanded value, the panel always starts collapsed regardless of screen size. Leave a `// TODO:` comment noting this should pass a responsive initial value once `Expandable` supports one. See [Decisions](./decisions.md#maplegend-and-mapoptions-use-ood-reacts-expandable-directly-always-collapsed-at-mount).
 
 **References:** TDD § Key Design Decisions § Legend entries use a mini-SVG indicator, TDD § Key Design Decisions § Panel initial collapse state is responsive
 
@@ -234,7 +234,7 @@ Implement `src/components/GalaxyMap/MapOptions/MapOptions.tsx` and `MapOptions.m
 - Planet labels input maximum may optionally be capped at `currentLimits.planets` (see TDD § State Management § Optional label cap)
 - `customOptions` rendered below the built-in controls
 - Initial expanded state determined once at mount via `window.matchMedia`
-- Implements its own toggle control rather than wrapping `Expandable` from `@outoforbitdev/ood-react`, since `Expandable` cannot currently be seeded with an initial expanded value. Leave a `// TODO:` comment noting this should migrate to `Expandable` once it supports an initial/default expanded state. See [Decisions](./decisions.md#custom-collapsible-panels-instead-of-ood-reacts-expandable).
+- Wraps `Expandable` from `@outoforbitdev/ood-react` directly (title, titleAlwaysVisible). Since `Expandable` cannot currently be seeded with an initial expanded value, the panel always starts collapsed regardless of screen size. Leave a `// TODO:` comment noting this should pass a responsive initial value once `Expandable` supports one. See [Decisions](./decisions.md#maplegend-and-mapoptions-use-ood-reacts-expandable-directly-always-collapsed-at-mount).
 
 **Unit tests:** Debounce prevents intermediate propagation to `setCurrentLimits`; limits can be set both below and above the consumer default; warning indicator appears when a limit exceeds the default; warning absent when at or below default.
 

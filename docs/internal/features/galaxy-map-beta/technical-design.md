@@ -820,13 +820,11 @@ Planet labels are rendered in `PlanetLabelLayer`, which is a sibling of `PlanetD
 
 The rationale for `leftChildren` and `rightChildren` alongside the center `children` slot: a consumer whose `children` content spans the full width (e.g., a header bar with a title and buttons) would otherwise have no way to place persistent widgets outside the legend and options panels. The outer slots solve this without requiring the consumer to manually replicate the legend/options layout.
 
-### Panel initial collapse state is responsive
+### Panel initial collapse state (deferred: currently always collapsed)
 
-Both `MapLegend` and `MapOptions` own their own `expanded: boolean` state locally (it does not need to live in `GalaxyMap`), and each renders its own toggle control rather than wrapping `Expandable` from `@outoforbitdev/ood-react`. `Expandable`'s current implementation hardcodes `useState(false)` with no way to seed an initial value, which cannot satisfy the responsive-initial-state requirement below. See [Decisions: Custom collapsible panels instead of `ood-react`'s `Expandable`](./decisions.md#custom-collapsible-panels-instead-of-ood-reacts-expandable).
+`MapLegend` and `MapOptions` wrap `Expandable` from `@outoforbitdev/ood-react` directly. `Expandable`'s current implementation hardcodes `useState(false)` with no way to seed an initial value, so both panels always start collapsed today, regardless of screen size. See [Decisions: `MapLegend` and `MapOptions` use `ood-react`'s `Expandable` directly, always collapsed at mount](./decisions.md#maplegend-and-mapoptions-use-ood-reacts-expandable-directly-always-collapsed-at-mount).
 
-**TODO:** Once `Expandable` supports seeding its initial expanded state, migrate `MapLegend` and `MapOptions` to use it instead of custom collapse UI.
-
-The initial value is determined at mount time by a `window.matchMedia` check:
+**TODO:** Once `Expandable` supports seeding its initial expanded state, restore the originally-intended responsive default — expanded on large screens, collapsed on small screens — determined at mount time by a `window.matchMedia` check:
 
 ```typescript
 const LARGE_SCREEN_BREAKPOINT = "(min-width: 768px)";

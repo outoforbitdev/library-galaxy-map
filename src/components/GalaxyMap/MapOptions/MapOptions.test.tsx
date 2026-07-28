@@ -4,37 +4,48 @@ import { MapOptions } from "./MapOptions";
 import { IRenderLimits } from "../../../types";
 import { RENDER_LIMIT_DEBOUNCE_MS } from "../constants";
 
-function mockMatchMedia(matches: boolean) {
-  vi.spyOn(window, "matchMedia").mockReturnValue({
-    matches,
-  } as MediaQueryList);
-}
-
 const defaultLimits: IRenderLimits = {
   planets: 50,
   planetLabels: 20,
   spacelanes: 30,
 };
 
+function expand(getByRole: (role: string) => HTMLElement) {
+  fireEvent.click(getByRole("button"));
+}
+
 describe("MapOptions", () => {
   beforeEach(() => {
-    mockMatchMedia(true);
     vi.useFakeTimers();
   });
 
   afterEach(() => {
     vi.useRealTimers();
-    vi.restoreAllMocks();
   });
 
-  it("renders inputs initialized from currentLimits", () => {
-    const { getByLabelText } = render(
+  it("starts collapsed and shows the title", () => {
+    const { getByText, queryByLabelText } = render(
       <MapOptions
         currentLimits={defaultLimits}
         maxLimits={defaultLimits}
         setCurrentLimits={vi.fn()}
       />,
     );
+
+    expect(getByText("Map Options")).toBeInTheDocument();
+    expect(queryByLabelText("Planets")).not.toBeInTheDocument();
+  });
+
+  it("expands to show inputs initialized from currentLimits when toggled", () => {
+    const { getByLabelText, getByRole } = render(
+      <MapOptions
+        currentLimits={defaultLimits}
+        maxLimits={defaultLimits}
+        setCurrentLimits={vi.fn()}
+      />,
+    );
+
+    expand(getByRole);
 
     expect(getByLabelText("Planets")).toHaveValue(50);
     expect(getByLabelText("Planet Labels")).toHaveValue(20);
@@ -43,13 +54,14 @@ describe("MapOptions", () => {
 
   it("does not call setCurrentLimits until the debounce settles", () => {
     const setCurrentLimits = vi.fn();
-    const { getByLabelText } = render(
+    const { getByLabelText, getByRole } = render(
       <MapOptions
         currentLimits={defaultLimits}
         maxLimits={defaultLimits}
         setCurrentLimits={setCurrentLimits}
       />,
     );
+    expand(getByRole);
 
     fireEvent.change(getByLabelText("Planets"), { target: { value: "75" } });
     expect(getByLabelText("Planets")).toHaveValue(75);
@@ -67,13 +79,14 @@ describe("MapOptions", () => {
 
   it("only propagates the final value when changed multiple times within the debounce window", () => {
     const setCurrentLimits = vi.fn();
-    const { getByLabelText } = render(
+    const { getByLabelText, getByRole } = render(
       <MapOptions
         currentLimits={defaultLimits}
         maxLimits={defaultLimits}
         setCurrentLimits={setCurrentLimits}
       />,
     );
+    expand(getByRole);
 
     fireEvent.change(getByLabelText("Planets"), { target: { value: "60" } });
     act(() => {
@@ -93,13 +106,14 @@ describe("MapOptions", () => {
 
   it("allows setting a limit below the default", () => {
     const setCurrentLimits = vi.fn();
-    const { getByLabelText } = render(
+    const { getByLabelText, getByRole } = render(
       <MapOptions
         currentLimits={defaultLimits}
         maxLimits={defaultLimits}
         setCurrentLimits={setCurrentLimits}
       />,
     );
+    expand(getByRole);
 
     fireEvent.change(getByLabelText("Spacelanes"), { target: { value: "0" } });
     act(() => {
@@ -113,31 +127,33 @@ describe("MapOptions", () => {
   });
 
   it("shows a warning indicator when a limit exceeds the consumer default", () => {
-    const { getByTestId } = render(
+    const { getByTestId, getByRole } = render(
       <MapOptions
         currentLimits={{ ...defaultLimits, planets: 100 }}
         maxLimits={defaultLimits}
         setCurrentLimits={vi.fn()}
       />,
     );
+    expand(getByRole);
 
     expect(getByTestId("warning-planets")).toBeInTheDocument();
   });
 
   it("does not show a warning indicator when at or below the consumer default", () => {
-    const { queryByTestId } = render(
+    const { queryByTestId, getByRole } = render(
       <MapOptions
         currentLimits={defaultLimits}
         maxLimits={defaultLimits}
         setCurrentLimits={vi.fn()}
       />,
     );
+    expand(getByRole);
 
     expect(queryByTestId("warning-planets")).not.toBeInTheDocument();
   });
 
-  it("renders customOptions content", () => {
-    const { getByText } = render(
+  it("renders customOptions content once expanded", () => {
+    const { getByText, getByRole } = render(
       <MapOptions
         currentLimits={defaultLimits}
         maxLimits={defaultLimits}
@@ -145,12 +161,12 @@ describe("MapOptions", () => {
         customOptions={<div>Extra Control</div>}
       />,
     );
+    expand(getByRole);
 
     expect(getByText("Extra Control")).toBeInTheDocument();
   });
 
-  it("starts collapsed on a small screen and expands when toggled", () => {
-    mockMatchMedia(false);
+  it("toggles expansion when the toggle control is clicked", () => {
     const { getByRole, queryByLabelText } = render(
       <MapOptions
         currentLimits={defaultLimits}
@@ -161,8 +177,10 @@ describe("MapOptions", () => {
 
     expect(queryByLabelText("Planets")).not.toBeInTheDocument();
 
-    fireEvent.click(getByRole("button", { name: "Map Options" }));
-
+    fireEvent.click(getByRole("button"));
     expect(queryByLabelText("Planets")).toBeInTheDocument();
+
+    fireEvent.click(getByRole("button"));
+    expect(queryByLabelText("Planets")).not.toBeInTheDocument();
   });
 });

@@ -18,16 +18,24 @@ export interface IMapOverlayProps {
 export function MapOverlay(props: IMapOverlayProps) {
   return (
     <div className={styles.overlay}>
-      {props.leftChildren}
+      {props.leftChildren && (
+        <div className={styles.slot}>{props.leftChildren}</div>
+      )}
       <MapLegend legendEntries={props.legendEntries} />
-      {props.children && <div className={styles.center}>{props.children}</div>}
+      <div className={styles.center}>
+        {props.children && (
+          <div className={styles.centerContent}>{props.children}</div>
+        )}
+      </div>
       <MapOptions
         currentLimits={props.currentLimits}
         maxLimits={props.maxLimits}
         setCurrentLimits={props.setCurrentLimits}
         customOptions={props.customOptions}
       />
-      {props.rightChildren}
+      {props.rightChildren && (
+        <div className={styles.slot}>{props.rightChildren}</div>
+      )}
     </div>
   );
 }
