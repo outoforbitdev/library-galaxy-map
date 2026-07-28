@@ -1,3 +1,32 @@
+## 0.1.0 (2026-07-28)
+
+### Breaking Changes
+
+- Complete rewrite of `GalaxyMap`, replacing the alpha's data model, API, and rendering approach entirely. There is no upgrade path — consumers will need to update their integration code.
+  - `dimensions` is now `{ min: { x, y }, max: { x, y } }` instead of `{ minX, maxX, minY, maxY }`.
+  - `FocusLevel` is removed. Render priority is now determined solely by position in the `planets`/`spacelanes` input arrays, combined with a new required `renderLimits` prop (`{ planets, planetLabels, spacelanes }`) that caps how many viewport-visible items render. Consumers can no longer assign per-item visibility.
+  - `ISpacelane` is now a multi-segment, multi-color route: `{ id, name?, segments: ISpaceLaneSegment[] }`, where each segment carries its own `origin`, `destination`, and `color`.
+  - `mapOptions.planetVisibility` and related visibility options are removed; the options panel now exposes render limit controls instead.
+  - Zoom/pan is implemented via an SVG transform (wheel, click-drag, touch, and pinch), not per-item CSS classes. Programmatic navigation is available via `ref.zoomTo({ coordinate, zoom? })`, animated with ease-in-out cubic easing.
+  - Package exports are now `GalaxyMap` (default) plus `IGalaxyMapHandle`, `IPlanet`, `ISpacelane`, `ISpaceLaneSegment`, `IMapCoordinate`, `IMapDimensions`, `IRenderLimits`, `ILegendEntry`, `IMapOptions`, and `MapColor` — see the updated Storybook stories for usage examples of the full component surface.
+
+### Features
+
+- Priority-ordered render caps with viewport culling: items outside the current viewport don't consume render capacity, so panning into a region reveals lower-priority items there instead of them staying permanently hidden.
+- Debounced label collision detection. The selected planet is always a labeling candidate, even beyond the label limit.
+- Overlapping planet dots are culled at low zoom so dense clusters stay legible, without ever exceeding `renderLimits.planets`.
+- Planet labels are colored to match their planet and rendered with a halo for legibility against planets and spacelanes underneath.
+- Collapsible legend and options panel overlay, with `leftChildren`/`rightChildren` slots for consumer-provided UI.
+
+### Bug Fixes
+
+- Planet dots now maintain an approximately constant on-screen size across zoom levels, instead of shrinking to invisible when zoomed out or growing oversized when zoomed in.
+- Clicking a planet or label no longer fires selection when it's actually the tail end of a click-and-drag pan gesture.
+- The map's default sizing no longer silently overrides a consumer's own height/width styling, regardless of CSS load order.
+- Clicking a planet label selects its planet again, matching planet dots (this had been dropped in the rewrite).
+- Wheel-zooming or touch gestures on the map no longer scroll or zoom the surrounding page along with it.
+- Pinch-zoom and touch-drag pan no longer stutter or produce a much smaller change than the actual gesture, which happened because rapid touch events could be read before the map's zoom/pan state had finished updating from the previous one.
+
 ## 0.0.11 (2025-10-16)
 
 ### Features

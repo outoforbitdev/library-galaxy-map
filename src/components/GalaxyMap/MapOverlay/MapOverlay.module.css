@@ -1,1 +1,33 @@
-/* TODO: MapOverlay styles */
+.overlay {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  width: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  /*
+   * The overlay row spans the full width of the map at a fixed height,
+   * but most of that area is empty space between the legend, center
+   * content, and options panel. Without this, the row would block
+   * clicks on the map underneath across its entire width, not just
+   * where a visible panel actually is.
+   */
+  pointer-events: none;
+}
+
+.center {
+  /* Layout spacer only — stays non-interactive so the empty portion of
+   * this flex-grow area (when children is absent, or narrower than the
+   * space available) never blocks clicks on the map underneath. */
+  flex: 1;
+  pointer-events: none;
+}
+
+.centerContent {
+  pointer-events: auto;
+}
+
+.slot {
+  pointer-events: auto;
+}

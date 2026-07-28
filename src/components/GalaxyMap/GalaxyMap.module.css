@@ -1,1 +1,16 @@
-/* TODO: GalaxyMap styles */
+.container {
+  position: relative;
+  overflow: hidden;
+}
+
+/*
+ * Zero-specificity default sizing: a consumer's own className (applied
+ * to this same container via props.className) must be able to override
+ * width/height regardless of CSS load order. A plain `.container` rule
+ * here would tie at (0,1,0) specificity with a consumer class, and
+ * whichever stylesheet loads later would win unpredictably.
+ */
+:where(.container) {
+  width: 100%;
+  height: 100%;
+}

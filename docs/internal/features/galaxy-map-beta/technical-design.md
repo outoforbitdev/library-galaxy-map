@@ -470,7 +470,7 @@ function overlapsAny(box: LabelBox, placed: LabelBox[]): boolean {
       box.x < p.x + p.w &&
       box.x + box.w > p.x &&
       box.y < p.y + p.h &&
-      box.y + p.h > p.y,
+      box.y + box.h > p.y,
   );
 }
 ```
@@ -820,9 +820,11 @@ Planet labels are rendered in `PlanetLabelLayer`, which is a sibling of `PlanetD
 
 The rationale for `leftChildren` and `rightChildren` alongside the center `children` slot: a consumer whose `children` content spans the full width (e.g., a header bar with a title and buttons) would otherwise have no way to place persistent widgets outside the legend and options panels. The outer slots solve this without requiring the consumer to manually replicate the legend/options layout.
 
-### Panel initial collapse state is responsive
+### Panel initial collapse state (deferred: currently always collapsed)
 
-Both `MapLegend` and `MapOptions` own their own `expanded: boolean` state locally (it does not need to live in `GalaxyMap`). The initial value is determined at mount time by a `window.matchMedia` check:
+`MapLegend` and `MapOptions` wrap `Expandable` from `@outoforbitdev/ood-react` directly. `Expandable`'s current implementation hardcodes `useState(false)` with no way to seed an initial value, so both panels always start collapsed today, regardless of screen size. See [Decisions: `MapLegend` and `MapOptions` use `ood-react`'s `Expandable` directly, always collapsed at mount](./decisions.md#maplegend-and-mapoptions-use-ood-reacts-expandable-directly-always-collapsed-at-mount).
+
+**TODO:** Once `Expandable` supports seeding its initial expanded state, restore the originally-intended responsive default — expanded on large screens, collapsed on small screens — determined at mount time by a `window.matchMedia` check:
 
 ```typescript
 const LARGE_SCREEN_BREAKPOINT = "(min-width: 768px)";
