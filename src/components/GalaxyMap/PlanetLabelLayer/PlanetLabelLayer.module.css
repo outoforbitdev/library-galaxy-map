@@ -10,4 +10,16 @@
    * the browser's text-selection behavior, not pointer interaction.
    */
   user-select: none;
+  /*
+   * A halo behind the glyphs, not a rectangular background box: paint the
+   * stroke first (paint-order), so it sits behind the fill instead of on
+   * top of it, giving each letter a colored outline that keeps it legible
+   * over planet dots and spacelane lines of any color. --ood-background is
+   * inherited from an ood-react theme class if the consumer's page has one
+   * (e.g. body.ood-primary); the fallback covers maps rendered without one.
+   */
+  paint-order: stroke fill;
+  stroke: var(--ood-background, #1a1a1a);
+  stroke-width: 1px;
+  stroke-linejoin: round;
 }
