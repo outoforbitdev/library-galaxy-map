@@ -66,7 +66,7 @@ describe("PlanetDotLayer", () => {
   });
 });
 
-describe("PlanetDotLayer zoom bucket class", () => {
+describe("PlanetDotLayer zoom-compensated radius", () => {
   beforeEach(() => {
     vi.useFakeTimers();
   });
@@ -75,14 +75,14 @@ describe("PlanetDotLayer zoom bucket class", () => {
     vi.useRealTimers();
   });
 
-  it("sets the initial zoom bucket class synchronously on mount", () => {
+  it("sets the initial --planet-dot-radius synchronously on mount", () => {
     const { container } = renderLayer({ zoom: 1 });
 
     const g = container.querySelector("g[data-testid='planet-dot-layer']");
-    expect(g?.getAttribute("class")).not.toBe("");
+    expect(g?.getAttribute("style")).toContain("--planet-dot-radius");
   });
 
-  it("only updates the zoom bucket class after the debounce settles", () => {
+  it("only updates --planet-dot-radius after the debounce settles", () => {
     const { container, rerender } = render(
       <svg>
         <PlanetDotLayer
@@ -94,7 +94,7 @@ describe("PlanetDotLayer zoom bucket class", () => {
     );
     const g = () =>
       container.querySelector("g[data-testid='planet-dot-layer']");
-    const initialClass = g()?.getAttribute("class");
+    const initialStyle = g()?.getAttribute("style");
 
     rerender(
       <svg>
@@ -105,11 +105,11 @@ describe("PlanetDotLayer zoom bucket class", () => {
         />
       </svg>,
     );
-    expect(g()?.getAttribute("class")).toBe(initialClass);
+    expect(g()?.getAttribute("style")).toBe(initialStyle);
 
     act(() => {
       vi.advanceTimersByTime(PLANET_SIZE_DEBOUNCE_MS);
     });
-    expect(g()?.getAttribute("class")).not.toBe(initialClass);
+    expect(g()?.getAttribute("style")).not.toBe(initialStyle);
   });
 });
