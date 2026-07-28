@@ -53,6 +53,25 @@ describe("useZoomPan", () => {
 
     expect(result.current.zoom).toBe(0.5);
   });
+
+  it("accumulates cumulative zoom changes correctly when multiple events fire before a re-render, as touchmove can report faster than React re-renders", () => {
+    const { result } = renderHook(() =>
+      useZoomPan({ dimensions, zoom: { initial: 1 } }),
+    );
+
+    // Both calls happen inside the same act() with no render in between,
+    // simulating two touchmove events arriving before React has re-rendered
+    // from the first one.
+    act(() => {
+      result.current.handlers.onWheel(makeWheelEvent(-1));
+      result.current.handlers.onWheel(makeWheelEvent(-1));
+    });
+
+    // Each wheel-in step multiplies zoom by 1.1, so two steps compound to
+    // 1.1 * 1.1 = 1.21 — not 1.1, which is what you'd get if the second
+    // call read a stale pre-first-call zoom value.
+    expect(result.current.zoom).toBeCloseTo(1.21);
+  });
 });
 
 describe("useZoomPan drag pan", () => {
@@ -73,6 +92,31 @@ describe("useZoomPan drag pan", () => {
     });
 
     expect(result.current.center).toEqual({ x: 40, y: 50 });
+  });
+
+  it("accumulates cumulative pan deltas correctly when multiple moves fire before a re-render", () => {
+    const { result } = renderHook(() =>
+      useZoomPan({
+        dimensions,
+        zoom: { initial: 1 },
+        initialCenter: { x: 50, y: 50 },
+      }),
+    );
+
+    act(() => {
+      result.current.handlers.onMouseDown(makeMouseEvent(100, 50));
+    });
+    act(() => {
+      // Two moves in the same act(), simulating touchmove/mousemove events
+      // arriving before React has re-rendered from the first one.
+      result.current.handlers.onMouseMove(makeMouseEvent(110, 50));
+      result.current.handlers.onMouseMove(makeMouseEvent(120, 50));
+    });
+
+    // A stale centerRef read on the second move would apply the second
+    // move's 10px delta on top of the ORIGINAL center (50) instead of the
+    // already-panned one (40), landing on 40 instead of 30.
+    expect(result.current.center).toEqual({ x: 30, y: 50 });
   });
 
   it("does not set isDragging for a plain click with no movement", () => {

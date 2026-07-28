@@ -124,6 +124,14 @@ export function useZoomPan(options: UseZoomPanOptions) {
 
     setZoom(newZoom);
     setCenter(newCenter);
+    // zoomRef/centerRef are otherwise only synced at the top of the render
+    // body, i.e. once per commit. Touch devices can report touchmove fast
+    // enough for two pinch events to fire before React re-renders between
+    // them — without this, the second call would read the same stale
+    // currentZoom/currentCenter the first one did, computing its delta from
+    // the wrong baseline and silently overwriting the first event's change.
+    zoomRef.current = newZoom;
+    centerRef.current = newCenter;
     scheduleCallbacks();
   }
 
@@ -190,10 +198,14 @@ export function useZoomPan(options: UseZoomPanOptions) {
       rect.height,
     );
     const origin = dragOriginRef.current;
-    setCenter({
+    const newCenter: IMapCoordinate = {
       x: centerRef.current.x + (origin.x - currentUnderCursor.x),
       y: centerRef.current.y + (origin.y - currentUnderCursor.y),
-    });
+    };
+    setCenter(newCenter);
+    // See the matching comment in zoomAroundPoint — keeps rapid successive
+    // moveDrag calls (e.g. touchmove) from reading a stale centerRef.
+    centerRef.current = newCenter;
     scheduleCallbacks();
   }
 
