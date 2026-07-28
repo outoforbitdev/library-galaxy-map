@@ -23,6 +23,9 @@
 - Planet dots now maintain an approximately constant on-screen size across zoom levels, instead of shrinking to invisible when zoomed out or growing oversized when zoomed in.
 - Clicking a planet or label no longer fires selection when it's actually the tail end of a click-and-drag pan gesture.
 - The map's default sizing no longer silently overrides a consumer's own height/width styling, regardless of CSS load order.
+- Clicking a planet label selects its planet again, matching planet dots (this had been dropped in the rewrite).
+- Wheel-zooming or touch gestures on the map no longer scroll or zoom the surrounding page along with it.
+- Pinch-zoom and touch-drag pan no longer stutter or produce a much smaller change than the actual gesture, which happened because rapid touch events could be read before the map's zoom/pan state had finished updating from the previous one.
 
 ## 0.0.11 (2025-10-16)
 
