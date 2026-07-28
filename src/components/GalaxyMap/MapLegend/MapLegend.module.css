@@ -3,6 +3,7 @@
   flex-direction: column;
   gap: 0.25rem;
   padding: 0.5rem;
+  border: 1px solid;
   pointer-events: auto;
 }
 
