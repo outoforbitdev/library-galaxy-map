@@ -33,11 +33,7 @@ export function PlanetDotLayer(props: IPlanetDotLayerProps) {
   } as CSSProperties;
 
   return (
-    <g
-      data-testid="planet-dot-layer"
-      className={styles.layer}
-      style={style}
-    >
+    <g data-testid="planet-dot-layer" className={styles.layer} style={style}>
       {ordered.map((planet) => (
         <circle
           key={planet.id}
