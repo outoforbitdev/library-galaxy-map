@@ -1,8 +1,12 @@
 name: NPM Publish
 permissions: read-all
+# TODO(#122): remove the push trigger below once trusted publishing has been
+# verified working on this branch; only the `release` trigger should remain.
 on:
   release:
     types: [published]
+  push:
+    branches: ["jaymirecki/122-fix-publish"]
 jobs:
   npm-publish:
     runs-on: ubuntu-latest
