@@ -1,3 +1,9 @@
+## 0.1.1 (2026-07-29)
+
+### Bug Fixes
+
+- Fixed the npm publish workflow, which was failing with a `404` on release because npm's Trusted Publisher (OIDC) configuration for this package required a newer npm CLI and no longer worked with the legacy `NPM_TOKEN`-based authentication.
+
 ## 0.1.0 (2026-07-28)
 
 ### Breaking Changes
