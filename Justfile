@@ -4,7 +4,7 @@ api_port := "1799"
 
 # Bootstrap: one-time repository initialization
 bootstrap:
-    pre-commit install --hook-type commit-msg --hook-type pre-commit
+    pre-commit install
 
 install:
     npm install
