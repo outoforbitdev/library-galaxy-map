@@ -52,7 +52,9 @@ export function ZoomableCanvas(props: IZoomableCanvasProps) {
 
     function handleWheel(e: WheelEvent) {
       e.preventDefault();
-      handlersRef.current.onWheel(e as unknown as React.WheelEvent<SVGSVGElement>);
+      handlersRef.current.onWheel(
+        e as unknown as React.WheelEvent<SVGSVGElement>,
+      );
     }
     function handleTouchStart(e: TouchEvent) {
       e.preventDefault();

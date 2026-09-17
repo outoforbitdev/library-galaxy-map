@@ -2,18 +2,26 @@ app_name := "library-galaxy-map"
 port := "1798"
 api_port := "1799"
 
+# Bootstrap: one-time repository initialization
+bootstrap:
+    pre-commit install
+
 install:
     npm install
-    npx husky install
-    npx husky init
-    echo "npx commitlint --edit \$1 --config ./.linters/config/commitlint.config.js" > .husky/commit-msg
-    echo "just lint" > .husky/pre-commit
 
 build:
     npm run build
 
 lint:
     docker run -v $(pwd):/app -v $(pwd)/.linters:/polylint/.linters outoforbitdev/polylint:0.1.0
+
+lint-write:
+    @echo "polylint has no autofix mode; run 'just lint' and fix findings manually."
+
+test:
+    npm test
+
+gate: test lint
 
 pack: build
     #!/usr/bin/env bash
