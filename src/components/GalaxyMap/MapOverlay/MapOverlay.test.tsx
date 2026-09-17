@@ -61,9 +61,7 @@ describe("MapOverlay", () => {
       />,
     );
 
-    expect(
-      container.querySelector("[class*='center']"),
-    ).not.toBeNull();
+    expect(container.querySelector("[class*='center']")).not.toBeNull();
   });
 
   it("wraps leftChildren and rightChildren so only they, not the whole overlay, capture pointer events", () => {
