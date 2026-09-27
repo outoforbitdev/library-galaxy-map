@@ -38,6 +38,7 @@ export function PlanetDotLayer(props: IPlanetDotLayerProps) {
         <circle
           key={planet.id}
           data-testid={`planet-dot-${planet.id}`}
+          data-selected={planet.id === props.selectedPlanetId}
           cx={planet.position.x}
           cy={planet.position.y}
           fill={colorToCss(planet.color)}
