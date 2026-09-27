@@ -59,6 +59,99 @@ describe("GalaxyMap", () => {
     vi.restoreAllMocks();
   });
 
+  it("renders without crashing given planets and spacelanes", () => {
+    const { container } = render(
+      <GalaxyMap
+        planets={[makePlanet("a")]}
+        spacelanes={[]}
+        dimensions={dimensions}
+        renderLimits={renderLimits}
+      />,
+    );
+
+    expect(container.querySelector("svg")).toBeInTheDocument();
+  });
+
+  it("re-renders the visual selection when the selectedPlanetId prop updates", () => {
+    const { container, rerender } = render(
+      <GalaxyMap
+        planets={[makePlanet("a"), makePlanet("b")]}
+        spacelanes={[]}
+        dimensions={dimensions}
+        renderLimits={renderLimits}
+      />,
+    );
+
+    expect(
+      container.querySelector('[data-testid="planet-dot-a"]'),
+    ).not.toHaveAttribute("data-selected", "true");
+
+    rerender(
+      <GalaxyMap
+        planets={[makePlanet("a"), makePlanet("b")]}
+        spacelanes={[]}
+        dimensions={dimensions}
+        renderLimits={renderLimits}
+        selectedPlanetId="a"
+      />,
+    );
+
+    expect(
+      container.querySelector('[data-testid="planet-dot-a"]'),
+    ).toHaveAttribute("data-selected", "true");
+  });
+
+  it("fires onZoomChange with the new zoom value after a pinch zoom", () => {
+    const onZoomChange = vi.fn();
+    const { container } = render(
+      <GalaxyMap
+        planets={[]}
+        spacelanes={[]}
+        dimensions={dimensions}
+        renderLimits={renderLimits}
+        onZoomChange={onZoomChange}
+      />,
+    );
+
+    const svg = container.querySelector("svg")!;
+    fireEvent.touchStart(svg, {
+      touches: [
+        { clientX: 90, clientY: 50 },
+        { clientX: 110, clientY: 50 },
+      ],
+    });
+    fireEvent.touchMove(svg, {
+      touches: [
+        { clientX: 80, clientY: 50 },
+        { clientX: 120, clientY: 50 },
+      ],
+    });
+    act(() => {
+      vi.advanceTimersByTime(20);
+    });
+
+    expect(onZoomChange).toHaveBeenCalled();
+    expect(onZoomChange.mock.calls[0][0]).toBeGreaterThan(1);
+  });
+
+  it("fires onPlanetSelect with the clicked planet", () => {
+    const onPlanetSelect = vi.fn();
+    const planet = makePlanet("a");
+    const { container } = render(
+      <GalaxyMap
+        planets={[planet]}
+        spacelanes={[]}
+        dimensions={dimensions}
+        renderLimits={renderLimits}
+        onPlanetSelect={onPlanetSelect}
+      />,
+    );
+
+    fireEvent.click(container.querySelector('[data-testid="planet-dot-a"]')!);
+
+    expect(onPlanetSelect).toHaveBeenCalledWith(planet);
+  });
+
   it("does not reset zoom or pan state when planets or spacelanes props update", () => {
     const { container, rerender } = render(
       <GalaxyMap
