@@ -21,5 +21,5 @@ This repository uses Yarn. Run `yarn install` or `just install` instead.
 **Q: What is `app-galaxy-map`?**
 A separate application repository used for manual integration testing of this library. It is not part of this repo but is referenced by the `just pack` workflow.
 
-**Q: Who are Andrea, Arlo, Gavin, and Priya?**
-They are user personas for the two prioritized [use cases](../product/use-cases.md). The atlas use case has [Andrea the Atlas Builder](../product/personas/persona-andrea-the-atlas-builder.md) and [Arlo the Atlas User](../product/personas/persona-arlo-the-atlas-user.md). The game use case has [Gavin the Game Developer](../product/personas/persona-gavin-the-game-developer.md) and [Priya the Player](../product/personas/persona-priya-the-player.md).
+**Q: Who are Andrea, Arlo, Gavin, Priya, and Casey?**
+They are personas. Four come from the two prioritized [use cases](../product/use-cases.md). The atlas use case has [Andrea the Atlas Builder](../product/personas/persona-andrea-the-atlas-builder.md) and [Arlo the Atlas User](../product/personas/persona-arlo-the-atlas-user.md). The game use case has [Gavin the Game Developer](../product/personas/persona-gavin-the-game-developer.md) and [Priya the Player](../product/personas/persona-priya-the-player.md). The fifth, [Casey the Contributor](../product/personas/persona-casey-the-contributor.md), represents whoever maintains the library's internals.
