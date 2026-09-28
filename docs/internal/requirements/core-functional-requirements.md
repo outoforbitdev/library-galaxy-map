@@ -65,19 +65,20 @@ The map owns spatial rendering and interaction: drawing, camera, gestures, hit-t
 | FR-L6 | The package MAY export a helper that suggests level-of-detail settings based on how dense the data is. It MUST NOT render any UI.                                                                                     | Andrea              | Game  |
 | FR-L7 | The selected system or lane MUST be treated as the highest priority when deciding what to show. It MUST always be shown, a selected system MUST show its label, and labels that would collide with it MUST be hidden. | Andrea, Arlo, Priya | Atlas |
 | FR-L8 | Hovering MUST NOT change which systems, lanes, or labels are shown. It only adds a highlight.                                                                                                                         | Arlo, Priya         | Atlas |
+| FR-L9 | The consumer MUST be able to turn off culling and level of detail, so every system, label, and lane is drawn.                                                                                                         | Andrea              | Atlas |
 
 ## Gestures
 
-| ID    | Requirement                                                                                                                                                                                                                                                          | Source        | Phase |
-| ----- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------- | ----- |
-| FR-G1 | Dragging with a mouse, or with one finger on a touch screen, MUST pan the map.                                                                                                                                                                                       | Arlo, Priya   | Atlas |
-| FR-G2 | Scrolling MUST zoom the map, anchored at the pointer. This applies to mouse wheels and trackpads alike. Trackpad scrolling MUST NOT pan.                                                                                                                             | Arlo, Priya   | Atlas |
-| FR-G3 | Pinching on a trackpad or touch screen MUST zoom the map, anchored at the center of the pinch.                                                                                                                                                                       | Arlo, Priya   | Atlas |
-| FR-G4 | Scroll, drag, and pinch gestures over the map MUST NOT scroll or zoom the page. As an accepted tradeoff, the consumer's layout must leave room to scroll past the map.                                                                                               | Arlo          | Atlas |
-| FR-G5 | A drag, pinch, or scroll MUST NOT count as a click or tap, even when it starts or ends on a system or lane.                                                                                                                                                          | Arlo, Priya   | Atlas |
-| FR-G6 | User gestures MUST respect minimum zoom, maximum zoom, and pan bounds. By default, pan bounds MUST keep the view center within the data's bounding box plus a margin. The consumer MUST be able to configure the zoom limits and supply explicit pan bounds instead. | Andrea, Gavin | Atlas |
-| FR-G7 | The consumer MUST be able to disable user panning and user zooming independently, so custom gestures such as drag-to-order don't conflict with the map's own gestures.                                                                                               | Gavin         | Game  |
-| FR-G8 | The map MUST fill its container and adapt when the container is resized, keeping the same center point.                                                                                                                                                              | Andrea, Gavin | Atlas |
+| ID    | Requirement                                                                                                                                                                                                                                                                    | Source        | Phase |
+| ----- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------- | ----- |
+| FR-G1 | Dragging with a mouse, or with one finger on a touch screen, MUST pan the map.                                                                                                                                                                                                 | Arlo, Priya   | Atlas |
+| FR-G2 | Scrolling MUST zoom the map, anchored at the pointer. This applies to mouse wheels and trackpads alike. Trackpad scrolling MUST NOT pan.                                                                                                                                       | Arlo, Priya   | Atlas |
+| FR-G3 | Pinching on a trackpad or touch screen MUST zoom the map, anchored at the center of the pinch.                                                                                                                                                                                 | Arlo, Priya   | Atlas |
+| FR-G4 | Scroll, drag, and pinch gestures over the map MUST NOT scroll or zoom the page. As an accepted tradeoff, the consumer's layout must leave room to scroll past the map.                                                                                                         | Arlo          | Atlas |
+| FR-G5 | A drag, pinch, or scroll MUST NOT count as a click or tap, even when it starts or ends on a system or lane.                                                                                                                                                                    | Arlo, Priya   | Atlas |
+| FR-G6 | User gestures MUST respect minimum zoom, maximum zoom, and pan bounds. By default, pan bounds MUST let the view center move at most half a view beyond the data's bounding box. The consumer MUST be able to configure the zoom limits and supply explicit pan bounds instead. | Andrea, Gavin | Atlas |
+| FR-G7 | The consumer MUST be able to disable user panning and user zooming independently, so custom gestures such as drag-to-order don't conflict with the map's own gestures.                                                                                                         | Gavin         | Game  |
+| FR-G8 | The map MUST fill its container and adapt when the container is resized, keeping the same center point.                                                                                                                                                                        | Andrea, Gavin | Atlas |
 
 ## Camera
 
@@ -107,6 +108,7 @@ The map owns spatial rendering and interaction: drawing, camera, gestures, hit-t
 | FR-S8  | Systems MUST have a tap and click area larger than their glyph. Lanes MUST have a hit area wider than their stroke. Where a system's and a lane's areas overlap, the system MUST win.    | Arlo, Priya         | Atlas |
 | FR-S9  | When data changes, the selection MUST persist if the selected id still exists. If it no longer exists, the map MUST notify the consumer. An uncontrolled selection MUST then be cleared. | Andrea, Arlo, Priya | Atlas |
 | FR-S10 | Data changes MUST NOT reset the camera or require remounting the map.                                                                                                                    | Andrea, Arlo, Priya | Atlas |
+| FR-S11 | The consumer MUST be able to turn off user selection and hover independently.                                                                                                            | Andrea, Gavin       | Atlas |
 
 ## Overlays and extension
 
@@ -140,23 +142,23 @@ The map owns spatial rendering and interaction: drawing, camera, gestures, hit-t
 ## Resolved questions
 
 - **Zoom units.** Zoom is a scale in screen pixels per world unit, so level of detail is consistent across devices (FR-C7).
-- **Pan bounds.** Derived from the data's extent plus a margin by default, with explicit bounds as an override (FR-G6).
+- **Pan bounds.** Derived from the data's extent plus half a view by default, with explicit bounds as an override (FR-G6).
 - **Camera limits.** Camera moves from code obey the same limits as gestures. Without video rendering, nothing needs to go beyond them (FR-C9).
 - **Route emphasis.** Consumers style routes with a CSS class on individual lanes, and layer them with priority order (FR-O5).
 - **Keyboard keys.** Arrow keys pan, plus and minus zoom, bracket keys move focus between systems, and Escape clears the selection (FR-A2, FR-A3).
 - **Static image export.** Out of scope. The map is plain SVG in the page, so a consumer can serialize it if needed.
 - **Game on touch devices.** The game targets desktop only. Game-phase features do not need to be designed for touch, although the atlas phase already requires touch gestures.
 
-## Carried to the architecture design
+## Resolved in the architecture design
 
-These are design questions, not requirements. They are recorded here so they aren't lost before the architecture doc exists.
+The design questions carried from these requirements are answered in the [architecture overview](../architecture/overview.md):
 
-- **Color value or class name.** Does the consumer pass a color value, a CSS class name, or both, for systems and lanes? Route emphasis (FR-O5) already uses a class so consumers can set stroke width and style.
-- **Selection event shape.** One callback reporting kind and id, or separate callbacks for systems and lanes. Ids may be shared across kinds (FR-D4), so either shape must identify the kind.
-- **Rendering strategy.** Recompute every element's screen position on each frame, or transform one group and counter-scale glyphs and labels.
-- **Draw order.** Lanes are drawn before systems, and each system is drawn as one group with its glyph and label, in reverse priority order. Where overlays go relative to glyphs and labels is undecided.
-- **Label clicks.** Whether labels ignore clicks or select their system.
-- **Selection and hover rendering.** The selected entity is moved to the highest priority and the visible set is culled again, so its label shows (FR-L7). Hover draws only a highlight on top, without reordering (FR-L8).
+- **Color value or class name.** Systems and segments take a required `color`, and systems and lanes take an optional `className`.
+- **Selection event shape.** One `onSelect` callback receives a discriminated union on `kind`, or `null`.
+- **Rendering strategy.** One transform plus a `--zoom` CSS variable ([ADR-0002](../architecture/decisions/adr-0002-transform-and-css-variable-rendering.md)).
+- **Draw order.** Each system's group draws its glyph, overlay, then label, in reverse priority order.
+- **Label clicks.** Clicking a label selects its system.
+- **Selection and hover rendering.** The selected entity is promoted and culling runs again. Hover only draws a highlight.
 
 ## Deferred
 
