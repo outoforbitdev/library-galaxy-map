@@ -1,6 +1,6 @@
 # Persona: Arlo the Atlas User
 
-> **Status:** Draft
+> **Status:** Reviewed
 
 ## Overview
 

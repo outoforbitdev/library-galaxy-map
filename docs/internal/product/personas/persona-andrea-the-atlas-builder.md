@@ -1,6 +1,6 @@
 # Persona: Andrea the Atlas Builder
 
-> **Status:** Draft
+> **Status:** Reviewed
 
 ## Overview
 

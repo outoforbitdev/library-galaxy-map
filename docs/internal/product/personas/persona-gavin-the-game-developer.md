@@ -1,6 +1,6 @@
 # Persona: Gavin the Game Developer
 
-> **Status:** Draft
+> **Status:** Reviewed
 
 ## Overview
 

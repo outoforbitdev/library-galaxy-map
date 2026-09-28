@@ -1,6 +1,6 @@
 # Persona: Priya the Player
 
-> **Status:** Draft
+> **Status:** Reviewed
 
 ## Overview
 
@@ -10,7 +10,7 @@ Priya represents the **player of a galactic conquest strategy game** built by [G
 
 - **Role:** Strategy game player who spends long sessions making decisions on the map.
 - **Tech familiarity:** Varies. Priya knows the game, not the map library, and never knows this library exists.
-- **Devices:** Primarily desktop with mouse and keyboard. Touch matters only if the game ships on tablets or phones.
+- **Devices:** Desktop with mouse and keyboard. The game does not target tablets or phones.
 - **Session pattern:** Long, repeated sessions. Priya looks at the map constantly and notices every small annoyance.
 
 ## Goals
@@ -25,6 +25,7 @@ Priya represents the **player of a galactic conquest strategy game** built by [G
 
 - Lag or stutter when panning a map full of fleets and indicators.
 - Misclicks: selecting a lane when aiming for a system, or missing thin lanes entirely.
+- Accidentally selecting a system or lane while trying to pan or zoom.
 - Fleets and badges that clutter the map or hide the systems beneath them.
 - The camera jumping or the selection clearing when a turn resolves.
 - Labels and indicators that become unreadable at the zoom level they play at.

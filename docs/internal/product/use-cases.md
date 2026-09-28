@@ -95,7 +95,7 @@ A single-player galactic conquest strategy game with a React UI. The map is one 
 | Content drawn on map  | Systems, lanes, labels, highlighted routes | Systems, lanes, labels, fleets, badges, stats |
 | Interaction           | Explore, select, search, share             | Select, plus custom game gestures             |
 | Surrounding UI        | Page layout owned by the atlas             | HUD panels overlapping the map                |
-| Primary devices       | Desktop and mobile                         | Desktop first                                 |
+| Primary devices       | Desktop and mobile                         | Desktop only                                  |
 | Persistence           | Viewport and selection in the URL          | Owned by the game's own state                 |
 
 ## Non-goals
