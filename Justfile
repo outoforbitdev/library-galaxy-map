@@ -21,7 +21,10 @@ lint-write:
 test:
     npm test
 
-gate: test lint
+typecheck:
+    npm run typecheck
+
+gate: test typecheck lint
 
 pack: build
     #!/usr/bin/env bash
