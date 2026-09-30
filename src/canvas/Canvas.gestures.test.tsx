@@ -175,8 +175,8 @@ describe("Canvas gestures", () => {
     expect(onViewportChange).not.toHaveBeenCalled();
   });
 
-  it("ends a pan when pointer capture is lost", () => {
-    const { target, onViewportChange } = setup();
+  it("ends a pan when the canvas loses pointer capture", () => {
+    const { root, target, onViewportChange } = setup();
     fireEvent.pointerDown(target, {
       pointerId: 1,
       pointerType: "mouse",
@@ -191,10 +191,39 @@ describe("Canvas gestures", () => {
       clientX: 150,
       clientY: 100,
     });
-    fireEvent.lostPointerCapture(target, { pointerId: 1 });
+    fireEvent.lostPointerCapture(root, { pointerId: 1 });
     expect(onViewportChange).toHaveBeenLastCalledWith(
       { center: { x: -50, y: 0 }, zoom: 1 },
       { settled: true },
+    );
+  });
+
+  it("keeps panning when capture moves from the touched element to the canvas", () => {
+    const { target, onViewportChange } = setup();
+    fireEvent.pointerDown(target, {
+      pointerId: 1,
+      pointerType: "touch",
+      clientX: 100,
+      clientY: 100,
+    });
+    fireEvent.pointerMove(target, {
+      pointerId: 1,
+      pointerType: "touch",
+      clientX: 150,
+      clientY: 100,
+    });
+    // Taking capture makes the browser fire lostpointercapture on the element
+    // that held it implicitly. The event bubbles to the canvas.
+    fireEvent.lostPointerCapture(target, { pointerId: 1 });
+    fireEvent.pointerMove(target, {
+      pointerId: 1,
+      pointerType: "touch",
+      clientX: 200,
+      clientY: 100,
+    });
+    expect(onViewportChange).toHaveBeenLastCalledWith(
+      { center: { x: -100, y: 0 }, zoom: 1 },
+      { settled: false },
     );
   });
 

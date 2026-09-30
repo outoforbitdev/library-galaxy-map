@@ -132,6 +132,13 @@ export function useGestures(options: IGestureOptions): IGestureHandlers {
     }
   };
 
+  // Only capture held by the canvas itself counts. Taking capture makes the
+  // browser fire this event on the element that held it implicitly (touch does
+  // this), and it bubbles here while the gesture is just starting.
+  const onLostPointerCapture = (event: PointerEvent<HTMLDivElement>) => {
+    if (event.target === event.currentTarget) onPointerEnd(event);
+  };
+
   const onClickCapture = (event: MouseEvent<HTMLDivElement>) => {
     if (!suppressClick.current) return;
     suppressClick.current = false;
@@ -174,7 +181,7 @@ export function useGestures(options: IGestureOptions): IGestureHandlers {
     onPointerMove,
     onPointerUp: onPointerEnd,
     onPointerCancel: onPointerEnd,
-    onLostPointerCapture: onPointerEnd,
+    onLostPointerCapture,
     onClickCapture,
   };
 }
