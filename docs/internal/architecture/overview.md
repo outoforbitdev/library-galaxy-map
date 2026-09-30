@@ -267,7 +267,7 @@ Values marked _(starting)_ have not been tested yet and are expected to be tuned
 | `EMPTY_BOUNDS_HALF_SIZE`    | 100 _(starting)_   | Half the size, in world units, of the default bounds when there is no data. |
 | `SEGMENT_JOIN_TOLERANCE`    | 0.001 _(starting)_ | Largest gap, in world units, reported as segments that almost join.         |
 
-Visual defaults that consumers may restyle (label font, lane width, highlight color) are defined once in `GalaxyMap.module.css`, with zero-specificity `:where()` rules on the map root that children inherit. Consumers restyle with their own classes: `className` on `GalaxyMap` for the whole map, or on a system or spacelane for that entity's group. Where culling depends on a styled value, it reads the computed style, as it does for the label font. A consumer that changes a glyph's radius with CSS should know culling still uses `GLYPH_RADIUS_PX`.
+Visual defaults that consumers may restyle (label font and outline, lane width, highlight color) are defined once in `GalaxyMap.module.css`, with zero-specificity `:where()` rules on the map root that children inherit. Consumers restyle with their own classes: `className` on `GalaxyMap` for the whole map, or on a system or spacelane for that entity's group. Where culling depends on a styled value, it reads the computed style, as it does for the label font. A consumer that changes a glyph's radius with CSS should know culling still uses `GLYPH_RADIUS_PX`.
 
 ## Performance
 

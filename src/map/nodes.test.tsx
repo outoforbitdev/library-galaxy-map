@@ -181,6 +181,14 @@ describe("SystemLabel", () => {
     expect(group.querySelector("text")).not.toHaveAttribute("fill");
   });
 
+  it("outlines the name so it stays readable over a glyph of the same color", () => {
+    const { container } = svg(<SystemLabel system={alpha} interactive />);
+    const style = getComputedStyle(container.querySelector("text")!);
+    expect(style.stroke).not.toBe("");
+    expect(style.stroke).not.toBe("none");
+    expect(style.strokeWidth).toBe("3px");
+  });
+
   it("does not re-render for an equal but newly created system", () => {
     const { container, rerender } = svg(
       <SystemLabel system={alpha} interactive />,

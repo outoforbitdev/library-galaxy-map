@@ -16,6 +16,12 @@
 
 :where(.label) {
   dominant-baseline: central;
+  /* A dark outline drawn under the fill keeps a label readable over a glyph of
+     the same color. Override `stroke` for a light background. */
+  stroke: rgba(0, 0, 0, 0.75);
+  stroke-width: 3px;
+  stroke-linejoin: round;
+  paint-order: stroke;
 }
 
 :where(.glyph) {
