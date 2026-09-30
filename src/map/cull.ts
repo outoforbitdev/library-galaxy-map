@@ -146,7 +146,11 @@ function cullSystems(input: ICullInput, selected: number): ICulledSystem[] {
     selected,
   ).filter(valid);
 
-  const placed = new BoxHash();
+  // Glyphs and labels collide separately: a glyph is hidden only by another
+  // glyph, and a label only by another label. Label text never decides which
+  // systems are visible.
+  const placedGlyphs = new BoxHash();
+  const placedLabels = new BoxHash();
   const result: ICulledSystem[] = [];
   const half = GLYPH_RADIUS_PX + GLYPH_SPACING_PX / 2;
   let labels = 0;
@@ -166,8 +170,8 @@ function cullSystems(input: ICullInput, selected: number): ICulledSystem[] {
       h: 2 * half,
     };
     const forced = index === selected;
-    if (!forced && placed.collides(glyph)) continue;
-    placed.add(glyph);
+    if (!forced && placedGlyphs.collides(glyph)) continue;
+    placedGlyphs.add(glyph);
     const label = {
       x: point.x + LABEL_OFFSET_PX,
       y: point.y - LABEL_HEIGHT_PX / 2,
@@ -175,9 +179,10 @@ function cullSystems(input: ICullInput, selected: number): ICulledSystem[] {
       h: LABEL_HEIGHT_PX,
     };
     const labeled =
-      forced || (labels < input.limits.maxLabels && !placed.collides(label));
+      forced ||
+      (labels < input.limits.maxLabels && !placedLabels.collides(label));
     if (labeled) {
-      placed.add(label);
+      placedLabels.add(label);
       labels++;
     }
     result.push({ index, labeled });
@@ -210,8 +215,8 @@ function cullLanes(input: ICullInput, selected: number): number[] {
 
 /**
  * Decides what to draw. Systems are walked greedily in priority order, with the
- * selected system first: a glyph that collides with anything placed is hidden,
- * and a placed glyph gets its label if the label box is clear. Lanes are kept
+ * selected system first: a glyph that collides with a placed glyph is hidden,
+ * and a placed glyph gets its label if the label box collides with no placed label. Lanes are kept
  * in priority order, with the selected lane first, until the segment budget.
  */
 export function cull(input: ICullInput): ICullResult {

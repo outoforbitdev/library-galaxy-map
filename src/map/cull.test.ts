@@ -62,11 +62,29 @@ describe("cull systems", () => {
     ]);
   });
 
-  it("hides a glyph that collides with an earlier label", () => {
+  it("keeps a glyph that overlaps an earlier label, and hides only the later label", () => {
     const result = cull(
       input([system("A", 0, 0, "Alpha"), system("D", 20, 0)]),
     );
-    expect(result.systems).toEqual([{ index: 0, labeled: true }]);
+    expect(result.systems).toEqual([
+      { index: 0, labeled: true },
+      { index: 1, labeled: false },
+    ]);
+  });
+
+  it("chooses the same glyphs whatever the labels say", () => {
+    const positions: [number, number][] = [
+      [0, 0],
+      [15, 0],
+      [40, 3],
+      [70, 0],
+      [3, 30],
+    ];
+    const glyphs = (name: string) =>
+      cull(
+        input(positions.map(([x, y], i) => system(`s${i}`, x, y, name))),
+      ).systems.map((s) => s.index);
+    expect(glyphs("A")).toEqual(glyphs("A very long system name"));
   });
 
   it("stops at maxSystems and maxLabels", () => {

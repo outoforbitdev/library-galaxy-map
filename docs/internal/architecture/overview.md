@@ -115,8 +115,8 @@ The world group MUST NOT be promoted to its own compositor layer (no `will-chang
 
 1. Query the system index for the view plus a 10% margin on each side, in priority order. The margin is `CULL_MARGIN` (see [Tuning constants](#tuning-constants)). If a system is selected, it goes first.
 2. Walk the candidates greedily in screen space:
-   - A glyph that collides with an already placed glyph or label is hidden.
-   - Otherwise the glyph is placed. Its label is placed too if the label box collides with nothing placed and fewer than `maxLabels` labels are placed.
+   - A glyph that collides with an already placed glyph is hidden.
+   - Otherwise the glyph is placed. Its label is placed too if the label box collides with no placed label and fewer than `maxLabels` labels are placed. Glyphs and labels never block each other, so label text does not change which systems are visible.
 3. Stop after `maxSystems` placed glyphs.
 
 **Lanes:** walk lanes in priority order, with the selected lane first, and keep each lane with at least one segment in the view until `maxLaneSegments` visible segments are reached. Lanes do not collide with each other or with systems.
