@@ -269,7 +269,7 @@ Values marked _(starting)_ have not been tested yet and are expected to be tuned
 
 Visual defaults that consumers may restyle (label font, lane width, highlight color) are defined once in `GalaxyMap.module.css`, with zero-specificity `:where()` rules on the map root that children inherit. Consumers restyle with their own classes: `className` on `GalaxyMap` for the whole map, or on a system or spacelane for that entity's group. Where culling depends on a styled value, it reads the computed style, as it does for the label font. A consumer that changes a glyph's radius with CSS should know culling still uses `GLYPH_RADIUS_PX`.
 
-The label outline uses the ood-react theme variable `--ood-background`, with a dark fallback. A theme class such as `ood-primary` on an ancestor of the map sets it, so labels stay readable over a glyph of the same color in every theme.
+The label outline uses the ood-react theme variable `--ood-background`, with a dark fallback. A theme class such as `ood-primary` on an ancestor of the map sets it, so labels stay readable over a glyph of the same color in every theme. Highlight and selection rings default to `--ood-text`, then white. The `highlightColor` prop comes first, then a `color` on a consumer class, then those defaults.
 
 ## Performance
 

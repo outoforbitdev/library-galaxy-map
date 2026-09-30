@@ -121,7 +121,7 @@ Draw a route as a spacelane placed first in `spacelanes`, so it draws on top and
 
 Style the map with your own classes. The map's defaults have zero specificity, so your rules always win.
 
-- **Map-wide:** pass `className` to `GalaxyMap`. `font` sets the label font, `color` sets the highlight and selection color, `stroke-width` sets the default lane width, and `.my-map text { stroke: ...; }` changes the label outline (see Theme colors). The `highlightColor` prop also sets the highlight color, and takes priority over the map's class.
+- **Map-wide:** pass `className` to `GalaxyMap`. `font` sets the label font, `color` sets the highlight and selection color (by default the theme's `--ood-text`, or white without a theme class), `stroke-width` sets the default lane width, and `.my-map text { stroke: ...; }` changes the label outline (see Theme colors). The `highlightColor` prop also sets the highlight color, and takes priority over the map's class.
 - **One system or lane:** set `className` on the `ISystem` or `ISpacelane`. The class goes on the entity's group, so properties like `font`, `fill`, and `stroke-width` apply to its label or lane paths. Labels are filled with the system's color by default, and a class on the system overrides that with `fill`. Use descendant selectors, such as `.capital text`, to target one part.
 
 ```css
@@ -135,7 +135,7 @@ Style the map with your own classes. The map's defaults have zero specificity, s
 
 ### Theme colors
 
-Labels are outlined with `var(--ood-background)` from the [ood-react](https://www.npmjs.com/package/@outoforbitdev/ood-react) theme system, so they stay readable over a glyph of the same color. Put an ood-react theme class such as `ood-primary` on a parent of the map. It sets `--ood-background` and paints the surface behind the map. Without one, the outline falls back to a dark color.
+Labels are outlined with `var(--ood-background)` from the [ood-react](https://www.npmjs.com/package/@outoforbitdev/ood-react) theme system, so they stay readable over a glyph of the same color. Put an ood-react theme class such as `ood-primary` on a parent of the map. It sets `--ood-background` and paints the surface behind the map. Without one, the outline falls back to a dark color. The `--ood-text` variable from the same class sets the default highlight and selection color, and `highlightColor` overrides it.
 
 ```tsx
 <div className="ood-primary" style={{ height: 600 }}>

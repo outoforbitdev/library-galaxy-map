@@ -168,6 +168,15 @@ describe("GalaxyMap rendering", () => {
     }
   });
 
+  it("defaults the highlight color to the theme text color, then white", () => {
+    const { container } = render(
+      <GalaxyMap systems={systems} spacelanes={lanes} />,
+    );
+    expect(getComputedStyle(container.firstChild as HTMLElement).color).toBe(
+      "var(--ood-text, #ffffff)",
+    );
+  });
+
   it("renders on the server without throwing", () => {
     expect(
       renderToString(<GalaxyMap systems={systems} spacelanes={lanes} />),

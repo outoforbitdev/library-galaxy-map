@@ -2,7 +2,9 @@
    the map root, or on a system's or lane's group. `.laneStroke` also gives a
    standalone SpacelaneSegment the same default stroke as the map. */
 :where(.root) {
-  color: #ffffff; /* highlight and selection rings, through currentColor */
+  /* highlight and selection rings, through currentColor: the ood-react theme
+     text color, or white without a theme class on an ancestor */
+  color: var(--ood-text, #ffffff);
   font:
     12px system-ui,
     sans-serif; /* label text, also used to measure labels */
