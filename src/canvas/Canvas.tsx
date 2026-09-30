@@ -26,6 +26,7 @@ import type {
   IViewport,
   YAxis,
 } from "./types";
+import { useGestures } from "./useGestures";
 import { type IViewportChangeInfo, useViewport } from "./useViewport";
 
 /** Camera controls exposed through a Canvas ref. */
@@ -150,6 +151,14 @@ export function Canvas(props: ICanvasProps) {
     [camera, props.bounds, props.minZoom, props.maxZoom, yAxis],
   );
 
+  const gestures = useGestures({
+    rootRef,
+    camera,
+    sizeRef,
+    yAxis,
+    setGesturing,
+  });
+
   const handleKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
     props.onKeyDown?.(event);
     if (event.defaultPrevented) return;
@@ -195,6 +204,7 @@ export function Canvas(props: ICanvasProps) {
       aria-roledescription={props["aria-roledescription"]}
       aria-activedescendant={props["aria-activedescendant"]}
       onKeyDown={handleKeyDown}
+      {...gestures}
     >
       <svg className={styles.svg}>
         <g ref={worldRef}>
