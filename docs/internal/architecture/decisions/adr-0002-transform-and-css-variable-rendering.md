@@ -48,6 +48,16 @@ A throwaway spike rendered 6,000 systems, 500 lanes, and 19,578 segments, using 
 
 Headless browsers render in software, so these numbers are indicative only.
 
+## Real-browser measurements
+
+Full Scale story, 6,000 systems and 500 lanes of 40 segments. **Not yet measured.** This needs a person to run `npm run storybook` and record frame rates in real Chrome, Firefox, and Safari windows. NFR-P2 is not confirmed until these are filled in.
+
+| Browser | Typical fps  | Worst fps    |
+| ------- | ------------ | ------------ |
+| Chrome  | not measured | not measured |
+| Firefox | not measured | not measured |
+| Safari  | not measured | not measured |
+
 ## Consequences
 
 - The world group must not be promoted to its own compositor layer, for example with `will-change: transform`. A composited layer is scaled as a bitmap, which blurs text during zoom.

@@ -165,7 +165,7 @@ If the consumer passes no `bounds`, the map uses the bounding box of all system 
 
 ### Event delegation
 
-Nodes carry `data-kind` and `data-id` but no handlers. `GalaxyMap` attaches one handler per pointer event type (`click`, `pointerover`, `pointerout`) to its root group and resolves the entity with `event.target.closest("[data-kind]")`. Keyboard handling goes through the `onKeyDown` prop of `Canvas`, since key events start at the focused root. Nodes are pure drawing, and all interaction logic is in one place.
+Nodes carry `data-kind` and `data-id` but no handlers. The `click` handler is on the canvas root, passed through the `onClick` prop, because a click on empty space targets the `<svg>`, outside the map's group. The hover handlers (`pointerover`, `pointerout`) are on the map's root group. Each resolves the entity with `event.target.closest("[data-kind]")`. Keyboard handling goes through the `onKeyDown` prop of `Canvas`, since key events start at the focused root. Nodes are pure drawing, and all interaction logic is in one place.
 
 ### Clicks
 
@@ -228,17 +228,19 @@ Values marked _(starting)_ have not been tested yet and are expected to be tuned
 
 **`canvas/constants.ts`**
 
-| Constant                  | Value              | Meaning                                                   |
-| ------------------------- | ------------------ | --------------------------------------------------------- |
-| `PUBLISH_INTERVAL_MS`     | 100                | Most frequent viewport publishing through context.        |
-| `WHEEL_SETTLE_MS`         | 150                | Wheel inactivity before a wheel zoom counts as settled.   |
-| `DRAG_THRESHOLD_MOUSE_PX` | 4                  | Mouse movement that turns a press into a pan.             |
-| `DRAG_THRESHOLD_TOUCH_PX` | 8                  | Touch movement that turns a press into a pan.             |
-| `BOUNDS_VIEW_MARGIN`      | 0.5                | How far, in views, the center may move beyond the bounds. |
-| `KEYBOARD_PAN_FRACTION`   | 0.1                | Arrow key pan distance, as a fraction of the view.        |
-| `KEYBOARD_ZOOM_FACTOR`    | 1.25               | Zoom change per plus or minus key press.                  |
-| `WHEEL_ZOOM_SENSITIVITY`  | 0.002 _(starting)_ | Zoom change per unit of wheel delta.                      |
-| `PINCH_ZOOM_SENSITIVITY`  | 0.01 _(starting)_  | Zoom change per unit of trackpad pinch delta.             |
+| Constant                  | Value              | Meaning                                                        |
+| ------------------------- | ------------------ | -------------------------------------------------------------- |
+| `PUBLISH_INTERVAL_MS`     | 100                | Most frequent viewport publishing through context.             |
+| `WHEEL_SETTLE_MS`         | 150                | Wheel inactivity before a wheel zoom counts as settled.        |
+| `DRAG_THRESHOLD_MOUSE_PX` | 4                  | Mouse movement that turns a press into a pan.                  |
+| `DRAG_THRESHOLD_TOUCH_PX` | 8                  | Touch movement that turns a press into a pan.                  |
+| `BOUNDS_VIEW_MARGIN`      | 0.5                | How far, in views, the center may move beyond the bounds.      |
+| `KEYBOARD_PAN_FRACTION`   | 0.1                | Arrow key pan distance, as a fraction of the view.             |
+| `KEYBOARD_ZOOM_FACTOR`    | 1.25               | Zoom change per plus or minus key press.                       |
+| `WHEEL_ZOOM_SENSITIVITY`  | 0.002 _(starting)_ | Zoom change per unit of wheel delta.                           |
+| `PINCH_ZOOM_SENSITIVITY`  | 0.01 _(starting)_  | Zoom change per unit of trackpad pinch delta.                  |
+| `WHEEL_LINE_HEIGHT_PX`    | 16                 | Pixels per line when a wheel event reports its delta in lines. |
+| `DEFAULT_ZOOM`            | 1                  | Zoom with no viewport, default viewport, or bounds to fit.     |
 
 **`map/constants.ts`**
 
@@ -252,12 +254,18 @@ Values marked _(starting)_ have not been tested yet and are expected to be tuned
 | `GLYPH_SPACING_PX`          | 4 _(starting)_     | Minimum gap between placed glyphs.                                          |
 | `LABEL_OFFSET_PX`           | 8                  | Horizontal distance from the system center to its label.                    |
 | `SYSTEM_HIT_RADIUS_PX`      | 12                 | Radius of a system's click and tap target.                                  |
-| `LANE_STROKE_WIDTH_PX`      | 2                  | Default drawn lane width, overridable with CSS.                             |
 | `LANE_HIT_WIDTH_PX`         | 12                 | Width of a lane's click and tap target.                                     |
+| `LANE_HALO_WIDTH_PX`        | 8                  | Width of the lane selection halo and hover highlight.                       |
+| `SELECTION_RING_GAP_PX`     | 3                  | Gap between a glyph and its selection ring.                                 |
+| `HIGHLIGHT_RING_GAP_PX`     | 3                  | Gap between a glyph and its hover or focus ring.                            |
+| `LABEL_HEIGHT_PX`           | 14                 | Label box height used for collisions.                                       |
+| `FALLBACK_CHAR_WIDTH_PX`    | 7                  | Estimated character width when text cannot be measured.                     |
+| `COLLISION_CELL_PX`         | 64                 | Size of the screen-space buckets used for collision lookups.                |
+| `INDEX_CELLS_PER_AXIS`      | 64                 | Spatial index cells along the larger side of the data's extent.             |
 | `EMPTY_BOUNDS_HALF_SIZE`    | 100 _(starting)_   | Half the size, in world units, of the default bounds when there is no data. |
 | `SEGMENT_JOIN_TOLERANCE`    | 0.001 _(starting)_ | Largest gap, in world units, reported as segments that almost join.         |
 
-Values that consumers can theme, such as label font, colors, and lane width, are also exposed as CSS, with the constants as defaults. Where culling depends on a themed value, it reads the computed style, as it does for the label font.
+Visual defaults that consumers may restyle (label font and fill, lane width, highlight color) are defined once in `GalaxyMap.module.css`, with zero-specificity `:where()` rules on the map root that children inherit. Consumers restyle with their own classes: `className` on `GalaxyMap` for the whole map, or on a system or spacelane for that entity's group. Where culling depends on a styled value, it reads the computed style, as it does for the label font. A consumer that changes a glyph's radius with CSS should know culling still uses `GLYPH_RADIUS_PX`.
 
 ## Performance
 

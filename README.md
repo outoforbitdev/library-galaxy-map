@@ -25,124 +25,123 @@ A React component for displaying a galactic map.
 
 ## Features
 
-- Display planets and spacelanes on a galactic map
-- Map is both draggable and zoomable on desktop and mobile
-  - Single finger drag and pinch to zoom on mobile
-  - Click and drag and scroll to zoom on desktop
-- Customize the colors
-- Automatically adjusts colors based on themes
-- Add custom options for the user to modify the map
+- Star systems and multi-segment spacelanes on a pannable, zoomable SVG map.
+- Handles 6,000 systems and 20,000 lane segments by drawing only what is in view.
+- Priority order decides which systems and labels show when not everything fits.
+- Drag, scroll, and pinch on desktop, trackpad, and touch. Gestures never scroll the page.
+- Selection, hover, and keyboard navigation, with controlled and uncontrolled modes.
+- No built-in legend, infobox, or settings: build your own from the exported primitives.
 
 ## Installation
 
-```
-npm install --save @outoforbitdev/galaxy-map
+```bash
+npm install @outoforbitdev/galaxy-map
 ```
 
 ## Usage
 
-Import:
+The map fills its container, so give the container a size.
 
-`import GalaxyMap, {MapColor} from "@outoforbitdev/galaxy-map";`
+```tsx
+import {
+  GalaxyMap,
+  type ISpacelane,
+  type ISystem,
+} from "@outoforbitdev/galaxy-map";
 
-Create:
-
-```typescript
-const planets =[
+// Highest priority first. World y points up.
+const systems: ISystem[] = [
+  { id: "core", name: "Core", position: { x: 0, y: 0 }, color: "#f5d90a" },
   {
-    name: "Earth",
-    x: 100,
-    y: 0,
-    color: MapColor.Blue,
-    focusLevel: 1,
+    id: "rim",
+    name: "Rimward",
+    position: { x: 400, y: -200 },
+    color: "#3e8ed0",
   },
+];
+
+const spacelanes: ISpacelane[] = [
   {
-    name: "Kepler-37",
-    x: 200,
-    y: 300,
-    color: MapColor.Red,
-    focusLevel: 2,
-  }
-]
+    id: "main",
+    name: "Main Run",
+    segments: [
+      {
+        id: "main-0",
+        origin: { x: 0, y: 0 },
+        destination: { x: 400, y: -200 },
+        color: "#9aa0a6",
+      },
+    ],
+  },
+];
 
-const spaceLanes = [
-  {
-    name: "Earth-Kepler Route",
-    xOne: 100,
-    yOne: 0,
-    xTwo: 200,
-    yTwo: 300,
-    color: MapColor.Gray,
-    focusLevel: 2,
-  }
-]
-
-const dimensions = {
-  minX: -100,
-  minY: -100,
-  maxX: 400,
-  maxY: 400,
+export function Atlas() {
+  return (
+    <div style={{ height: 600 }}>
+      <GalaxyMap
+        systems={systems}
+        spacelanes={spacelanes}
+        onSelect={(event) =>
+          console.log(event?.kind === "system" ? event.system.name : event)
+        }
+      />
+    </div>
+  );
 }
+```
 
-const zoom = {
-  initial: 80,
-  min: 0,
-}
+### Camera control
 
-return (
-  <GalaxyMap
-    planets={planets}
-    spacelanes={spacelanes}
-    dimensions={dimensions}
-    zoom={zoom}
-  />
+```tsx
+const map = useRef<IGalaxyMapHandle>(null);
+
+map.current?.moveTo({ center: system.position, zoom: 2 }, { duration: 400 });
+map.current?.fitPoints(
+  route.segments.flatMap((s) => [s.origin, s.destination]),
+  { padding: 40 },
 );
 ```
 
-## API
+### Routes
 
-### Component Props
+Draw a route as a spacelane placed first in `spacelanes`, so it draws on top and is never culled. Give it a `className` and style it with ordinary CSS. The class goes on the lane's group, and the lane's paths inherit from it:
 
-| Prop              | Type           | Default     | Description                                   |
-| ----------------- | -------------- | ----------- | --------------------------------------------- |
-| `planets`         | `IPlanet[]`    | Required    | List of planets to display on the map         |
-| `spacelanes`      | `ISpacelane[]` | Required    | List of spacelanes to display on the map      |
-| `dimensions.minX` | `number`       | Required    | Minimum x coordinate that should be displayed |
-| `dimensions.minY` | `number`       | Required    | Minimum y coordinate that should be displayed |
-| `dimensions.maxX` | `number`       | Required    | Maximum x coordinate that should be displayed |
-| `dimensions.maxY` | `number`       | Required    | Maximum y coordinate that should be displayed |
-| `mapOptions`      | `IMapOptions`  | `undefined` | Options for the options window in the map     |
-| `zoom.initial`    | `number`       | `1`         | Initial zoom level for the map                |
-| `zoom.min`        | `number`       |             | Minimum zoom level                            |
-| `zoom.max`        | `number`       |             | Maximum zoom level                            |
+```css
+.route {
+  stroke-width: 4px;
+  stroke-dasharray: 8 4;
+}
+```
 
-### IPlanet Props
+### Overlays
 
-| Prop         | Type         | Default  | Description                                     |
-| ------------ | ------------ | -------- | ----------------------------------------------- |
-| `name`       | `string`     | Required | Name of the planet                              |
-| `x`          | `number`     | Required | X coordinate of the planet                      |
-| `y`          | `number`     | Required | Y coordinate of the planet                      |
-| `color`      | `MapColor`   | Required | Color of the planet                             |
-| `focusLevel` | `FocusLevel` | Required | Zoom level at which the planet comes into focus |
+`renderSystemOverlay` draws content with each visible system, in pixels relative to its center. Wrap it in `useCallback`, or every system re-renders whenever the map does. Clicking overlay content selects the system unless your handler calls `event.preventDefault()`.
 
-### ISpacelane Props
+### Theming
 
-| Prop         | Type         | Default  | Description                                        |
-| ------------ | ------------ | -------- | -------------------------------------------------- |
-| `name`       | `string`     | Required | Name of the spacelane                              |
-| `xOne`       | `number`     | Required | X coordinate of the first end of the spacelane     |
-| `yOne`       | `number`     | Required | Y coordinate of the first end of the spacelane     |
-| `xTwo`       | `number`     | Required | X coordinate of the second end of the spacelane    |
-| `yTwo`       | `number`     | Required | Y coordinate of the second end of the spacelane    |
-| `color`      | `MapColor`   | Required | Color of the spacelane                             |
-| `focusLevel` | `FocusLevel` | Required | Zoom level at which the spacelane comes into focus |
+Style the map with your own classes. The map's defaults have zero specificity, so your rules always win.
 
-### IMapOptions
+- **Map-wide:** pass `className` to `GalaxyMap`. `font` and `fill` set the label font and color, `color` sets the highlight and selection color, and `stroke-width` sets the default lane width. The `highlightColor` prop also sets the highlight color, and takes priority over the map's class.
+- **One system or lane:** set `className` on the `ISystem` or `ISpacelane`. The class goes on the entity's group, so properties like `font`, `fill`, and `stroke-width` apply to its label or lane paths. Use descendant selectors, such as `.capital text`, to target one part.
 
-| Prop                    | Type                        | Default     | Description                                           |
-| ----------------------- | --------------------------- | ----------- | ----------------------------------------------------- |
-| `planetLabelVisibility` | `"dynamic"\|"show"\|"hide"` | `dynamic`   | Whether to hide planet text labels at all zoom levels |
-| `planetVisibility`      | `"dynamic"\|"show"\|"hide"` | `dynamic`   | Whether to show all planets at all zoom levels        |
-| `spacelaneVisibility`   | `"dynamic"\|"show"\|"hide"` | `dynamic`   | Whether to show all spacelanes at all zoom levels     |
-| `customOptions`         | `ReactNode`                 | `undefined` | Additional options to show in the options window      |
+```css
+.my-map {
+  font:
+    14px Georgia,
+    serif;
+  fill: #cde;
+  color: gold;
+}
+```
+
+### Legends
+
+`SystemGlyph` and `SpacelaneSegment` draw exactly what the map draws:
+
+```tsx
+<svg width={16} height={16}>
+  <SystemGlyph x={8} y={8} color={faction.color} />
+</svg>
+```
+
+See [the API design](./docs/internal/architecture/api-design.md) for every prop and method, and [MIGRATION.md](./MIGRATION.md) to upgrade from v0.
