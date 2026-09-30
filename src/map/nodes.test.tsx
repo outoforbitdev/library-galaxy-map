@@ -6,6 +6,7 @@ import styles from "./GalaxyMap.module.css";
 import { Highlight } from "./Highlight";
 import { LaneNode, laneNodePropsEqual } from "./LaneNode";
 import { laneStrokeProps, SpacelaneSegment, SystemGlyph } from "./primitives";
+import { SystemLabel } from "./SystemLabel";
 import { SystemNode } from "./SystemNode";
 import type { ISpacelane, ISystem } from "./types";
 
@@ -78,7 +79,6 @@ describe("primitives", () => {
 describe("SystemNode", () => {
   const props = {
     system: alpha,
-    labeled: true,
     selected: false,
     interactive: true,
     elementId: "sys-a",
@@ -98,14 +98,11 @@ describe("SystemNode", () => {
       "fill",
       "red",
     );
-    expect(container.querySelector("text")).toHaveTextContent("Alpha");
+    expect(container.querySelector("text")).toBeNull();
   });
 
-  it("omits the label when not labeled and shows a ring when selected", () => {
-    const { container } = svg(
-      <SystemNode {...props} labeled={false} selected />,
-    );
-    expect(container.querySelector("text")).toBeNull();
+  it("shows a ring when selected", () => {
+    const { container } = svg(<SystemNode {...props} selected />);
     expect(container.querySelector(`.${styles.ring}`)).not.toBeNull();
     expect(container.querySelector("[data-kind='system']")).toHaveAttribute(
       "aria-pressed",
@@ -120,7 +117,7 @@ describe("SystemNode", () => {
     expect(group).not.toHaveAttribute("aria-pressed");
   });
 
-  it("draws overlay content between the glyph and the label", () => {
+  it("draws overlay content after the glyph", () => {
     const { container } = svg(
       <SystemNode
         {...props}
@@ -133,10 +130,8 @@ describe("SystemNode", () => {
     const badge = children.findIndex(
       (c) => c.getAttribute("data-testid") === "badge",
     );
-    const label = children.findIndex((c) => c.tagName === "text");
     const glyph = children.findIndex((c) => c.classList.contains(styles.glyph));
     expect(glyph).toBeLessThan(badge);
-    expect(badge).toBeLessThan(label);
   });
 
   it("does not re-render for an equal but newly created system", () => {
@@ -164,6 +159,35 @@ describe("SystemNode", () => {
       </svg>,
     );
     expect(renderOverlay).toHaveBeenCalledTimes(2);
+  });
+});
+
+describe("SystemLabel", () => {
+  it("draws the name beside the system, in its own group, hidden from assistive technology", () => {
+    const { container } = svg(<SystemLabel system={alpha} interactive />);
+    const group = container.querySelector("[data-part='label']")!;
+    expect(group).toHaveAttribute("data-kind", "system");
+    expect(group).toHaveAttribute("data-id", "a");
+    expect(group).toHaveAttribute("transform", "translate(10 20)");
+    expect(group).toHaveAttribute("aria-hidden", "true");
+    expect(group).toHaveClass(styles.systemLabel, "capital");
+    expect(group.querySelector("text")).toHaveTextContent("Alpha");
+  });
+
+  it("does not re-render for an equal but newly created system", () => {
+    const { container, rerender } = svg(
+      <SystemLabel system={alpha} interactive />,
+    );
+    const text = container.querySelector("text");
+    rerender(
+      <svg>
+        <SystemLabel
+          system={{ ...alpha, position: { ...alpha.position } }}
+          interactive
+        />
+      </svg>,
+    );
+    expect(container.querySelector("text")).toBe(text);
   });
 });
 

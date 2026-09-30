@@ -3,7 +3,6 @@ import { memo, type ReactNode } from "react";
 import { screenSpaceClassName } from "../canvas/screenSpace";
 import {
   GLYPH_RADIUS_PX,
-  LABEL_OFFSET_PX,
   SELECTION_RING_GAP_PX,
   SYSTEM_HIT_RADIUS_PX,
 } from "./constants";
@@ -13,7 +12,6 @@ import type { ISystem } from "./types";
 
 export interface ISystemNodeProps {
   system: ISystem;
-  labeled: boolean;
   selected: boolean;
   /** False when selection is disabled: the node becomes role="img". */
   interactive: boolean;
@@ -26,7 +24,6 @@ export interface ISystemNodeProps {
 
 function SystemNodeView({
   system,
-  labeled,
   selected,
   interactive,
   elementId,
@@ -56,11 +53,6 @@ function SystemNodeView({
           />
         )}
         {renderOverlay?.(system)}
-        {labeled && (
-          <text className={styles.label} x={LABEL_OFFSET_PX}>
-            {system.name}
-          </text>
-        )}
       </g>
     </g>
   );
@@ -72,7 +64,6 @@ export function systemNodePropsEqual(
   b: ISystemNodeProps,
 ): boolean {
   return (
-    a.labeled === b.labeled &&
     a.selected === b.selected &&
     a.interactive === b.interactive &&
     a.elementId === b.elementId &&
@@ -88,5 +79,5 @@ export function systemNodePropsEqual(
   );
 }
 
-/** One system: hit area, glyph, selection ring, overlay, then label. */
+/** One system: hit area, glyph, selection ring, then overlay. Labels are drawn separately. */
 export const SystemNode = memo(SystemNodeView, systemNodePropsEqual);

@@ -32,9 +32,14 @@ const lanes: ISpacelane[] = [
   },
 ];
 
+const SYSTEMS = "[data-kind='system']:not([data-part])";
+
 const systemEl = (container: HTMLElement, id: string) =>
+  container.querySelector(`${SYSTEMS}[data-id='${id}']`) as SVGGElement;
+
+const labelEl = (container: HTMLElement, id: string) =>
   container.querySelector(
-    `[data-kind='system'][data-id='${id}']`,
+    `[data-part='label'][data-id='${id}']`,
   ) as SVGGElement;
 
 beforeEach(() => {
@@ -60,9 +65,9 @@ describe("GalaxyMap rendering", () => {
     const { container } = render(
       <GalaxyMap systems={systems} spacelanes={lanes} />,
     );
-    const kinds = Array.from(container.querySelectorAll("[data-kind]")).map(
-      (el) => el.getAttribute("data-id"),
-    );
+    const kinds = Array.from(
+      container.querySelectorAll("[data-kind]:not([data-part])"),
+    ).map((el) => el.getAttribute("data-id"));
     expect(kinds).toEqual(["l", "b", "a"]);
   });
 
@@ -70,7 +75,7 @@ describe("GalaxyMap rendering", () => {
     const { container, getByRole } = render(
       <GalaxyMap systems={systems} spacelanes={lanes} />,
     );
-    expect(systemEl(container, "a").querySelector("text")).toHaveTextContent(
+    expect(labelEl(container, "a").querySelector("text")).toHaveTextContent(
       "Alpha",
     );
     expect(getByRole("button", { name: "Beta" })).toBeInTheDocument();
@@ -80,22 +85,31 @@ describe("GalaxyMap rendering", () => {
     ).toBeInTheDocument();
   });
 
+  it("draws every label above every glyph, so no label is covered by a later system", () => {
+    const { container } = render(
+      <GalaxyMap systems={systems} spacelanes={lanes} />,
+    );
+    const drawn = Array.from(
+      container.querySelectorAll(`.${styles.glyph}, text`),
+    );
+    const lastGlyph = drawn.map((el) => el.tagName).lastIndexOf("circle");
+    const firstLabel = drawn.findIndex((el) => el.tagName === "text");
+    expect(firstLabel).toBeGreaterThan(-1);
+    expect(lastGlyph).toBeLessThan(firstLabel);
+  });
+
   it("draws everything when culling is disabled", () => {
     const crowded = [
       systems[0],
       { ...systems[1], id: "c", position: { x: -100, y: -50 } },
     ];
     const culled = render(<GalaxyMap systems={crowded} spacelanes={[]} />);
-    expect(
-      culled.container.querySelectorAll("[data-kind='system']"),
-    ).toHaveLength(1);
+    expect(culled.container.querySelectorAll(SYSTEMS)).toHaveLength(1);
     culled.unmount();
     const all = render(
       <GalaxyMap systems={crowded} spacelanes={[]} culling={false} />,
     );
-    expect(all.container.querySelectorAll("[data-kind='system']")).toHaveLength(
-      2,
-    );
+    expect(all.container.querySelectorAll(SYSTEMS)).toHaveLength(2);
   });
 
   it("renders free children in a group that ignores pointer events", () => {
@@ -114,9 +128,7 @@ describe("GalaxyMap rendering", () => {
     const { container } = render(
       <GalaxyMap systems={duplicate} spacelanes={[]} />,
     );
-    expect(
-      container.querySelectorAll("[data-kind='system']").length,
-    ).toBeGreaterThan(0);
+    expect(container.querySelectorAll(SYSTEMS).length).toBeGreaterThan(0);
     expect(warn).toHaveBeenCalledWith('[galaxy-map] Duplicate system id "a".');
   });
 
@@ -187,7 +199,7 @@ describe("GalaxyMap selection", () => {
     const { container } = render(
       <GalaxyMap systems={systems} spacelanes={lanes} onSelect={onSelect} />,
     );
-    fireEvent.click(systemEl(container, "b").querySelector("text")!);
+    fireEvent.click(labelEl(container, "b").querySelector("text")!);
     expect(onSelect).toHaveBeenCalledWith(expect.objectContaining({ id: "b" }));
   });
 

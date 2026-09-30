@@ -24,6 +24,7 @@
 }
 
 :where(.system[role="button"]),
+:where(.systemLabel[data-interactive="true"]),
 :where(.lane[role="button"]) {
   cursor: pointer;
 }

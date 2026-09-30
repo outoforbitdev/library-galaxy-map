@@ -155,7 +155,7 @@ The label is drawn last in its group, so a system's name stays readable over its
 
 **Memoization:** both nodes compare the fields they draw by value: id, name, position, color, class name, and `data` identity, plus labeled, selected, and focused. Consumers who recreate every object on each update still only re-render nodes whose drawn fields changed.
 
-**Draw order and hit priority** follow from element order. Systems are drawn after lanes, so where their hit areas overlap, the system receives the click ([FR-S8](../requirements/core-functional-requirements.md)).
+**Draw order and hit priority** follow from element order. Systems are drawn after lanes, so where their hit areas overlap, the system receives the click ([FR-S8](../requirements/core-functional-requirements.md)). Labels are drawn in their own layer above every system glyph, so a lower-priority glyph can never cover a label. A label carries its system's `data-kind` and `data-id` (plus `data-part="label"`), so clicking or hovering it acts on the system.
 
 ### Default bounds
 

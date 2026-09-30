@@ -13,6 +13,7 @@ import styles from "./GalaxyMap.module.css";
 import { Highlight, type HighlightTarget } from "./Highlight";
 import { LaneNode } from "./LaneNode";
 import { createTextMeasurer, type MeasureText } from "./measure";
+import { SystemLabel } from "./SystemLabel";
 import { SystemNode } from "./SystemNode";
 import type { EntityKind, IEntityRef, ISystem } from "./types";
 import type { IMapData } from "./useMapData";
@@ -154,13 +155,12 @@ export function MapContent<TSystemData, TLaneData>(
         })}
       </g>
       <g ref={systemsRef}>
-        {[...result.systems].reverse().map(({ index, labeled }) => {
+        {[...result.systems].reverse().map(({ index }) => {
           const system = data.systems[index];
           return (
             <SystemNode
               key={system.id}
               system={system}
-              labeled={labeled}
               selected={isSelected("system", system.id)}
               interactive={props.selectionEnabled}
               elementId={props.elementIdFor(system.id)}
@@ -169,6 +169,21 @@ export function MapContent<TSystemData, TLaneData>(
             />
           );
         })}
+      </g>
+      <g>
+        {[...result.systems]
+          .reverse()
+          .filter(({ labeled }) => labeled)
+          .map(({ index }) => {
+            const system = data.systems[index];
+            return (
+              <SystemLabel
+                key={system.id}
+                system={system}
+                interactive={props.selectionEnabled}
+              />
+            );
+          })}
       </g>
       <Highlight
         target={highlightTarget(data, props.hovered)}
