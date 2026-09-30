@@ -20,6 +20,7 @@ function SystemLabelView({ system, interactive }: ISystemLabelProps) {
       data-id={system.id}
       data-part="label"
       data-interactive={interactive}
+      fill={system.color}
       aria-hidden="true"
     >
       <g className={screenSpaceClassName}>
@@ -40,6 +41,7 @@ export function systemLabelPropsEqual(
     a.interactive === b.interactive &&
     a.system.id === b.system.id &&
     a.system.name === b.system.name &&
+    a.system.color === b.system.color &&
     a.system.position.x === b.system.position.x &&
     a.system.position.y === b.system.position.y &&
     a.system.className === b.system.className
@@ -49,7 +51,8 @@ export function systemLabelPropsEqual(
 /**
  * A system's name. Labels are drawn in their own layer above every glyph, so a
  * lower-priority system's glyph can never cover a label. The label carries the
- * system's id, so clicking it selects the system. The system's own group already
+ * system's id, so clicking it selects the system. The name is filled with the
+ * system's color, as a presentation attribute so a consumer class always wins. The system's own group already
  * names the system for assistive technology, so this is hidden from it.
  */
 export const SystemLabel = memo(SystemLabelView, systemLabelPropsEqual);

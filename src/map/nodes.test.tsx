@@ -174,6 +174,13 @@ describe("SystemLabel", () => {
     expect(group.querySelector("text")).toHaveTextContent("Alpha");
   });
 
+  it("colors the name like the system, on the group so a consumer class can override it", () => {
+    const { container } = svg(<SystemLabel system={alpha} interactive />);
+    const group = container.querySelector("[data-part='label']")!;
+    expect(group).toHaveAttribute("fill", "red");
+    expect(group.querySelector("text")).not.toHaveAttribute("fill");
+  });
+
   it("does not re-render for an equal but newly created system", () => {
     const { container, rerender } = svg(
       <SystemLabel system={alpha} interactive />,

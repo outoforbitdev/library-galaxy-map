@@ -3,7 +3,6 @@
    standalone SpacelaneSegment the same default stroke as the map. */
 :where(.root) {
   color: #ffffff; /* highlight and selection rings, through currentColor */
-  fill: #e6e6e6; /* label text */
   font:
     12px system-ui,
     sans-serif; /* label text, also used to measure labels */

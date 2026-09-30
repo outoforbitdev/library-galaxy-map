@@ -121,15 +121,14 @@ Draw a route as a spacelane placed first in `spacelanes`, so it draws on top and
 
 Style the map with your own classes. The map's defaults have zero specificity, so your rules always win.
 
-- **Map-wide:** pass `className` to `GalaxyMap`. `font` and `fill` set the label font and color, `color` sets the highlight and selection color, and `stroke-width` sets the default lane width. The `highlightColor` prop also sets the highlight color, and takes priority over the map's class.
-- **One system or lane:** set `className` on the `ISystem` or `ISpacelane`. The class goes on the entity's group, so properties like `font`, `fill`, and `stroke-width` apply to its label or lane paths. Use descendant selectors, such as `.capital text`, to target one part.
+- **Map-wide:** pass `className` to `GalaxyMap`. `font` sets the label font, `color` sets the highlight and selection color, and `stroke-width` sets the default lane width. The `highlightColor` prop also sets the highlight color, and takes priority over the map's class.
+- **One system or lane:** set `className` on the `ISystem` or `ISpacelane`. The class goes on the entity's group, so properties like `font`, `fill`, and `stroke-width` apply to its label or lane paths. Labels are filled with the system's color by default, and a class on the system overrides that with `fill`. Use descendant selectors, such as `.capital text`, to target one part.
 
 ```css
 .my-map {
   font:
     14px Georgia,
     serif;
-  fill: #cde;
   color: gold;
 }
 ```
