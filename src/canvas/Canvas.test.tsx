@@ -125,6 +125,13 @@ describe("Canvas", () => {
     expect(root).toHaveClass(styles.root, "mine");
   });
 
+  it("does not let a double click select text inside the canvas", () => {
+    const { container } = render(<Canvas defaultViewport={start} />);
+    expect(
+      getComputedStyle(container.firstChild as HTMLElement).userSelect,
+    ).toBe("none");
+  });
+
   it("moves and fits through the imperative handle", () => {
     const ref = createRef<ICanvasHandle>();
     const onViewportChange = vi.fn();
