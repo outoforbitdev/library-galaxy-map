@@ -29,6 +29,7 @@ export interface IGestureHandlers {
   onPointerMove: (event: PointerEvent<HTMLDivElement>) => void;
   onPointerUp: (event: PointerEvent<HTMLDivElement>) => void;
   onPointerCancel: (event: PointerEvent<HTMLDivElement>) => void;
+  onLostPointerCapture: (event: PointerEvent<HTMLDivElement>) => void;
   onClickCapture: (event: MouseEvent<HTMLDivElement>) => void;
 }
 
@@ -73,6 +74,12 @@ export function useGestures(options: IGestureOptions): IGestureHandlers {
   const onPointerMove = (event: PointerEvent<HTMLDivElement>) => {
     const previous = pointers.current.get(event.pointerId);
     if (!previous) return;
+    // A mouse move with no button down means the release happened where this
+    // element could not see it, such as outside the window. End the gesture.
+    if (event.pointerType === "mouse" && event.buttons === 0) {
+      onPointerEnd(event);
+      return;
+    }
     const point = toLocal(event);
     const { camera, sizeRef, yAxis } = optionsRef.current;
 
@@ -167,6 +174,7 @@ export function useGestures(options: IGestureOptions): IGestureHandlers {
     onPointerMove,
     onPointerUp: onPointerEnd,
     onPointerCancel: onPointerEnd,
+    onLostPointerCapture: onPointerEnd,
     onClickCapture,
   };
 }

@@ -45,12 +45,14 @@ function drag(
   fireEvent.pointerDown(element, {
     pointerId: 1,
     pointerType,
+    buttons: 1,
     clientX: from[0],
     clientY: from[1],
   });
   fireEvent.pointerMove(element, {
     pointerId: 1,
     pointerType,
+    buttons: 1,
     clientX: to[0],
     clientY: to[1],
   });
@@ -132,6 +134,68 @@ describe("Canvas gestures", () => {
     expect(info).toEqual({ settled: false });
     act(() => vi.advanceTimersByTime(150));
     expect(onViewportChange.mock.lastCall![1]).toEqual({ settled: true });
+  });
+
+  it("ends a pan when the button was released off the component", () => {
+    const { target, onViewportChange } = setup();
+    fireEvent.pointerDown(target, {
+      pointerId: 1,
+      pointerType: "mouse",
+      buttons: 1,
+      clientX: 100,
+      clientY: 100,
+    });
+    fireEvent.pointerMove(target, {
+      pointerId: 1,
+      pointerType: "mouse",
+      buttons: 1,
+      clientX: 150,
+      clientY: 100,
+    });
+    // The release happened outside, so no pointerup arrived. The next move has no buttons.
+    fireEvent.pointerMove(target, {
+      pointerId: 1,
+      pointerType: "mouse",
+      buttons: 0,
+      clientX: 300,
+      clientY: 100,
+    });
+    expect(onViewportChange).toHaveBeenLastCalledWith(
+      { center: { x: -50, y: 0 }, zoom: 1 },
+      { settled: true },
+    );
+    onViewportChange.mockClear();
+    fireEvent.pointerMove(target, {
+      pointerId: 1,
+      pointerType: "mouse",
+      buttons: 0,
+      clientX: 400,
+      clientY: 100,
+    });
+    expect(onViewportChange).not.toHaveBeenCalled();
+  });
+
+  it("ends a pan when pointer capture is lost", () => {
+    const { target, onViewportChange } = setup();
+    fireEvent.pointerDown(target, {
+      pointerId: 1,
+      pointerType: "mouse",
+      buttons: 1,
+      clientX: 100,
+      clientY: 100,
+    });
+    fireEvent.pointerMove(target, {
+      pointerId: 1,
+      pointerType: "mouse",
+      buttons: 1,
+      clientX: 150,
+      clientY: 100,
+    });
+    fireEvent.lostPointerCapture(target, { pointerId: 1 });
+    expect(onViewportChange).toHaveBeenLastCalledWith(
+      { center: { x: -50, y: 0 }, zoom: 1 },
+      { settled: true },
+    );
   });
 
   it("pinch zooms with two touch pointers", () => {
