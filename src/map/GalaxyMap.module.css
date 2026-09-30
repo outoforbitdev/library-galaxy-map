@@ -1,0 +1,65 @@
+/* Inherited defaults for the whole map. Consumers override them with a class on
+   the map root, or on a system's or lane's group. `.laneStroke` also gives a
+   standalone SpacelaneSegment the same default stroke as the map. */
+:where(.root) {
+  color: #ffffff; /* highlight and selection rings, through currentColor */
+  fill: #e6e6e6; /* label text */
+  font:
+    12px system-ui,
+    sans-serif; /* label text, also used to measure labels */
+}
+
+:where(.root),
+:where(.laneStroke) {
+  stroke-width: 2px; /* lane width */
+  stroke-linecap: round;
+}
+
+:where(.label) {
+  dominant-baseline: central;
+}
+
+:where(.glyph) {
+  stroke: none;
+}
+
+:where(.system[role="button"]),
+:where(.lane[role="button"]) {
+  cursor: pointer;
+}
+
+:where(.laneHalo),
+:where(.highlightLane) {
+  fill: none;
+  stroke: currentColor;
+  stroke-opacity: 0.35;
+}
+
+:where(.ring) {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.5px;
+}
+
+:where(.focusRing) {
+  stroke-dasharray: 3 2;
+}
+
+/* Structural rules, not meant to be overridden. */
+.hit {
+  fill: transparent;
+}
+
+.laneHit {
+  fill: none;
+  stroke: transparent;
+}
+
+.laneRun,
+.laneHalo,
+.highlightLane,
+.ring,
+.highlight,
+.free {
+  pointer-events: none;
+}
