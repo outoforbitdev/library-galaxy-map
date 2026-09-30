@@ -184,8 +184,8 @@ describe("SystemLabel", () => {
   it("outlines the name so it stays readable over a glyph of the same color", () => {
     const { container } = svg(<SystemLabel system={alpha} interactive />);
     const style = getComputedStyle(container.querySelector("text")!);
-    expect(style.stroke).not.toBe("");
-    expect(style.stroke).not.toBe("none");
+    // The theme's background color, so the outline matches the surface behind the map.
+    expect(style.stroke).toContain("var(--ood-background");
     expect(style.strokeWidth).toBe("3px");
   });
 

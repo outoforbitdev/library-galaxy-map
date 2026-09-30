@@ -16,9 +16,11 @@
 
 :where(.label) {
   dominant-baseline: central;
-  /* A dark outline drawn under the fill keeps a label readable over a glyph of
-     the same color. Override `stroke` for a light background. */
-  stroke: rgba(0, 0, 0, 0.75);
+  /* An outline in the theme's background color, drawn under the fill, keeps a
+     label readable over a glyph of the same color. `--ood-background` is set by
+     an ood-react theme class such as `ood-primary` on an ancestor. Without one,
+     the fallback is a dark outline. */
+  stroke: var(--ood-background, rgba(0, 0, 0, 0.75));
   stroke-width: 3px;
   stroke-linejoin: round;
   paint-order: stroke;

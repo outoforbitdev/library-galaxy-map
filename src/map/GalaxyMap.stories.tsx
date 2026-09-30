@@ -46,7 +46,8 @@ const smallLanes: ISpacelane[] = [
   },
 ];
 
-const frame = { width: "100%", height: "80vh", background: "#0b0e14" };
+// The ood-primary class supplies the theme background and text colors.
+const frame = { width: "100%", height: "80vh" };
 
 const meta: Meta<typeof GalaxyMap> = {
   title: "GalaxyMap",
@@ -57,7 +58,7 @@ type Story = StoryObj<typeof GalaxyMap>;
 
 export const Basic: Story = {
   render: () => (
-    <div style={frame}>
+    <div className="ood-primary" style={frame}>
       <GalaxyMap systems={small} spacelanes={smallLanes} />
     </div>
   ),
@@ -68,7 +69,7 @@ export const FullScale: Story = {
   render: function FullScaleStory() {
     const { systems, lanes } = useMemo(() => generateGalaxy(6000, 500, 40), []);
     return (
-      <div style={frame}>
+      <div className="ood-primary" style={frame}>
         <GalaxyMap systems={systems} spacelanes={lanes} />
       </div>
     );
@@ -109,7 +110,7 @@ export const Route: Story = {
       }
     };
     return (
-      <div style={frame}>
+      <div className="ood-primary" style={frame}>
         <style>
           {".story-route { stroke-width: 4px; stroke-dasharray: 8 4; }"}
         </style>
@@ -136,10 +137,8 @@ export const Controlled: Story = {
     });
     const [settled, setSettled] = useState(viewport);
     return (
-      <div style={frame}>
-        <pre style={{ color: "#e6e6e6" }}>
-          {JSON.stringify({ selected, settled })}
-        </pre>
+      <div className="ood-primary" style={frame}>
+        <pre>{JSON.stringify({ selected, settled })}</pre>
         <GalaxyMap
           systems={small}
           spacelanes={smallLanes}
