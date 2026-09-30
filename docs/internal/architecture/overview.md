@@ -127,6 +127,8 @@ Culling ignores consumer overlay content, since its size is unknown.
 
 **Disabling culling.** With `culling={false}`, `cull` returns every system, labeled, and every lane, in priority order. There is no viewport query, no collision check, and no limit. Selection promotion still applies. This is for consumers who want the full SVG, and the performance targets do not apply to it.
 
+**Known behavior: systems and labels can disappear while zooming in.** Culling is deterministic and follows priority order, but the greedy walk is not monotonic. Zooming in moves systems apart, so collisions ease, but a system that newly appears can hide a lower-priority one that was visible only because it was hidden. For example, A hides B and B was hiding C. Zooming in separates A and B, so B appears and now hides C. Labels behave the same way, and the `maxSystems` and `maxLabels` limits add a second cause: a higher-priority system that newly qualifies pushes the last one out. A sweep over the 6,000-system data (zoom 0.05 to 1.5 in 5% steps) found 50 glyphs and 11 labels lost while zooming in, almost all below zoom 0.4, where the limits and density dominate. It is accepted for now. Options, if it needs fixing: hide a system only when a higher-priority system is within range whether or not that one is shown, which is monotonic but sparser; add a rank rule so the limits grow with zoom; or prefer systems shown in the previous frame, which is smooth but makes culling depend on history.
+
 ### Rendering tree
 
 ```
