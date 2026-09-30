@@ -1,5 +1,6 @@
 import { type IComponentProps, lib } from "@outoforbitdev/ood-react";
 import {
+  type KeyboardEvent,
   type MouseEvent,
   type ReactNode,
   type Ref,
@@ -20,6 +21,7 @@ import {
 } from "./constants";
 import type { ICullResult } from "./cull";
 import styles from "./GalaxyMap.module.css";
+import { nextFocus } from "./keyboardFocus";
 import { MapContent } from "./MapContent";
 import type {
   EntityKind,
@@ -92,7 +94,7 @@ export function GalaxyMap<TSystemData = unknown, TLaneData = unknown>(
   });
   const canvasRef = useRef<ICanvasHandle>(null);
   const visibleRef = useRef<ICullResult>({ systems: [], lanes: [] });
-  const [focusedId] = useState<string | null>(null);
+  const [focusedId, setFocusedId] = useState<string | null>(null);
   const idPrefix = useId();
   const elementIdFor = useCallback(
     (systemId: string) => `${idPrefix}system-${encodeURIComponent(systemId)}`,
@@ -120,9 +122,38 @@ export function GalaxyMap<TSystemData = unknown, TLaneData = unknown>(
     [selection],
   );
 
-  const handleCulled = useCallback((result: ICullResult) => {
-    visibleRef.current = result;
-  }, []);
+  // Tracks what is drawn, and drops focus from a system that is no longer drawn.
+  const handleCulled = useCallback(
+    (result: ICullResult) => {
+      visibleRef.current = result;
+      setFocusedId((id) =>
+        id !== null &&
+        result.systems.some((s) => data.systems[s.index].id === id)
+          ? id
+          : null,
+      );
+    },
+    [data],
+  );
+
+  const handleKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
+    if (event.key === "]" || event.key === "[") {
+      event.preventDefault();
+      const visible = visibleRef.current.systems.map(
+        (s) => data.systems[s.index].id,
+      );
+      setFocusedId(nextFocus(visible, focusedId, event.key === "]" ? 1 : -1));
+      return;
+    }
+    if (!selectionEnabled) return;
+    if ((event.key === "Enter" || event.key === " ") && focusedId !== null) {
+      event.preventDefault();
+      selection.select({ kind: "system", id: focusedId });
+    } else if (event.key === "Escape") {
+      event.preventDefault();
+      selection.select(null);
+    }
+  };
 
   // Clicks are handled at the canvas root: a click on empty space targets the <svg>.
   const handleClick = (event: MouseEvent) => {
@@ -164,6 +195,10 @@ export function GalaxyMap<TSystemData = unknown, TLaneData = unknown>(
       role="application"
       aria-roledescription="galaxy map"
       aria-label={props["aria-label"] ?? "Galaxy map"}
+      aria-activedescendant={
+        focusedId === null ? undefined : elementIdFor(focusedId)
+      }
+      onKeyDown={handleKeyDown}
     >
       <MapContent
         data={data}
