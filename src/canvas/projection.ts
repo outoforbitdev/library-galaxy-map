@@ -1,4 +1,5 @@
 import { BOUNDS_VIEW_MARGIN, DEFAULT_ZOOM } from "./constants";
+import { extentOf } from "./extent";
 import type {
   IBounds,
   IPadding,
@@ -165,12 +166,9 @@ export function fitViewport(
   options: IFitOptions = {},
 ): IViewport | null {
   if (points.length === 0 || size.width <= 0 || size.height <= 0) return null;
-  const xs = points.map((p) => p.x);
-  const ys = points.map((p) => p.y);
-  const minX = Math.min(...xs);
-  const maxX = Math.max(...xs);
-  const minY = Math.min(...ys);
-  const maxY = Math.max(...ys);
+  const { min, max } = extentOf(points)!;
+  const { x: minX, y: minY } = min;
+  const { x: maxX, y: maxY } = max;
   const padding = normalizePadding(options.padding);
   const availableWidth = Math.max(1, size.width - padding.left - padding.right);
   const availableHeight = Math.max(

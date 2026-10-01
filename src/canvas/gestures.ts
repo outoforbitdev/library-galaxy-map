@@ -1,4 +1,5 @@
 import {
+  WHEEL_PAGE_HEIGHT_PX,
   DRAG_THRESHOLD_MOUSE_PX,
   DRAG_THRESHOLD_TOUCH_PX,
   KEYBOARD_PAN_FRACTION,
@@ -65,7 +66,12 @@ export function wheelZoomFactor(
   deltaMode: number,
   ctrlKey: boolean,
 ): number {
-  const pixels = deltaMode === 1 ? deltaY * WHEEL_LINE_HEIGHT_PX : deltaY;
+  const pixels =
+    deltaMode === 2
+      ? deltaY * WHEEL_PAGE_HEIGHT_PX
+      : deltaMode === 1
+        ? deltaY * WHEEL_LINE_HEIGHT_PX
+        : deltaY;
   const sensitivity = ctrlKey ? PINCH_ZOOM_SENSITIVITY : WHEEL_ZOOM_SENSITIVITY;
   return Math.exp(-pixels * sensitivity);
 }

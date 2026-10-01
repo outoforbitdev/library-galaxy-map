@@ -134,6 +134,18 @@ describe("geometry change detection", () => {
   });
 });
 
+describe("dataBounds with very large data", () => {
+  it("does not overflow the call stack argument limit", () => {
+    const systems = Array.from({ length: 300_000 }, (_, i) =>
+      system(`s${i}`, i, 5 - i),
+    );
+    expect(dataBounds(systems, [])).toEqual({
+      min: { x: 0, y: -299_994 },
+      max: { x: 299_999, y: 5 },
+    });
+  });
+});
+
 describe("dataBounds", () => {
   it("covers every finite system position and lane point", () => {
     const bounds = dataBounds(

@@ -1,3 +1,4 @@
+import { extentOf } from "../canvas/extent";
 import { INDEX_CELLS_PER_AXIS } from "./constants";
 import type {
   IBounds,
@@ -29,14 +30,7 @@ export function isFiniteSegment(segment: ILaneSegment): boolean {
 }
 
 function boundsOf(points: IPoint[]): IBounds | null {
-  const finite = points.filter(isFinitePoint);
-  if (finite.length === 0) return null;
-  const xs = finite.map((p) => p.x);
-  const ys = finite.map((p) => p.y);
-  return {
-    min: { x: Math.min(...xs), y: Math.min(...ys) },
-    max: { x: Math.max(...xs), y: Math.max(...ys) },
-  };
+  return extentOf(points.filter(isFinitePoint));
 }
 
 function segmentBox(segment: ILaneSegment): IBounds {

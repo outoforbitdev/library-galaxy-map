@@ -69,6 +69,12 @@ describe("wheelZoomFactor", () => {
     expect(wheelZoomFactor(100, 0, false)).toBeLessThan(1);
   });
 
+  it("converts page deltas to pixels", () => {
+    expect(wheelZoomFactor(-1, 2, false)).toBeGreaterThan(
+      wheelZoomFactor(-1, 1, false),
+    );
+  });
+
   it("treats ctrlKey as a trackpad pinch with its own sensitivity", () => {
     expect(wheelZoomFactor(-10, 0, true)).toBeCloseTo(Math.exp(0.1));
     expect(wheelZoomFactor(-10, 0, false)).toBeCloseTo(Math.exp(0.02));

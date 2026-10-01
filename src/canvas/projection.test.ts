@@ -198,6 +198,13 @@ describe("fitViewport", () => {
   });
 });
 
+describe("fitViewport with very large input", () => {
+  it("does not overflow the call argument limit", () => {
+    const points = Array.from({ length: 300_000 }, (_, i) => ({ x: i, y: -i }));
+    expect(fitViewport(points, size)).not.toBeNull();
+  });
+});
+
 describe("interpolateViewport", () => {
   const from = { center: { x: 0, y: 0 }, zoom: 1 };
   const to = { center: { x: 100, y: -50 }, zoom: 4 };

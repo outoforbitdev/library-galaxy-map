@@ -28,5 +28,8 @@ export const PINCH_ZOOM_SENSITIVITY = 0.01;
 /** Pixels per line when a wheel event reports its delta in lines. */
 export const WHEEL_LINE_HEIGHT_PX = 16;
 
+/** Pixels per page when a wheel event reports its delta in pages. */
+export const WHEEL_PAGE_HEIGHT_PX = 400;
+
 /** Zoom used when there is no viewport, default viewport, or bounds to fit. */
 export const DEFAULT_ZOOM = 1;
