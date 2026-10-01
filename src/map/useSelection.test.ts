@@ -49,6 +49,21 @@ function setup(options: Props["options"] = {}) {
 }
 
 describe("useSelection", () => {
+  it("clears a selection whose id is not in the data, including before data loads", () => {
+    const onSelect = vi.fn();
+    const { result } = renderHook(
+      ({ list }: { list: ISystem<{ fleets: number }>[] }) =>
+        useSelection({
+          data: useMapData(list, lanes),
+          defaultSelected: { kind: "system", id: "a" },
+          onSelect,
+        }),
+      { initialProps: { list: [] as ISystem<{ fleets: number }>[] } },
+    );
+    expect(result.current.selected).toBeNull();
+    expect(onSelect).toHaveBeenCalledWith(null);
+  });
+
   it("selects in uncontrolled mode and emits a typed event", () => {
     const onSelect = vi.fn();
     const { result } = setup({ onSelect });

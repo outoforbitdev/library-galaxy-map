@@ -73,11 +73,19 @@ export function MapContent<TSystemData, TLaneData>(
   );
 
   // Measure labels in the font the stylesheet actually applies.
+  // Measure again when web fonts finish loading, since the first pass may have
+  // used a fallback font.
   useLayoutEffect(() => {
     const element = systemsRef.current;
     if (!element) return;
-    const font = getComputedStyle(element).font;
-    if (font) setMeasure(() => createTextMeasurer(font));
+    const remeasure = () => {
+      const font = getComputedStyle(element).font;
+      if (font) setMeasure(() => createTextMeasurer(font));
+    };
+    remeasure();
+    const fonts = typeof document === "undefined" ? undefined : document.fonts;
+    fonts?.addEventListener?.("loadingdone", remeasure);
+    return () => fonts?.removeEventListener?.("loadingdone", remeasure);
   }, []);
 
   const { data, selected, culling, maxSystems, maxLabels, maxLaneSegments } =

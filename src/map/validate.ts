@@ -86,11 +86,12 @@ export function findDataProblems(
 }
 
 /**
- * True outside production builds. Bundlers replace process.env.NODE_ENV. Where
- * `process` does not exist, validation is skipped.
+ * True outside production builds. Bundlers such as webpack and Next replace
+ * process.env.NODE_ENV. Vite does not define `process` in the browser, so
+ * there the check falls back to import.meta.env.DEV.
  */
 export function isDevelopment(): boolean {
-  return (
-    typeof process !== "undefined" && process.env?.NODE_ENV !== "production"
-  );
+  if (typeof process !== "undefined" && process.env?.NODE_ENV !== undefined)
+    return process.env.NODE_ENV !== "production";
+  return (import.meta as { env?: { DEV?: boolean } }).env?.DEV === true;
 }

@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { findDataProblems, isDevelopment } from "./validate";
 import type { ISpacelane, ISystem } from "./types";
 
@@ -81,7 +81,22 @@ describe("findDataProblems", () => {
 });
 
 describe("isDevelopment", () => {
+  afterEach(() => {
+    vi.unstubAllGlobals();
+    vi.unstubAllEnvs();
+  });
+
   it("is true under the test runner", () => {
+    expect(isDevelopment()).toBe(true);
+  });
+
+  it("is false in a production build", () => {
+    vi.stubEnv("NODE_ENV", "production");
+    expect(isDevelopment()).toBe(false);
+  });
+
+  it("falls back to import.meta.env.DEV where process does not exist", () => {
+    vi.stubGlobal("process", undefined);
     expect(isDevelopment()).toBe(true);
   });
 });
