@@ -56,9 +56,11 @@ export interface IGalaxyMapProps<TSystemData = unknown, TLaneData = unknown>
   /** False turns off hover tracking and onHover. */
   hoverEnabled?: boolean;
   /**
-   * Any CSS color for hover, focus, and selection highlights. It is set only on
-   * the highlight elements, so overlays and children using currentColor are
-   * unaffected. It overrides a `color` on the map's className.
+   * Any CSS color for hover, focus, and selection highlights. One color
+   * applies to every system and spacelane. It is set only on the highlight
+   * elements, so overlays and children using currentColor are unaffected. It
+   * overrides a `color` on the map's className. Without either, highlights use
+   * the ood-react theme's `--ood-text`, or white (`#ffffff`) without a theme.
    */
   highlightColor?: string;
   /** Content drawn with each visible system, in pixels relative to its center. Memoize it. */
@@ -149,7 +151,8 @@ export function GalaxyMap<TSystemData = unknown, TLaneData = unknown>(
     if ((event.key === "Enter" || event.key === " ") && focusedId !== null) {
       event.preventDefault();
       selection.select({ kind: "system", id: focusedId });
-    } else if (event.key === "Escape") {
+    } else if (event.key === "Escape" && selection.selected) {
+      // Without a selection Escape is not ours, so an enclosing dialog can use it.
       event.preventDefault();
       selection.select(null);
     }
@@ -178,6 +181,10 @@ export function GalaxyMap<TSystemData = unknown, TLaneData = unknown>(
     );
   };
 
+  // Empty data has no meaningful bounds. Leaving them unset defers the initial
+  // fit until data arrives, so data loaded after mount still gets fitted.
+  const isEmpty = data.systems.length === 0 && data.lanes.length === 0;
+
   return (
     <Canvas
       ref={canvasRef}
@@ -188,7 +195,7 @@ export function GalaxyMap<TSystemData = unknown, TLaneData = unknown>(
       viewport={props.viewport}
       defaultViewport={props.defaultViewport}
       onViewportChange={props.onViewportChange}
-      bounds={props.bounds ?? data.bounds}
+      bounds={props.bounds ?? (isEmpty ? undefined : data.bounds)}
       minZoom={props.minZoom}
       maxZoom={props.maxZoom}
       yAxis={MAP_Y_AXIS}

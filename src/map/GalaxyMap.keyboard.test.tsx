@@ -73,6 +73,15 @@ describe("GalaxyMap keyboard", () => {
     expect(onSelect).toHaveBeenLastCalledWith(null);
   });
 
+  it("leaves Escape to the page when nothing is selected", () => {
+    const { root, key, onSelect } = setup();
+    expect(fireEvent.keyDown(root, { key: "Escape" })).toBe(true);
+    expect(onSelect).not.toHaveBeenCalled();
+    key("]");
+    key("Enter");
+    expect(fireEvent.keyDown(root, { key: "Escape" })).toBe(false);
+  });
+
   it("still pans with arrow keys", () => {
     const { key, onViewportChange } = setup();
     onViewportChange.mockClear();

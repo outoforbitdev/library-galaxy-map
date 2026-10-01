@@ -61,6 +61,18 @@ describe("GalaxyMap rendering", () => {
     );
   });
 
+  it("fits the data when it arrives after mount", () => {
+    const { container, rerender } = render(
+      <GalaxyMap systems={[]} spacelanes={[]} />,
+    );
+    rerender(<GalaxyMap systems={systems} spacelanes={lanes} />);
+    expect(container.querySelector("svg > g")).toHaveAttribute(
+      "transform",
+      "matrix(4 0 0 -4 400 300)",
+    );
+    expect(systemEl(container, "a")).not.toBeNull();
+  });
+
   it("draws lanes before systems, and higher priority systems last", () => {
     const { container } = render(
       <GalaxyMap systems={systems} spacelanes={lanes} />,
