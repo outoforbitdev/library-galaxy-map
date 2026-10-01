@@ -92,6 +92,23 @@ describe("Canvas", () => {
     expect(onViewportChange.mock.lastCall![0].zoom).toBeCloseTo(1.25);
   });
 
+  it.each(["ctrlKey", "metaKey", "altKey"])(
+    "leaves keys with %s held to the browser",
+    (modifier) => {
+      const onViewportChange = vi.fn();
+      const { container } = render(
+        <Canvas defaultViewport={start} onViewportChange={onViewportChange} />,
+      );
+      onViewportChange.mockClear();
+      const notPrevented = fireEvent.keyDown(
+        container.firstChild as HTMLElement,
+        { key: "=", [modifier]: true },
+      );
+      expect(notPrevented).toBe(true);
+      expect(onViewportChange).not.toHaveBeenCalled();
+    },
+  );
+
   it("ignores keys that an onKeyDown handler already handled", () => {
     const onViewportChange = vi.fn();
     const { container } = render(

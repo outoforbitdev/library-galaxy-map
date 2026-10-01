@@ -63,6 +63,8 @@ export function useGestures(options: IGestureOptions): IGestureHandlers {
   };
 
   const onPointerDown = (event: PointerEvent<HTMLDivElement>) => {
+    // Only the primary button pans. Others open menus or are left to the page.
+    if (event.pointerType === "mouse" && event.button !== 0) return;
     suppressClick.current = false;
     optionsRef.current.camera.cancelAnimation();
     const point = toLocal(event);
@@ -127,6 +129,11 @@ export function useGestures(options: IGestureOptions): IGestureHandlers {
     if (panning.current) {
       panning.current = false;
       suppressClick.current = true;
+      // A pan that ends off the component gets no click, so the flag must not
+      // outlive the click that would immediately follow the release.
+      setTimeout(() => {
+        suppressClick.current = false;
+      }, 0);
       optionsRef.current.setGesturing(false);
       optionsRef.current.camera.settle();
     }

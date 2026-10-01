@@ -161,7 +161,14 @@ export function Canvas(props: ICanvasProps) {
 
   const handleKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
     props.onKeyDown?.(event);
-    if (event.defaultPrevented) return;
+    // Modified keys belong to the browser, such as Ctrl or Cmd with plus for page zoom.
+    if (
+      event.defaultPrevented ||
+      event.ctrlKey ||
+      event.metaKey ||
+      event.altKey
+    )
+      return;
     const current = sizeRef.current;
     const action = keyAction(event.key, current);
     if (!action) return;

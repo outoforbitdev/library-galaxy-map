@@ -93,6 +93,40 @@ describe("Canvas gestures", () => {
     expect(onTargetClick).toHaveBeenCalledTimes(1);
   });
 
+  it("does not pan with a non-primary mouse button", () => {
+    const { target, onViewportChange } = setup();
+    onViewportChange.mockClear();
+    for (const button of [1, 2]) {
+      fireEvent.pointerDown(target, {
+        pointerId: 1,
+        pointerType: "mouse",
+        button,
+        buttons: 1 << (button === 2 ? 1 : 2),
+        clientX: 100,
+        clientY: 100,
+      });
+      fireEvent.pointerMove(target, {
+        pointerId: 1,
+        pointerType: "mouse",
+        buttons: 1 << (button === 2 ? 1 : 2),
+        clientX: 150,
+        clientY: 100,
+      });
+      fireEvent.pointerUp(target, { pointerId: 1, pointerType: "mouse" });
+    }
+    expect(onViewportChange).not.toHaveBeenCalled();
+  });
+
+  it("lets a later click through when a pan ended with no click after it", () => {
+    const { target, onTargetClick } = setup();
+    drag(target, [100, 100], [150, 100]);
+    act(() => {
+      vi.advanceTimersByTime(10);
+    });
+    fireEvent.click(target);
+    expect(onTargetClick).toHaveBeenCalledTimes(1);
+  });
+
   it("cancels the click that follows a pan", () => {
     const { target, onTargetClick, onRootClick } = setup();
     drag(target, [100, 100], [150, 100]);
