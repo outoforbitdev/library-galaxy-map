@@ -26,10 +26,10 @@ A React component for displaying a galactic map.
 ## Features
 
 - Star systems and multi-segment spacelanes on a pannable, zoomable SVG map.
-- Handles 6,000 systems and 20,000 lane segments by drawing only what is in view.
+- Built for maps of about 6,000 systems and 20,000 lane segments by drawing only what is in view. These are design targets, not measured frame rates.
 - Priority order decides which systems and labels show when not everything fits.
 - Drag, scroll, and pinch on desktop, trackpad, and touch. Gestures never scroll the page.
-- Selection, hover, and keyboard navigation, with controlled and uncontrolled modes.
+- Selection, hover, and keyboard navigation, with controlled and uncontrolled modes. A selection whose id is not in the data is cleared (`onSelect(null)`), so set it after the data has loaded.
 - No built-in legend, infobox, or settings: build your own from the exported primitives.
 
 ## Installation
@@ -104,7 +104,7 @@ map.current?.fitPoints(
 
 ### Routes
 
-Draw a route as a spacelane placed first in `spacelanes`, so it draws on top and is never culled. Give it a `className` and style it with ordinary CSS. The class goes on the lane's group, and the lane's paths inherit from it:
+Draw a route as a spacelane placed first in `spacelanes`, so it draws on top and is first in line for the segment budget. The segment budget (`maxLaneSegments`) is a hard limit, so a route with more visible segments than the budget is dropped, and `maxSystems={0}` hides every system, including the selected one. Give it a `className` and style it with ordinary CSS. The class goes on the lane's group, and the lane's paths inherit from it:
 
 ```css
 .route {
@@ -132,6 +132,16 @@ Style the map with your own classes. The map's defaults have zero specificity, s
   color: gold;
 }
 ```
+
+### Highlight color
+
+Hover, focus, and selection highlights share one color across every system and spacelane. A system's own `color` and `className` do not change it. Set it in one of three ways, listed from highest to lowest priority:
+
+1. The `highlightColor` prop: `<GalaxyMap highlightColor="gold" />`.
+2. A `color` on the map's `className`: `.my-map { color: gold; }`.
+3. The default, used when you set neither: the theme's `--ood-text` from an [ood-react](https://www.npmjs.com/package/@outoforbitdev/ood-react) theme class on an ancestor, or white (`#ffffff`) without one.
+
+Set a `color` on the map root, not on a system's or spacelane's `className`. A `color` there also recolors that entity's selection ring or halo.
 
 ### Theme colors
 

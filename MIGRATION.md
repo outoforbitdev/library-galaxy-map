@@ -36,3 +36,9 @@ The rebuild replaces the whole API. The map no longer renders a legend or option
 ## Coordinates
 
 World y still points up, as in v0.
+
+## Behavior changes
+
+- The map fits the data once, when it first has data. Data that arrives after mount is fitted when it arrives. Pass `defaultViewport` or `viewport` to opt out.
+- Children you pass to `GalaxyMap` get `pointer-events: none` by default. Set `pointer-events: auto` on any child that should take clicks.
+- Only the primary mouse button pans. Keyboard shortcuts ignore keys held with Ctrl, Cmd, or Alt.
