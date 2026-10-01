@@ -1,46 +1,64 @@
-import { describe, it, expect } from "vitest";
+import { describe, expect, it } from "vitest";
 import * as pkg from "./index";
-// Type-only import: verifies every public type is exported from the package
-// root without needing an internal path. Checked by `tsc --noEmit`; erased
-// at runtime so it has no effect on the tests below.
+// Type-only import: every public type must be exported from the package root.
+// Checked by `npm run typecheck`, erased at runtime.
 import type {
+  EntityKind,
+  IBounds,
+  ICanvasContext,
+  ICanvasHandle,
+  ICanvasProps,
+  IEntityRef,
   IGalaxyMapHandle,
-  IPlanet,
+  IGalaxyMapProps,
+  ILaneSegment,
+  IPadding,
+  IPoint,
+  ISize,
   ISpacelane,
-  ISpaceLaneSegment,
-  IMapCoordinate,
-  IMapDimensions,
-  IRenderLimits,
-  ILegendEntry,
-  IMapOptions,
+  ISystem,
+  IViewport,
+  IViewportChangeInfo,
+  MapEntityEvent,
+  YAxis,
 } from "./index";
 
 type _ExportSurfaceCheck = [
+  EntityKind,
+  IBounds,
+  ICanvasContext,
+  ICanvasHandle,
+  ICanvasProps,
+  IEntityRef,
   IGalaxyMapHandle,
-  IPlanet,
+  IGalaxyMapProps,
+  ILaneSegment,
+  IPadding,
+  IPoint,
+  ISize,
   ISpacelane,
-  ISpaceLaneSegment,
-  IMapCoordinate,
-  IMapDimensions,
-  IRenderLimits,
-  ILegendEntry,
-  IMapOptions,
+  ISystem,
+  IViewport,
+  IViewportChangeInfo,
+  MapEntityEvent,
+  YAxis,
 ];
 
 describe("package root exports", () => {
-  it("exports GalaxyMap as the default export", () => {
-    expect(pkg.default).toBeDefined();
-    expect(
-      typeof pkg.default === "function" || typeof pkg.default === "object",
-    ).toBe(true);
+  it("exports the atlas-phase API", () => {
+    expect(Object.keys(pkg).sort()).toEqual([
+      "Canvas",
+      "GalaxyMap",
+      "SpacelaneSegment",
+      "SystemGlyph",
+      "fitViewport",
+      "screenSpaceClassName",
+      "useCanvas",
+    ]);
   });
 
-  it("exports MapColor as a value (enum)", () => {
-    expect(pkg.MapColor).toBeDefined();
-    expect(pkg.MapColor.Gray).toBe(0);
-  });
-
-  it("does not export the retired FocusLevel", () => {
-    expect("FocusLevel" in pkg).toBe(false);
+  it("has no default export and no v0 exports", () => {
+    expect("default" in pkg).toBe(false);
+    expect("MapColor" in pkg).toBe(false);
   });
 });

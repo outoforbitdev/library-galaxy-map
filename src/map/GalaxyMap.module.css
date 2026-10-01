@@ -1,0 +1,75 @@
+/* Inherited defaults for the whole map. Consumers override them with a class on
+   the map root, or on a system's or lane's group. `.laneStroke` also gives a
+   standalone SpacelaneSegment the same default stroke as the map. */
+:where(.root) {
+  /* highlight and selection rings, through currentColor: the ood-react theme
+     text color, or white without a theme class on an ancestor */
+  color: var(--ood-text, #ffffff);
+  font:
+    12px system-ui,
+    sans-serif; /* label text, also used to measure labels */
+}
+
+:where(.root),
+:where(.laneStroke) {
+  stroke-width: 2px; /* lane width */
+  stroke-linecap: round;
+}
+
+:where(.label) {
+  dominant-baseline: central;
+  /* An outline in the theme's background color, drawn under the fill, keeps a
+     label readable over a glyph of the same color. `--ood-background` is set by
+     an ood-react theme class such as `ood-primary` on an ancestor. Without one,
+     the fallback is a dark outline. */
+  stroke: var(--ood-background, rgba(0, 0, 0, 0.75));
+  stroke-width: 3px;
+  stroke-linejoin: round;
+  paint-order: stroke;
+}
+
+:where(.glyph) {
+  stroke: none;
+}
+
+:where(.system[role="button"]),
+:where(.systemLabel[data-interactive="true"]),
+:where(.lane[role="button"]) {
+  cursor: pointer;
+}
+
+:where(.laneHalo),
+:where(.highlightLane) {
+  fill: none;
+  stroke: currentColor;
+  stroke-opacity: 0.35;
+}
+
+:where(.ring) {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.5px;
+}
+
+:where(.focusRing) {
+  stroke-dasharray: 3 2;
+}
+
+/* Structural rules, not meant to be overridden. */
+.hit {
+  fill: transparent;
+}
+
+.laneHit {
+  fill: none;
+  stroke: transparent;
+}
+
+.laneRun,
+.laneHalo,
+.highlightLane,
+.ring,
+.highlight,
+.free {
+  pointer-events: none;
+}

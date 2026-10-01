@@ -1,0 +1,22 @@
+.root {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  touch-action: none;
+  overscroll-behavior: contain;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* The world group scales by the zoom. This undoes it, and the y-flip, for
+   content that must stay a fixed screen size. See ADR-0002. */
+.screenSpace {
+  transform: scale(calc(1 / var(--zoom)), calc(var(--y-sign) / var(--zoom)));
+}
