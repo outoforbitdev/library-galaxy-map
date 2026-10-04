@@ -47,9 +47,13 @@ export interface IGalaxyMapProps<TSystemData = unknown, TLaneData = unknown>
   systems: ISystem<TSystemData>[];
   /** Spacelanes in priority order, highest first. */
   spacelanes: ISpacelane<TLaneData>[];
+  /** The selected entity. Controlled mode: the map only calls `onSelect` and never changes it itself. */
   selected?: IEntityRef | null;
+  /** The initial selection in uncontrolled mode. A selection missing from the data is cleared. */
   defaultSelected?: IEntityRef | null;
+  /** Called with the entity the user selected, or null when the selection is cleared. */
   onSelect?: (event: MapEntityEvent<TSystemData, TLaneData> | null) => void;
+  /** Called with the entity under the pointer, or null when the pointer leaves it. */
   onHover?: (event: MapEntityEvent<TSystemData, TLaneData> | null) => void;
   /** False stops users from changing the selection. `selected` and `select()` still work. */
   selectionEnabled?: boolean;
@@ -65,19 +69,29 @@ export interface IGalaxyMapProps<TSystemData = unknown, TLaneData = unknown>
   highlightColor?: string;
   /** Content drawn with each visible system, in pixels relative to its center. Memoize it. */
   renderSystemOverlay?: (system: ISystem<TSystemData>) => ReactNode;
+  /** Most systems drawn at once. Defaults to 500. Zero hides every system. */
   maxSystems?: number;
+  /** Most labels drawn at once. Defaults to 100. */
   maxLabels?: number;
+  /** Most lane segments drawn at once. A hard limit. Defaults to 600. */
   maxLaneSegments?: number;
   /** False draws every system, label, and lane. Performance targets do not apply. */
   culling?: boolean;
   /** The content area. Defaults to the data's bounding box. */
   bounds?: IBounds;
+  /** Smallest zoom, in screen pixels per world unit. Unlimited by default. */
   minZoom?: number;
+  /** Largest zoom, in screen pixels per world unit. Unlimited by default. */
   maxZoom?: number;
+  /** The camera. Controlled mode: the map only calls `onViewportChange` and never moves it itself. */
   viewport?: IViewport;
+  /** The initial camera in uncontrolled mode. Without one, the map fits the data once it has data. */
   defaultViewport?: IViewport;
+  /** Called as the camera moves. `info.settled` is true once when a gesture or camera move ends. */
   onViewportChange?: (viewport: IViewport, info: IViewportChangeInfo) => void;
+  /** The map's accessible name. Defaults to "Galaxy map". */
   "aria-label"?: string;
+  /** Handle for camera moves and `select()`. */
   ref?: Ref<IGalaxyMapHandle>;
 }
 

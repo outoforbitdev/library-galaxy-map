@@ -1,4 +1,11 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
+import {
+  Controls,
+  Description,
+  Primary,
+  Title,
+} from "@storybook/addon-docs/blocks";
+import { fn } from "storybook/test";
 import { useMemo, useRef, useState } from "react";
 import { generateGalaxy } from "../stories/generateGalaxy";
 import { GalaxyMap, type IGalaxyMapHandle } from "./GalaxyMap";
@@ -52,9 +59,58 @@ const frame = { width: "100%", height: "80vh" };
 const meta: Meta<typeof GalaxyMap> = {
   title: "GalaxyMap",
   component: GalaxyMap,
+  tags: ["autodocs"],
+  parameters: {
+    // Show only the primary story (Playground), not every story, on the docs page.
+    docs: {
+      page: () => (
+        <>
+          <Title />
+          <Description />
+          <Primary />
+          <Controls />
+        </>
+      ),
+    },
+  },
 };
 export default meta;
 type Story = StoryObj<typeof GalaxyMap>;
+
+/**
+ * Try the inputs on a full-scale galaxy of 6,000 systems and 500 lanes. Edit any
+ * prop in the Controls panel, and watch `onSelect`, `onHover`, and
+ * `onViewportChange` in the Actions panel. The data and ref are not editable
+ * here, so see the other stories for those.
+ */
+export const Playground: Story = {
+  args: {
+    selectionEnabled: true,
+    hoverEnabled: true,
+    culling: true,
+    onSelect: fn(),
+    onHover: fn(),
+    onViewportChange: fn(),
+  },
+  argTypes: {
+    systems: { control: false },
+    spacelanes: { control: false },
+    highlightColor: { control: "color" },
+    maxSystems: { control: { type: "number", min: 0 } },
+    maxLabels: { control: { type: "number", min: 0 } },
+    maxLaneSegments: { control: { type: "number", min: 0 } },
+    minZoom: { control: { type: "number", min: 0, step: 0.1 } },
+    maxZoom: { control: { type: "number", min: 0, step: 0.1 } },
+  },
+  render: function PlaygroundStory(args) {
+    const { systems, lanes } = useMemo(() => generateGalaxy(6000, 500, 40), []);
+    return (
+      <div className="ood-primary" style={frame}>
+        <GalaxyMap {...args} systems={systems} spacelanes={lanes} />
+      </div>
+    );
+  },
+};
 
 export const Basic: Story = {
   render: () => (
