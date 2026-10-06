@@ -174,7 +174,7 @@ export function Canvas(props: ICanvasProps) {
     if (!action) return;
     event.preventDefault();
     camera.cancelAnimation();
-    camera.moveBy((viewport) =>
+    camera.moveBy((viewport, limits) =>
       action.type === "pan"
         ? panByPixels(viewport, action.dx, action.dy, yAxis)
         : zoomAtPoint(
@@ -183,6 +183,7 @@ export function Canvas(props: ICanvasProps) {
             { x: current.width / 2, y: current.height / 2 },
             action.factor,
             yAxis,
+            limits,
           ),
     );
     camera.settle();

@@ -105,6 +105,23 @@ function clampAxis(
 }
 
 /**
+ * Clamps a zoom to the limits. When `current` is given, the limits are
+ * expanded to include it, as in `clampViewport`.
+ */
+export function clampZoom(
+  zoom: number,
+  limits: Pick<ILimits, "minZoom" | "maxZoom">,
+  current?: number,
+): number {
+  return clampAxis(
+    zoom,
+    limits.minZoom ?? 0,
+    limits.maxZoom ?? Infinity,
+    current,
+  );
+}
+
+/**
  * Clamps a target viewport to the limits. The center may move up to half a
  * view beyond the bounds. When `current` is given, the limits are expanded to
  * include it, so clamping never moves a camera that is already outside them:
@@ -116,12 +133,7 @@ export function clampViewport(
   size: ISize,
   current?: IViewport,
 ): IViewport {
-  const zoom = clampAxis(
-    target.zoom,
-    limits.minZoom ?? 0,
-    limits.maxZoom ?? Infinity,
-    current?.zoom,
-  );
+  const zoom = clampZoom(target.zoom, limits, current?.zoom);
   const { bounds } = limits;
   if (!bounds || size.width <= 0 || size.height <= 0) {
     return { center: target.center, zoom };

@@ -96,8 +96,8 @@ export function useGestures(options: IGestureOptions): IGestureHandlers {
         pointers.current.get(first)!,
         pointers.current.get(second)!,
       ];
-      camera.moveBy((viewport) =>
-        pinchUpdate(before, after, viewport, sizeRef.current, yAxis),
+      camera.moveBy((viewport, limits) =>
+        pinchUpdate(before, after, viewport, sizeRef.current, yAxis, limits),
       );
       return;
     }
@@ -166,8 +166,8 @@ export function useGestures(options: IGestureOptions): IGestureHandlers {
         event.deltaMode,
         event.ctrlKey,
       );
-      camera.moveBy((viewport) =>
-        zoomAtPoint(viewport, sizeRef.current, point, factor, yAxis),
+      camera.moveBy((viewport, limits) =>
+        zoomAtPoint(viewport, sizeRef.current, point, factor, yAxis, limits),
       );
       if (wheelTimer.current !== null) clearTimeout(wheelTimer.current);
       wheelTimer.current = setTimeout(() => {

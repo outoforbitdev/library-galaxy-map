@@ -8,8 +8,12 @@ import {
   WHEEL_LINE_HEIGHT_PX,
   WHEEL_ZOOM_SENSITIVITY,
 } from "./constants";
-import { screenToWorld, ySign } from "./projection";
+import { clampZoom, screenToWorld, ySign } from "./projection";
+import type { ILimits } from "./projection";
 import type { IPoint, ISize, IViewport, YAxis } from "./types";
+
+/** Zoom limits that gestures respect. */
+export type ZoomLimits = Pick<ILimits, "minZoom" | "maxZoom">;
 
 /** Whether a press has moved far enough to count as a pan rather than a click. */
 export function exceedsDragThreshold(
@@ -38,16 +42,21 @@ export function panByPixels(
   };
 }
 
-/** Multiplies zoom by `factor`, keeping the world point under `screenPoint` fixed. */
+/**
+ * Multiplies zoom by `factor`, keeping the world point under `screenPoint` fixed.
+ * With `limits`, the zoom is clamped before the center is computed, so zooming
+ * against a limit does not drift the center toward the pointer.
+ */
 export function zoomAtPoint(
   viewport: IViewport,
   size: ISize,
   screenPoint: IPoint,
   factor: number,
   yAxis: YAxis,
+  limits: ZoomLimits = {},
 ): IViewport {
   const anchor = screenToWorld(screenPoint, viewport, size, yAxis);
-  const zoom = viewport.zoom * factor;
+  const zoom = clampZoom(viewport.zoom * factor, limits, viewport.zoom);
   return {
     zoom,
     center: {
@@ -87,6 +96,7 @@ export function pinchUpdate(
   viewport: IViewport,
   size: ISize,
   yAxis: YAxis,
+  limits: ZoomLimits = {},
 ): IViewport {
   const previousDistance = Math.hypot(
     previous[0].x - previous[1].x,
@@ -96,7 +106,14 @@ export function pinchUpdate(
   const factor = previousDistance > 0 ? nextDistance / previousDistance : 1;
   const previousMid = midpoint(previous[0], previous[1]);
   const nextMid = midpoint(next[0], next[1]);
-  const zoomed = zoomAtPoint(viewport, size, previousMid, factor, yAxis);
+  const zoomed = zoomAtPoint(
+    viewport,
+    size,
+    previousMid,
+    factor,
+    yAxis,
+    limits,
+  );
   return panByPixels(
     zoomed,
     nextMid.x - previousMid.x,

@@ -61,6 +61,38 @@ describe("zoomAtPoint", () => {
       expect(after.y).toBeCloseTo(before.y);
     },
   );
+
+  it.each([
+    ["maxZoom", 4, 2, { maxZoom: 4 }],
+    ["minZoom", 0.5, 0.5, { minZoom: 0.5 }],
+  ])(
+    "does not move the center when already at %s",
+    (_, zoom, factor, limits) => {
+      const viewport = { center: { x: 10, y: 20 }, zoom };
+      const zoomed = zoomAtPoint(
+        viewport,
+        size,
+        { x: 600, y: 450 },
+        factor === 2 ? 2 : 0.5,
+        "up",
+        limits,
+      );
+      expect(zoomed).toEqual(viewport);
+    },
+  );
+
+  it("clamps a partial zoom step to the limit and anchors at the clamped zoom", () => {
+    const viewport = { center: { x: 0, y: 0 }, zoom: 3 };
+    const pointer = { x: 600, y: 450 };
+    const before = screenToWorld(pointer, viewport, size, "up");
+    const zoomed = zoomAtPoint(viewport, size, pointer, 2, "up", {
+      maxZoom: 4,
+    });
+    const after = screenToWorld(pointer, zoomed, size, "up");
+    expect(zoomed.zoom).toBe(4);
+    expect(after.x).toBeCloseTo(before.x);
+    expect(after.y).toBeCloseTo(before.y);
+  });
 });
 
 describe("wheelZoomFactor", () => {

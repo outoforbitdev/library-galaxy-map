@@ -6,6 +6,7 @@ import {
   useRef,
   useState,
 } from "react";
+import type { ZoomLimits } from "./gestures";
 import { DEFAULT_ZOOM, PUBLISH_INTERVAL_MS } from "./constants";
 import {
   clampViewport,
@@ -36,7 +37,7 @@ export interface IViewportController {
   /** The live camera: the viewport most recently applied, or emitted in controlled mode. */
   getViewport(): IViewport;
   /** Moves the camera for a user gesture, clamped with expanding bounds. */
-  moveBy(update: (current: IViewport) => IViewport): void;
+  moveBy(update: (current: IViewport, limits: ZoomLimits) => IViewport): void;
   /** Marks the end of a gesture: emits a settled change and publishes immediately. */
   settle(): void;
   /** Moves to a target clamped to the configured limits, animated when `durationMs` is above 0. */
@@ -138,12 +139,12 @@ export function useViewport(options: IUseViewportOptions): IViewportController {
   ]);
 
   const moveBy = useCallback(
-    (update: (current: IViewport) => IViewport) => {
+    (update: (current: IViewport, limits: ZoomLimits) => IViewport) => {
       const { bounds, minZoom, maxZoom, size } = optionsRef.current;
       const current = currentRef.current;
       commit(
         clampViewport(
-          update(current),
+          update(current, { minZoom, maxZoom }),
           { bounds, minZoom, maxZoom },
           size,
           current,
