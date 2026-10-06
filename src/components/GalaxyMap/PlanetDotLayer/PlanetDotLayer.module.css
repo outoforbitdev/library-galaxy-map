@@ -1,4 +1,0 @@
-.layer circle {
-  r: var(--planet-dot-radius, 4px);
-  cursor: pointer;
-}

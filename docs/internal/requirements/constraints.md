@@ -4,7 +4,7 @@
 
 - **TC-1 React peer dependency** — The library requires React as a peer dependency. It is not usable in non-React environments. The minimum supported version tracks the version used in `devDependencies` (currently React 19).
 - **TC-2 SVG rendering** — All map content is rendered as SVG. CSS-in-SVG is limited; complex layout techniques available in HTML are not applicable to map elements.
-- **TC-3 CSS custom properties** — Colors are resolved via `--ood-color-*` CSS custom properties defined by the `@outoforbitdev/ood-react` design system. Consumers must include the ood design system styles or define these variables themselves.
+- **TC-3 Consumer-supplied colors** — Map item colors are CSS color values supplied by the consumer (see FR-D5 in [Core Functional Requirements](./core-functional-requirements.md)). The map does not depend on the `--ood-color-*` custom properties for item colors.
 - **TC-4 TypeScript** — The library is authored in TypeScript and ships type definitions. Pure JavaScript consumers are supported but lose type safety.
 - **TC-5 No test framework** — As of v0.0.11, there is no automated test suite. Manual testing is performed via the `pack` workflow against the `app-galaxy-map` application. This is a known gap.
 - **TC-6 Rollup bundler** — The build system is Rollup with TypeScript and PostCSS plugins. Changes to the build pipeline must remain compatible with the existing `rollup.config.ts`.

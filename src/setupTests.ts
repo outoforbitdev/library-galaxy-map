@@ -20,3 +20,8 @@ class ResizeObserverMock implements ResizeObserver {
 }
 
 global.ResizeObserver = ResizeObserverMock;
+
+// jsdom does not implement canvas. Returning null makes label measurement use
+// its documented fallback instead of logging "not implemented" errors.
+HTMLCanvasElement.prototype.getContext = (() =>
+  null) as unknown as HTMLCanvasElement["getContext"];
