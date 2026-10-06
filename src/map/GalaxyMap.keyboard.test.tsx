@@ -51,6 +51,16 @@ describe("GalaxyMap keyboard", () => {
     expect(active()).toHaveAttribute("data-id", "a");
   });
 
+  it.each(["ctrlKey", "metaKey", "altKey"])(
+    "leaves bracket keys with %s to the browser",
+    (modifier) => {
+      const { root, active } = setup();
+      const proceed = fireEvent.keyDown(root, { key: "[", [modifier]: true });
+      expect(proceed).toBe(true);
+      expect(active()).toBeNull();
+    },
+  );
+
   it("draws a focus ring", () => {
     const { key, container } = setup();
     key("]");

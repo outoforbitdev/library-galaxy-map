@@ -153,6 +153,8 @@ export function GalaxyMap<TSystemData = unknown, TLaneData = unknown>(
   );
 
   const handleKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
+    // Modified keys belong to the browser, such as Cmd or Alt with [ for back.
+    if (event.ctrlKey || event.metaKey || event.altKey) return;
     if (event.key === "]" || event.key === "[") {
       event.preventDefault();
       const visible = visibleRef.current.systems.map(
