@@ -10,10 +10,11 @@
 
 ## Language and Type System
 
-| Technology  | Version | Role                       |
-| ----------- | ------- | -------------------------- |
-| TypeScript  | ^5.7.3  | Primary authoring language |
-| CSS Modules | —       | Scoped component styling   |
+| Technology  | Version | Role                                                                      |
+| ----------- | ------- | ------------------------------------------------------------------------- |
+| TypeScript  | ^5.7.3  | Primary authoring language                                                |
+| CSS Modules | —       | Scoped component styling                                                  |
+| SVG         | —       | Map rendering ([ADR-0001](./decisions/adr-0001-svg-for-map-rendering.md)) |
 
 ## Build
 
@@ -26,6 +27,17 @@
 | @rollup/plugin-terser    | ^0.4.4  | Minification              |
 | tslib                    | ^2.8.1  | TypeScript helper runtime |
 
+## Testing and Documentation
+
+| Technology                | Version | Role                                  |
+| ------------------------- | ------- | ------------------------------------- |
+| Vitest                    | ^3.2.4  | Test runner                           |
+| jsdom                     | ^27.0.1 | DOM environment for tests             |
+| @testing-library/react    | ^16.3.2 | Component and hook testing            |
+| @testing-library/jest-dom | ^6.9.1  | DOM assertions                        |
+| Storybook                 | ^10.3.3 | Stories and the full-scale playground |
+| Vite                      | ^7.3.1  | Dev server for Storybook and Vitest   |
+
 ## Output Formats
 
 | Format | Path                | Description                 |
@@ -36,21 +48,21 @@
 
 ## Quality and Tooling
 
-| Tool              | Role                          |
-| ----------------- | ----------------------------- |
-| Husky             | Git hooks (pre-commit)        |
-| commitlint        | Enforces Conventional Commits |
-| Prettier          | Code formatting               |
-| polylint (Docker) | Multi-language linting        |
-| Yarn 1.x          | Package manager               |
-| just              | Task runner (`Justfile`)      |
+| Tool                    | Role                          |
+| ----------------------- | ----------------------------- |
+| pre-commit              | Git hooks (lint, commit-msg)  |
+| conventional-pre-commit | Enforces Conventional Commits |
+| Prettier                | Code formatting               |
+| polylint (Docker)       | Multi-language linting        |
+| npm                     | Package manager               |
+| just                    | Task runner (`Justfile`)      |
 
 ## CI/CD
 
-| Workflow    | Trigger        | Purpose                      |
-| ----------- | -------------- | ---------------------------- |
-| Test        | Pull request   | Checks version consistency   |
-| NPM Publish | Push to `main` | Builds and publishes to npm  |
-| Release     | Push to `main` | Creates GitHub release       |
-| Scorecard   | Schedule       | OpenSSF security scoring     |
-| Dependabot  | Weekly         | Automated dependency updates |
+| Workflow    | Trigger        | Purpose                          |
+| ----------- | -------------- | -------------------------------- |
+| Test        | Pull request   | Version consistency, tests, lint |
+| NPM Publish | Push to `main` | Builds and publishes to npm      |
+| Release     | Push to `main` | Creates GitHub release           |
+| Scorecard   | Schedule       | OpenSSF security scoring         |
+| Dependabot  | Weekly         | Automated dependency updates     |

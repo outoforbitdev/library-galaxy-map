@@ -5,10 +5,12 @@ A GitHub issue is considered **done** when all of the following are true:
 ## Code
 
 - [ ] The implementation matches the issue's acceptance criteria.
+- [ ] `just gate` passes: tests, typecheck, and lint.
 - [ ] The build passes: `just build` succeeds without errors.
-- [ ] The change has been manually verified in `app-galaxy-map` via `just pack` (for component changes).
+- [ ] New or changed behavior has tests.
+- [ ] Interaction changes were checked in a real browser, in Storybook or in `app-galaxy-map` via `just pack`.
 - [ ] No `any` types were introduced without justification.
-- [ ] Code is formatted (Prettier-compliant).
+- [ ] Code is formatted (Prettier-compliant, checked by `just lint`).
 
 ## Version and Changelog
 

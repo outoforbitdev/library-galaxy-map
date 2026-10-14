@@ -11,7 +11,7 @@ Before merging a release PR, verify:
 - [ ] `version` in `package.json` is updated to the new version (e.g., `0.0.12`).
 - [ ] `CHANGELOG.md` has an entry for the new version.
 - [ ] The version in `package.json` matches the latest entry in `CHANGELOG.md` (enforced by the CI `check-release-match` job).
-- [ ] The build passes locally: `just build`.
+- [ ] `just gate` and `just build` pass locally.
 
 ## Version Bump Guidelines
 

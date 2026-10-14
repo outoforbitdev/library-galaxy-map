@@ -6,9 +6,9 @@
 - **TC-2 SVG rendering** — All map content is rendered as SVG. CSS-in-SVG is limited; complex layout techniques available in HTML are not applicable to map elements.
 - **TC-3 Consumer-supplied colors** — Map item colors are CSS color values supplied by the consumer (see FR-D5 in [Core Functional Requirements](./core-functional-requirements.md)). The map does not depend on the `--ood-color-*` custom properties for item colors.
 - **TC-4 TypeScript** — The library is authored in TypeScript and ships type definitions. Pure JavaScript consumers are supported but lose type safety.
-- **TC-5 No test framework** — As of v0.0.11, there is no automated test suite. Manual testing is performed via the `pack` workflow against the `app-galaxy-map` application. This is a known gap.
+- **TC-5 Test framework** — Tests run on Vitest with jsdom and Testing Library. jsdom has no layout, so tests mock element size, and canvas text measurement falls back to a fixed character width. Real-browser behavior is verified in Storybook and through the `pack` workflow against `app-galaxy-map`.
 - **TC-6 Rollup bundler** — The build system is Rollup with TypeScript and PostCSS plugins. Changes to the build pipeline must remain compatible with the existing `rollup.config.ts`.
-- **TC-7 Yarn package manager** — The repository uses Yarn 1.x. Do not use npm to install dependencies.
+- **TC-7 npm package manager** — The repository uses npm. The lockfile is `package-lock.json` and `just install` runs `npm install`.
 
 ## Legal Constraints
 
@@ -19,5 +19,5 @@
 
 - **BC-1 Semantic versioning** — Releases MUST follow semantic versioning. Breaking API changes require a major version bump.
 - **BC-2 npm publishing** — The package is published to the public npm registry under the `@outoforbitdev` scope. The publishing pipeline is managed via GitHub Actions.
-- **BC-3 Conventional commits** — All commits must pass the commitlint check enforced by Husky pre-commit hooks. This is required for automated changelog and release generation.
+- **BC-3 Conventional commits** — All commits must pass the commitlint check enforced by the pre-commit `commit-msg` hook. This is required for automated changelog and release generation.
 - **BC-4 Version consistency** — The version in `package.json` must match the latest entry in `CHANGELOG.md` before a release can be cut.

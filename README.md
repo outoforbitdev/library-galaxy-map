@@ -163,4 +163,4 @@ Labels are outlined with `var(--ood-background)` from the [ood-react](https://ww
 </svg>
 ```
 
-See [the API design](./docs/internal/architecture/api-design.md) for every prop and method, and [MIGRATION.md](./MIGRATION.md) to upgrade from v0.
+See [the API design](./docs/internal/architecture/api-design.md) for every prop and method, and [the migration guide](./docs/public/migrating-from-v0.md) to upgrade from v0.
