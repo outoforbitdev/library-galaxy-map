@@ -1,3 +1,5 @@
 **/.next/*
 **/bin/*
 **/obj/*
+**/storybook-static/*
+**/dist/*

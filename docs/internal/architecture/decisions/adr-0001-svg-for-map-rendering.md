@@ -23,3 +23,7 @@ Use SVG for all map rendering.
 
 - Rendering hundreds or thousands of items may cause performance degradation in SVG. If scale requirements grow significantly, a Canvas or WebGL approach should be reconsidered.
 - SVG text rendering is browser-dependent and may require careful font and alignment handling.
+
+## Update (2026-09-28)
+
+The rebuild keeps SVG at a scale of 6,000 systems and 20,000 lane segments. Viewport culling caps the map at about 1,000 map entities (systems, labels, and lane segments) regardless of dataset size with the default limits (400 systems, 100 labels, 500 lane segments), which is within SVG's practical range. Each entity renders a few DOM nodes. Raising the limits or disabling culling raises the cap. Canvas would also give up native hit-testing, accessibility, and React overlay content. See [ADR-0002](./adr-0002-transform-and-css-variable-rendering.md) for the rendering approach and its measurements. Colors are now consumer-supplied CSS values rather than `--ood-color-*` properties.

@@ -16,6 +16,8 @@ This directory contains internal documentation for the `@outoforbitdev/galaxy-ma
 | [onboarding/](./onboarding/)     | Quick start and orientation for new contributors        |
 | [assets/](./assets/)             | Shared images and diagrams                              |
 
+Consumer-facing guides live next to this directory in [docs/public/](../public/).
+
 ## Audience
 
 - **Contributors** — Developers adding features or fixing bugs

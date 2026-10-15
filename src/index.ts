@@ -1,13 +1,24 @@
-export { default } from "./components/GalaxyMap";
+export { Canvas } from "./canvas/Canvas";
+export type { ICanvasHandle, ICanvasProps } from "./canvas/Canvas";
+export { useCanvas } from "./canvas/CanvasContext";
+export type { ICanvasContext } from "./canvas/CanvasContext";
+export { fitViewport } from "./canvas/projection";
+export { screenSpaceClassName } from "./canvas/screenSpace";
+export type { YAxis } from "./canvas/types";
+export type { IViewportChangeInfo } from "./canvas/useViewport";
+export { GalaxyMap } from "./map/GalaxyMap";
+export type { IGalaxyMapHandle, IGalaxyMapProps } from "./map/GalaxyMap";
+export { SpacelaneSegment, SystemGlyph } from "./map/primitives";
 export type {
-  IGalaxyMapHandle,
-  IPlanet,
+  EntityKind,
+  IBounds,
+  IEntityRef,
+  ILaneSegment,
+  IPadding,
+  IPoint,
+  ISize,
   ISpacelane,
-  ISpaceLaneSegment,
-  IMapCoordinate,
-  IMapDimensions,
-  IRenderLimits,
-  ILegendEntry,
-  IMapOptions,
-} from "./components/GalaxyMap";
-export { MapColor } from "./components/GalaxyMap";
+  ISystem,
+  IViewport,
+  MapEntityEvent,
+} from "./map/types";

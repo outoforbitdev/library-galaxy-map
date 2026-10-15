@@ -4,10 +4,11 @@ Get up and running as a contributor to `@outoforbitdev/galaxy-map`.
 
 ## Prerequisites
 
-- Node.js (current LTS)
-- Yarn 1.x (`npm install -g yarn`)
+- Node.js 20 or later (CI uses 20)
+- npm
 - Docker (for `just lint`)
 - [just](https://github.com/casey/just) task runner
+- [pre-commit](https://pre-commit.com/)
 
 ## Setup
 
@@ -16,11 +17,23 @@ Get up and running as a contributor to `@outoforbitdev/galaxy-map`.
 git clone https://github.com/outoforbitdev/library-galaxy-map.git
 cd library-galaxy-map
 
-# Install dependencies and set up git hooks
+# Install the git hooks, then the dependencies
+just bootstrap
 just install
 ```
 
-This installs npm/yarn dependencies and configures the Husky pre-commit hook (commitlint).
+`just bootstrap` installs the pre-commit hooks: lint before a commit, and a Conventional Commits check on the commit message.
+
+## Run the Checks
+
+```bash
+just test       # Vitest
+just typecheck  # tsc --noEmit
+just lint       # polylint in Docker
+just gate       # all three
+```
+
+A change is not complete until `just gate` passes.
 
 ## Build
 
@@ -30,13 +43,13 @@ just build
 
 Output is written to `dist/` (ESM, CJS, and type declarations).
 
-## Lint
+## Explore in Storybook
 
 ```bash
-just lint
+just storybook
 ```
 
-Runs the Docker-based polylint tool across the repository.
+Opens Storybook on http://localhost:6006. The `GalaxyMap` stories include a full-scale playground for checking performance and interaction in a real browser.
 
 ## Test Against a Consuming App
 
@@ -49,9 +62,10 @@ Builds the library, packs it as a tarball, and installs it into the `app-galaxy-
 ## Make a Change
 
 1. Create a branch: `git checkout -b <issue-number>-<description>`
-2. Write code.
-3. Commit with a Conventional Commit message: `feat: add X`
-4. Push and open a PR against `main`.
+2. Write code and tests.
+3. Run `just gate`.
+4. Commit with a Conventional Commit message: `feat(map): add X`
+5. Push and open a PR against `main`.
 
 ## Next Steps
 

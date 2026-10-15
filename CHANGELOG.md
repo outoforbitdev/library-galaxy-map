@@ -1,3 +1,39 @@
+## 0.2.0 (2026-10-11)
+
+### Breaking Changes
+
+- Rebuilt the package around a generic `Canvas` and a `GalaxyMap` drawn on it, replacing the v0 API. See [the migration guide](./docs/public/migrating-from-v0.md) for the full mapping.
+  - Planets are now systems. Pass `systems` and `spacelanes` in priority order. The array order decides what shows when not everything fits.
+  - `GalaxyMap` is now a named export, `{ GalaxyMap }`, instead of the default export.
+  - `MapColor`, `FocusLevel`, `MapItemVisibility`, `IRenderLimits`, `ILegendEntry`, and `IMapOptions` are removed. Colors are any CSS color string.
+  - `dimensions` is now the optional `bounds`, which defaults to the extent of the data.
+  - `renderLimits` is replaced by `maxSystems`, `maxLabels`, and `maxLaneSegments`, or `culling={false}`.
+  - `zoom` is now in screen pixels per world unit. Use `defaultViewport`, `viewport`, `minZoom`, and `maxZoom`.
+  - `onPlanetSelect`, `onSpaceLaneSelect`, `onZoomChange`, and `onCenterChange` are replaced by `onSelect` and `onViewportChange`.
+  - The built-in legend and options panel are removed, along with `legendEntries`, `mapOptions`, `leftChildren`, and `rightChildren`. Build a legend from the exported `SystemGlyph` and `SpacelaneSegment`.
+  - `ref.zoomTo` is now `ref.moveTo({ center, zoom }, { duration })`.
+
+### Features
+
+- New exported `Canvas` component: pan and zoom surface with controlled and uncontrolled viewports, zoom and pan limits, animated camera moves, and `useCanvas`, `fitViewport`, and `screenSpaceClassName` helpers.
+- Spatial indexes and priority-order culling of systems, labels, and lane segments, so large galaxies stay responsive.
+- Selection, hover, and keyboard focus for systems and spacelanes, with ARIA roles and `aria-activedescendant`.
+- Labels are colored like their system and outlined so they stay readable over glyphs.
+- Highlight color defaults to the `ood-react` theme text color.
+- Development-only data validation warns about duplicate ids and similar mistakes without crashing.
+- Storybook stories, including a full-scale playground, and a `just storybook` recipe.
+
+### Bug Fixes
+
+- Fit data that arrives after mount, and when a hidden container later gets a size.
+- Keep touch panning when pointer capture moves to the canvas, and end a pan when the release happens off the component.
+- Ignore modified keys and non-primary mouse buttons, handle page wheel deltas, and stop double click from selecting label text.
+- Stop the view center from drifting when zooming at a zoom limit.
+
+### Documentation
+
+- Added a README, a migration guide from v0, and refreshed the internal architecture, requirements, and onboarding docs.
+
 ## 0.1.1 (2026-07-29)
 
 ### Bug Fixes

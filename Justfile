@@ -21,7 +21,14 @@ lint-write:
 test:
     npm test
 
-gate: test lint
+typecheck:
+    npm run typecheck
+
+# Launch the Storybook dev server on http://localhost:6006
+storybook:
+    npm run storybook
+
+gate: test typecheck lint
 
 pack: build
     #!/usr/bin/env bash

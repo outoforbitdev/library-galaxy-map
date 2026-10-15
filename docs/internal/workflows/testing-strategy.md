@@ -1,25 +1,41 @@
 # Testing Strategy
 
-## Current State
+## Stack
 
-As of v0.0.11, this library has no automated unit or integration test suite. This is a known gap acknowledged in [Constraints](../requirements/constraints.md) (TC-5).
+- **Vitest** with the **jsdom** environment and **Testing Library**.
+- `vitest.config.ts` compiles CSS modules with stable class names, so tests select elements with the imported `styles` object rather than hard-coded strings.
+- `src/setupTests.ts` stubs the canvas `getContext`, so label measurement uses its documented fallback instead of logging "not implemented".
+- `src/testUtils.ts` provides `mockElementSize(width, height)`, because jsdom reports zero for all layout.
 
-## Manual Testing
+## What Is Tested
 
-The primary testing mechanism is the `just pack` workflow:
+| Layer             | How                                                                                                                                 |
+| ----------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| Pure modules      | Direct unit tests: `projection`, `gestures`, `extent`, `spatialIndex`, `lanePaths`, `cull`, `measure`, `keyboardFocus`, `validate`. |
+| Hooks             | `renderHook` tests for `useViewport`, `useMapData`, and `useSelection`, with fake timers for publishing.                            |
+| Components        | Testing Library tests for `Canvas`, `GalaxyMap`, and the nodes, including gestures and keyboard behavior.                           |
+| Architecture rule | `src/canvas/dependencies.test.ts` fails if anything in `canvas/` imports from `map/`.                                               |
 
-1. Run `just build` to produce a fresh `dist/`.
-2. Run `just pack` to pack the library as a tarball and install it into `app-galaxy-map`.
-3. Manually verify the map renders, zooms, pans, and responds to interactions correctly in `app-galaxy-map`.
+Tests live next to the code they cover.
+
+## Running
+
+```bash
+just test       # the suite
+just typecheck  # tsc --noEmit
+just gate       # tests, typecheck, and lint
+```
 
 ## Automated CI
 
-The only automated check that runs on PRs is `check-release-match`, which verifies version consistency between `package.json` and `CHANGELOG.md`. This is not a functional test.
+On every PR, `test.yml` runs three checks: version consistency between `package.json` and `CHANGELOG.md`, `npm test`, and lint.
 
-## Future Testing Goals
+## What jsdom Cannot Cover
 
-- **Unit tests** — Test individual components (`PlanetMap`, `SpacelaneMap`, `MapOptions`) with a React testing library.
-- **Interaction tests** — Test zoom and pan behavior with simulated mouse and touch events.
-- **Visual regression tests** — Snapshot or pixel-diff tests to catch rendering regressions.
+- Real layout, text measurement, and rendering. Check these in Storybook (`just storybook`), which includes a full-scale playground.
+- Performance at scale and gesture feel on touch devices. Check these in Storybook and through the `just pack` workflow against `app-galaxy-map`.
 
-The testing infrastructure should be prioritized before the library reaches v1.0.
+## Gaps
+
+- There are no visual regression tests.
+- There are no automated real-browser interaction tests.
