@@ -10,7 +10,7 @@ Keywords and the **Source** and **Phase** columns follow the conventions in [Cor
 | ------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------- | ----- |
 | NFR-P1 | The map MUST handle a dataset of 6,000 systems and 500 lanes made of 20,000 segments.                                                                           | Andrea, Gavin | Atlas |
 | NFR-P2 | Pan and zoom MUST run at 60 frames per second on desktop and at least 30 frames per second on mid-range phones, at the NFR-P1 scale.                            | Arlo, Priya   | Atlas |
-| NFR-P3 | The page MUST contain only elements in or near the current view, not the whole dataset. A typical view holds up to 500 systems and 500 lane segments.           | Arlo, Priya   | Atlas |
+| NFR-P3 | The page MUST contain only elements in or near the current view, not the whole dataset. A typical view holds up to 400 systems and 500 lane segments.           | Arlo, Priya   | Atlas |
 | NFR-P4 | The first render of the full NFR-P1 dataset SHOULD complete within 500 ms on desktop.                                                                           | Arlo          | Atlas |
 | NFR-P5 | Replacing the entire dataset, such as for a time period change, SHOULD complete within 200 ms on desktop.                                                       | Arlo          | Atlas |
 | NFR-P6 | Changing the color or data of a few entities MUST cost time in proportion to what changed. It MUST NOT rebuild spatial indexes or re-render unchanged entities. | Gavin, Priya  | Atlas |

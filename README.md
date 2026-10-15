@@ -104,7 +104,7 @@ map.current?.fitPoints(
 
 ### Routes
 
-Draw a route as a spacelane placed first in `spacelanes`, so it draws on top and is first in line for the segment budget. The segment budget (`maxLaneSegments`) is a hard limit, so a route with more visible segments than the budget is dropped, and `maxSystems={0}` hides every system, including the selected one. Give it a `className` and style it with ordinary CSS. The class goes on the lane's group, and the lane's paths inherit from it:
+Draw a route as a spacelane placed first in `spacelanes`, so it draws on top and is first in line for the segment budget. The segment budget (`maxLaneSegments`, default 500) is a hard limit. A route with more visible segments than the budget is dropped, and every lane after it is dropped too, so no lanes draw. A selected lane is exempt from the budget. `maxSystems={0}` hides every system, including the selected one. Give it a `className` and style it with ordinary CSS. The class goes on the lane's group, and the lane's paths inherit from it:
 
 ```css
 .route {

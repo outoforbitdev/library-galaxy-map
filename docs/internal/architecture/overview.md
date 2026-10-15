@@ -185,7 +185,7 @@ Nodes carry `data-kind` and `data-id` but no handlers. The `click` handler is on
 ### Selection
 
 - Controlled with `selected` and `onSelect`, or uncontrolled with `defaultSelected`.
-- The selected entity is promoted to the highest priority in culling, so it is always drawn, on top, and a selected system always shows its label.
+- The selected entity is promoted to the highest priority in culling, so it is drawn first, on top, and a selected system shows its label. Two edge cases: `maxSystems={0}` hides every system including the selected one, and a selected lane is exempt from the segment budget but its segments still count against it.
 - If the selected id no longer exists in new data, the map calls `onSelect(null)`. An uncontrolled selection is cleared. Hover is handled the same way with `onHover(null)`.
 
 ### Disabling hover and selection
@@ -249,9 +249,9 @@ Values marked _(starting)_ have not been tested yet and are expected to be tuned
 | Constant                    | Value              | Meaning                                                                     |
 | --------------------------- | ------------------ | --------------------------------------------------------------------------- |
 | `CULL_MARGIN`               | 0.1                | Extra area culled on each side of the view, as a fraction of the view.      |
-| `DEFAULT_MAX_SYSTEMS`       | 500                | Default for `maxSystems`.                                                   |
+| `DEFAULT_MAX_SYSTEMS`       | 400                | Default for `maxSystems`.                                                   |
 | `DEFAULT_MAX_LABELS`        | 100                | Default for `maxLabels`.                                                    |
-| `DEFAULT_MAX_LANE_SEGMENTS` | 600                | Default for `maxLaneSegments`.                                              |
+| `DEFAULT_MAX_LANE_SEGMENTS` | 500                | Default for `maxLaneSegments`.                                              |
 | `GLYPH_RADIUS_PX`           | 4                  | Drawn glyph radius, also used for glyph collisions.                         |
 | `GLYPH_SPACING_PX`          | 4 _(starting)_     | Minimum gap between placed glyphs.                                          |
 | `LABEL_OFFSET_PX`           | 8                  | Horizontal distance from the system center to its label.                    |
@@ -280,7 +280,7 @@ The label outline uses the ood-react theme variable `--ood-background`, with a d
 | Data change                            | One linear scan, an index rebuild only if positions changed, one cull, changed nodes. |
 | Selection change                       | One cull with the selected entity promoted.                                           |
 
-- Defaults: `maxSystems` 500, `maxLabels` 100, `maxLaneSegments` 600. At these limits the DOM holds about 1,000 map elements regardless of dataset size. With culling disabled, the DOM holds every entity.
+- Defaults: `maxSystems` 400, `maxLabels` 100, `maxLaneSegments` 500. These sum to 1,000, so with the defaults the map draws at most about 1,000 map entities (systems, labels, and lane segments) regardless of dataset size. Each entity renders several DOM nodes (for example a glyph and a hit target), so the node count is a small multiple of this. Raising a limit raises the cap. With culling disabled, every entity is drawn.
 - **Known risk:** Firefox paint cost on a real GPU has not been measured. Headless Firefox reached 18 to 40 fps in the spike, with the cost in SVG text and counter-scaled groups. Measure it early in implementation with a full-scale Storybook story. If it misses [NFR-P2](../requirements/non-functional-requirements.md), the first mitigations are lower default label limits and cheaper text rendering during gestures, recorded as NFR-M5 justifications.
 
 ## Error handling

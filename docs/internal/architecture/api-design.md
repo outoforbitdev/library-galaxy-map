@@ -1,6 +1,6 @@
 # API Design
 
-> **Status:** Approved design for the rebuild
+> **Status:** Approved design for the rebuild. Everything outside the [Planned](#planned) section is implemented and exported.
 
 Types referenced here are defined in the [data model](./data-model.md). The [architecture overview](./overview.md) describes how each piece works.
 
@@ -12,7 +12,6 @@ Types referenced here are defined in the [data model](./data-model.md). The [arc
 | `Canvas`, `useCanvas`, `screenSpaceClassName` | Canvas     | Atlas |
 | `SystemGlyph`, `SpacelaneSegment`             | Primitives | Atlas |
 | `fitViewport`                                 | Helper     | Atlas |
-| `pointAlongLane`, `interpolateColor`          | Helpers    | Game  |
 | Types from the data model, plus handle types  | Types      | Atlas |
 
 ## `GalaxyMap`
@@ -33,15 +32,14 @@ Types referenced here are defined in the [data model](./data-model.md). The [arc
 | `hoverEnabled`                                    | `boolean`                                     | `true`                       | Set to `false` to turn off hover tracking and `onHover`.                                                                                   |
 | `highlightColor`                                  | `string`                                      | `--ood-text`, then `#ffffff` | Any CSS color for hover, focus, and selection highlights. Set only on highlight elements, so overlays using `currentColor` are unaffected. |
 | `renderSystemOverlay`                             | `(system: ISystem<TSystemData>) => ReactNode` | None                         | Content drawn with each visible system, in screen pixels relative to its center.                                                           |
-| `children`                                        | `ReactNode`                                   | None                         | Free-floating content in world coordinates. Ignores pointer events by default. Game phase.                                                 |
-| `maxSystems`                                      | `number`                                      | `500`                        | Most systems drawn at once.                                                                                                                |
+| `children`                                        | `ReactNode`                                   | None                         | Free-floating content in world coordinates. Ignores pointer events by default.                                                             |
+| `maxSystems`                                      | `number`                                      | `400`                        | Most systems drawn at once.                                                                                                                |
 | `maxLabels`                                       | `number`                                      | `100`                        | Most labels drawn at once.                                                                                                                 |
-| `maxLaneSegments`                                 | `number`                                      | `600`                        | Most visible lane segments drawn at once.                                                                                                  |
+| `maxLaneSegments`                                 | `number`                                      | `500`                        | Most visible lane segments drawn at once.                                                                                                  |
 | `culling`                                         | `boolean`                                     | `true`                       | Set to `false` to draw every system, label, and lane, with no viewport culling or level of detail. Performance targets do not apply.       |
 | `bounds`                                          | `IBounds`                                     | Data extent                  | The content area. Defaults to the data's bounding box.                                                                                     |
 | `minZoom`, `maxZoom`                              | `number`                                      | None                         | Zoom limits, in screen pixels per world unit.                                                                                              |
 | `viewport`, `defaultViewport`, `onViewportChange` | See `Canvas`                                  |                              | Passed through to `Canvas`.                                                                                                                |
-| `panEnabled`, `zoomEnabled`                       | `boolean`                                     | `true`                       | Passed through to `Canvas`. Game phase.                                                                                                    |
 | `ref`                                             | `Ref<IGalaxyMapHandle>`                       | None                         | Imperative handle.                                                                                                                         |
 
 Props extend `IComponentProps` from `@outoforbitdev/ood-react`, so DOM props such as `className`, `style`, and `aria-label` go to the root element.
@@ -53,7 +51,6 @@ Props extend `IComponentProps` from `@outoforbitdev/ood-react`, so DOM props suc
 | Method                            | Purpose                                                                                                        | Phase |
 | --------------------------------- | -------------------------------------------------------------------------------------------------------------- | ----- |
 | `select(ref: IEntityRef \| null)` | Selects an entity. In uncontrolled mode it updates the selection. In controlled mode it only calls `onSelect`. | Atlas |
-| `getVisible()`                    | Returns `{ systems: string[]; lanes: string[] }`, the ids currently drawn.                                     | Game  |
 
 ## `Canvas`
 
@@ -117,8 +114,17 @@ A class that counter-scales an element so its content is drawn at a fixed screen
 | Helper                               | Purpose                                                                                   | Phase |
 | ------------------------------------ | ----------------------------------------------------------------------------------------- | ----- |
 | `fitViewport(points, size, options)` | Computes the viewport `fitPoints` would move to, without moving. For building deep links. | Atlas |
-| `pointAlongLane(lane, t)`            | The point at fraction `t` of the way along a continuous lane.                             | Game  |
-| `interpolateColor(a, b, t)`          | Perceptual interpolation between two concrete colors.                                     | Game  |
+
+## Planned
+
+These are approved but not yet implemented or exported. Do not rely on them.
+
+| Item                        | Kind             | Purpose                                                                                       | Phase |
+| --------------------------- | ---------------- | --------------------------------------------------------------------------------------------- | ----- |
+| `pointAlongLane(lane, t)`   | Helper           | The point at fraction `t` of the way along a continuous lane.                                 | Game  |
+| `interpolateColor(a, b, t)` | Helper           | Perceptual interpolation between two concrete colors.                                         | Game  |
+| `getVisible()`              | Handle method    | Returns `{ systems: string[]; lanes: string[] }`, the ids currently drawn.                    | Game  |
+| `panEnabled`, `zoomEnabled` | `GalaxyMap` prop | Passed through to `Canvas`, where they already exist. Default `true`. Not yet passed through. | Game  |
 
 ## Example
 
