@@ -28,7 +28,7 @@ function LaneNodeView({
       data-kind="lane"
       data-id={lane.id}
       role={interactive ? "button" : "img"}
-      aria-label={lane.name}
+      aria-label={lane.name ?? lane.id}
       aria-pressed={interactive ? selected : undefined}
     >
       {selected && (

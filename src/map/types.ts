@@ -38,7 +38,8 @@ export interface ILaneSegment {
 export interface ISpacelane<TData = unknown> {
   /** Unique among spacelanes. May equal a system id. */
   id: string;
-  name: string;
+  /** Optional. The accessible name, which falls back to `id` when absent. */
+  name?: string;
   segments: ILaneSegment[];
   className?: string;
   data?: TData;

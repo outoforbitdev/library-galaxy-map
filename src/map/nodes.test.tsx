@@ -223,6 +223,17 @@ describe("LaneNode", () => {
     expect(group).toHaveAttribute("aria-label", "Lane");
   });
 
+  it("falls back to the id for the accessible name when the lane has no name", () => {
+    const { name: _name, ...unnamed } = lane;
+    const { container } = svg(
+      <LaneNode lane={unnamed} selected={false} interactive />,
+    );
+    expect(container.querySelector("[data-kind='lane']")).toHaveAttribute(
+      "aria-label",
+      lane.id,
+    );
+  });
+
   it("draws a halo under the runs when selected", () => {
     const { container } = svg(<LaneNode lane={lane} selected interactive />);
     expect(container.querySelector("path")).toHaveClass(styles.laneHalo);
