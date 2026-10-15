@@ -69,11 +69,11 @@ export interface IGalaxyMapProps<TSystemData = unknown, TLaneData = unknown>
   highlightColor?: string;
   /** Content drawn with each visible system, in pixels relative to its center. Memoize it. */
   renderSystemOverlay?: (system: ISystem<TSystemData>) => ReactNode;
-  /** Most systems drawn at once. Defaults to 500. Zero hides every system. */
+  /** Most systems drawn at once. Defaults to 400. Zero hides every system, including the selected one. */
   maxSystems?: number;
   /** Most labels drawn at once. Defaults to 100. */
   maxLabels?: number;
-  /** Most lane segments drawn at once. A hard limit. Defaults to 600. */
+  /** Most lane segments drawn at once. A hard limit: the first lane that would exceed it is dropped along with every lane after it, even a route. Defaults to 500. */
   maxLaneSegments?: number;
   /** False draws every system, label, and lane. Performance targets do not apply. */
   culling?: boolean;

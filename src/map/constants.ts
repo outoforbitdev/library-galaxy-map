@@ -7,13 +7,13 @@ export const MAP_Y_AXIS: YAxis = "up";
 export const CULL_MARGIN = 0.1;
 
 /** Default for `maxSystems`. */
-export const DEFAULT_MAX_SYSTEMS = 500;
+export const DEFAULT_MAX_SYSTEMS = 400;
 
 /** Default for `maxLabels`. */
 export const DEFAULT_MAX_LABELS = 100;
 
 /** Default for `maxLaneSegments`. */
-export const DEFAULT_MAX_LANE_SEGMENTS = 600;
+export const DEFAULT_MAX_LANE_SEGMENTS = 500;
 
 /** Drawn glyph radius in pixels. Also the glyph's collision size in culling. */
 export const GLYPH_RADIUS_PX = 4;
