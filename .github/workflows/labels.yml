@@ -15,6 +15,6 @@ permissions: read-all
 jobs:
   labels:
     # yamllint disable-line rule:line-length
-    uses: outoforbitdev/reusable-workflows-library/.github/workflows/label-manager.yml@ffb7fcc6d8418595d18543d55c62a2ade1388ae9 # v1.4.1
+    uses: outoforbitdev/reusable-workflows-library/.github/workflows/label-manager.yml@dd8ab9adb0a6233804161fdd51581690598d584a # v1.4.2
     permissions:
       issues: write
