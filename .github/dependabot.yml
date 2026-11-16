@@ -9,14 +9,18 @@ updates:
     directory: "/" # Location of package manifests
     schedule:
       interval: "weekly"
+      day: "monday"
+      time: "02:00"
     labels:
-      - "type: chore"
+      - "type: ci"
       - "work: obvious"
       - "effort: 1"
   - package-ecosystem: "npm"
     directory: "/"
     schedule:
       interval: "weekly"
+      day: "monday"
+      time: "02:00"
     labels:
       - "type: chore"
       - "work: obvious"
